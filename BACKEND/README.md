@@ -18,7 +18,14 @@ Set-ExecutionPolicy  -Scope CurrentUser -ExecutionPolicy RemoteSigned
 Cuando te pregunte si estás seguro, presiona S y luego Enter.
 
   
-## 3. Activa el entorno virtual
+## 3. Crea y activa el entorno virtual
+
+🔹 Si NO tienes el entorno virtual (venv) creado:
+Ejecuta este comando en la terminal:
+```
+python -m venv venv
+```
+Esto creará una carpeta venv con el entorno virtual.
 
 - Ejecuta el siguiente comando:
 ```
