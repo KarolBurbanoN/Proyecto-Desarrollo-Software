@@ -34,9 +34,9 @@ Esto creará una carpeta venv con el entorno virtual.
 Deberías ver algo como (venv) al principio de la línea, indicando que el entorno virtual está activado. La terminal debería verse de color verde.
 
 - Después, instala las librerías necesarias ejecutando:
-
+```
 pip install -r requirements.txt
-
+```
 Esto instalará todas las dependencias necesarias para que FastAPI funcione correctamente. ✅
 
 **Nota:**
@@ -57,15 +57,26 @@ Para evitar tener que pegar las tablas manualmente en PgAdmin, realizamos el pro
 **Luego, en la terminal de VS Code:**
 
 *Si cerraste la terminal, reactiva el entorno virtual con:
+```
 .\venv\Scripts\Activate.ps1*
-
+```
   **Copia y pega:** 
-
-- ipython
-- from BASE_DE_DATOS import db, models
-- db.create_table()
+```
+ipython
+```
+Luego
+```
+from BASE_DE_DATOS import db, models
+```
+Y finalmente
+```
+db.create_table()
+```
 
 Si no aparece ningún error, eso significa que las tablas se crearon correctamente. 🎉
+
+Y puedes salir con
+
 - exit
 
 **Verificación:**
