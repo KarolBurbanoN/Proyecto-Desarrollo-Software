@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import date
+from pydantic import EmailStr
+
 
 # 1. CATEGORÍA
 class CategoriaBase(BaseModel):
@@ -14,7 +16,7 @@ class Categoria(CategoriaBase):
     id_categoria: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # 2. ETIQUETA
 class EtiquetaBase(BaseModel):
@@ -27,7 +29,7 @@ class Etiqueta(EtiquetaBase):
     id_etiqueta: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # 3. AUTOR
 class AutorBase(BaseModel):
@@ -42,7 +44,7 @@ class Autor(AutorBase):
     id_autor: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # 4. USUARIO
 class UsuarioBase(BaseModel):
@@ -55,8 +57,8 @@ class UsuarioBase(BaseModel):
     direccion: Optional[str] = None
     ciudad: Optional[str] = None
     telefono: Optional[str] = None
-    correo: str
-    contrasena: str
+    correo: EmailStr
+    contraseña: str
     rol: str
     estado_cuenta: Optional[str] = 'activa'
 
@@ -67,7 +69,7 @@ class Usuario(UsuarioBase):
     id_usuario: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # 5. LIBRO
 class LibroBase(BaseModel):
@@ -86,7 +88,7 @@ class Libro(LibroBase):
     ISBN: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # 6. LIBRO_AUTOR (relación N:N)
 class LibroAutorBase(BaseModel):
@@ -98,7 +100,7 @@ class LibroAutorCreate(LibroAutorBase):
 
 class LibroAutor(LibroAutorBase):
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # 7. LIBRO_ETIQUETA (relación N:N)
 class LibroEtiquetaBase(BaseModel):
@@ -110,7 +112,7 @@ class LibroEtiquetaCreate(LibroEtiquetaBase):
 
 class LibroEtiqueta(LibroEtiquetaBase):
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # 8. EJEMPLAR
 class EjemplarBase(BaseModel):
@@ -125,7 +127,7 @@ class Ejemplar(EjemplarBase):
     id_ejemplar: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # 9. PRÉSTAMO
 class PrestamoBase(BaseModel):
@@ -142,7 +144,7 @@ class Prestamo(PrestamoBase):
     id_prestamo: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # 10. DEVOLUCIÓN
 class DevolucionBase(BaseModel):
@@ -158,7 +160,7 @@ class Devolucion(DevolucionBase):
     id_devolucion: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # 11. SANCIÓN
 class SancionBase(BaseModel):
@@ -174,7 +176,7 @@ class Sancion(SancionBase):
     id_sancion: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # 12. RESERVA
 class ReservaBase(BaseModel):
@@ -190,7 +192,7 @@ class Reserva(ReservaBase):
     id_reserva: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # 13. CALIFICACIÓN
 class CalificacionBase(BaseModel):
@@ -206,4 +208,4 @@ class Calificacion(CalificacionBase):
     id_calificacion: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True

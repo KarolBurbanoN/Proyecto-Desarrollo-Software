@@ -1,11 +1,11 @@
 from sqlalchemy.orm import Session
-from models import Usuario, Libro, Autor, Etiqueta, Ejemplar, Prestamo, Reserva, Devolucion, Sancion, Calificacion, Categoria
-from schemas import (UsuarioCreate, UsuarioUpdate, LibroCreate, LibroUpdate, 
-                    AutorCreate, AutorUpdate, EtiquetaCreate, EtiquetaUpdate,
-                    EjemplarCreate, EjemplarUpdate, PrestamoCreate, PrestamoUpdate,
-                    ReservaCreate, ReservaUpdate, DevolucionCreate, DevolucionUpdate,
-                    SancionCreate, SancionUpdate, CalificacionCreate, CalificacionUpdate,
-                    CategoriaCreate, CategoriaUpdate)
+from .models import Usuario, Libro, Autor, Etiqueta, Ejemplar, Prestamo, Reserva, Devolucion, Sancion, Calificacion, Categoria
+from .schemas import (UsuarioCreate, LibroCreate, 
+                    AutorCreate, EtiquetaCreate, 
+                    EjemplarCreate, PrestamoCreate, 
+                    ReservaCreate,  DevolucionCreate, 
+                    SancionCreate, CalificacionCreate, 
+                    CategoriaCreate)
 
 # Servicio para Usuario
 def create_usuario(db: Session, usuario: UsuarioCreate):
@@ -21,7 +21,7 @@ def get_usuario(db: Session, usuario_id: int):
 def get_usuarios(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Usuario).offset(skip).limit(limit).all()
 
-def update_usuario(db: Session, usuario_id: int, usuario: UsuarioUpdate):
+def update_usuario(db: Session, usuario_id: int, usuario: UsuarioCreate):
     db_usuario = db.query(Usuario).filter(Usuario.id_usuario == usuario_id).first()
     if db_usuario:
         update_data = usuario.model_dump(exclude_unset=True)
@@ -52,7 +52,7 @@ def get_libro(db: Session, ISBN: int):
 def get_libros(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Libro).offset(skip).limit(limit).all()
 
-def update_libro(db: Session, ISBN: int, libro: LibroUpdate):
+def update_libro(db: Session, ISBN: int, libro: LibroCreate):
     db_libro = db.query(Libro).filter(Libro.ISBN == ISBN).first()
     if db_libro:
         update_data = libro.model_dump(exclude_unset=True)
@@ -83,7 +83,7 @@ def get_autor(db: Session, autor_id: int):
 def get_autores(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Autor).offset(skip).limit(limit).all()
 
-def update_autor(db: Session, autor_id: int, autor: AutorUpdate):
+def update_autor(db: Session, autor_id: int, autor: AutorCreate):
     db_autor = db.query(Autor).filter(Autor.id_autor == autor_id).first()
     if db_autor:
         update_data = autor.model_dump(exclude_unset=True)
@@ -114,7 +114,7 @@ def get_etiqueta(db: Session, etiqueta_id: int):
 def get_etiquetas(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Etiqueta).offset(skip).limit(limit).all()
 
-def update_etiqueta(db: Session, etiqueta_id: int, etiqueta: EtiquetaUpdate):
+def update_etiqueta(db: Session, etiqueta_id: int, etiqueta: EtiquetaCreate):
     db_etiqueta = db.query(Etiqueta).filter(Etiqueta.id_etiqueta == etiqueta_id).first()
     if db_etiqueta:
         update_data = etiqueta.model_dump(exclude_unset=True)
@@ -145,7 +145,7 @@ def get_ejemplar(db: Session, ejemplar_id: int):
 def get_ejemplares(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Ejemplar).offset(skip).limit(limit).all()
 
-def update_ejemplar(db: Session, ejemplar_id: int, ejemplar: EjemplarUpdate):
+def update_ejemplar(db: Session, ejemplar_id: int, ejemplar: EjemplarCreate):
     db_ejemplar = db.query(Ejemplar).filter(Ejemplar.id_ejemplar == ejemplar_id).first()
     if db_ejemplar:
         update_data = ejemplar.model_dump(exclude_unset=True)
@@ -176,7 +176,7 @@ def get_prestamo(db: Session, prestamo_id: int):
 def get_prestamos(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Prestamo).offset(skip).limit(limit).all()
 
-def update_prestamo(db: Session, prestamo_id: int, prestamo: PrestamoUpdate):
+def update_prestamo(db: Session, prestamo_id: int, prestamo: PrestamoCreate):
     db_prestamo = db.query(Prestamo).filter(Prestamo.id_prestamo == prestamo_id).first()
     if db_prestamo:
         update_data = prestamo.model_dump(exclude_unset=True)
@@ -207,7 +207,7 @@ def get_reserva(db: Session, reserva_id: int):
 def get_reservas(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Reserva).offset(skip).limit(limit).all()
 
-def update_reserva(db: Session, reserva_id: int, reserva: ReservaUpdate):
+def update_reserva(db: Session, reserva_id: int, reserva: ReservaCreate):
     db_reserva = db.query(Reserva).filter(Reserva.id_reserva == reserva_id).first()
     if db_reserva:
         update_data = reserva.model_dump(exclude_unset=True)
@@ -238,7 +238,7 @@ def get_devolucion(db: Session, devolucion_id: int):
 def get_devoluciones(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Devolucion).offset(skip).limit(limit).all()
 
-def update_devolucion(db: Session, devolucion_id: int, devolucion: DevolucionUpdate):
+def update_devolucion(db: Session, devolucion_id: int, devolucion: DevolucionCreate):
     db_devolucion = db.query(Devolucion).filter(Devolucion.id_devolucion == devolucion_id).first()
     if db_devolucion:
         update_data = devolucion.model_dump(exclude_unset=True)
@@ -269,7 +269,7 @@ def get_sancion(db: Session, sancion_id: int):
 def get_sanciones(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Sancion).offset(skip).limit(limit).all()
 
-def update_sancion(db: Session, sancion_id: int, sancion: SancionUpdate):
+def update_sancion(db: Session, sancion_id: int, sancion: SancionCreate):
     db_sancion = db.query(Sancion).filter(Sancion.id_sancion == sancion_id).first()
     if db_sancion:
         update_data = sancion.model_dump(exclude_unset=True)
@@ -300,7 +300,7 @@ def get_calificacion(db: Session, calificacion_id: int):
 def get_calificaciones(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Calificacion).offset(skip).limit(limit).all()
 
-def update_calificacion(db: Session, calificacion_id: int, calificacion: CalificacionUpdate):
+def update_calificacion(db: Session, calificacion_id: int, calificacion: CalificacionCreate):
     db_calificacion = db.query(Calificacion).filter(Calificacion.id_calificacion == calificacion_id).first()
     if db_calificacion:
         update_data = calificacion.model_dump(exclude_unset=True)
@@ -331,7 +331,7 @@ def get_categoria(db: Session, categoria_id: int):
 def get_categorias(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Categoria).offset(skip).limit(limit).all()
 
-def update_categoria(db: Session, categoria_id: int, categoria: CategoriaUpdate):
+def update_categoria(db: Session, categoria_id: int, categoria: CategoriaCreate):
     db_categoria = db.query(Categoria).filter(Categoria.id_categoria == categoria_id).first()
     if db_categoria:
         update_data = categoria.model_dump(exclude_unset=True)

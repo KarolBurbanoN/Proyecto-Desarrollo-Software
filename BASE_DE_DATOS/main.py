@@ -1,7 +1,9 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from BASE_DE_DATOS.db import SessionLocal, engine, get_db
-import models, services, schemas
+from BASE_DE_DATOS import models, services, schemas
+
+
 
 # Crear las tablas en la base de datos
 models.Base.metadata.create_all(bind=engine)
@@ -45,6 +47,7 @@ def obtener_libro(libro_id: int, db: Session = Depends(get_db)):
     if db_libro is None:
         raise HTTPException(status_code=404, detail="Libro no encontrado")
     return db_libro
+
 
 @app.put("/libros/{libro_id}", response_model=schemas.LibroCreate)
 def actualizar_libro(libro_id: int, libro: schemas.LibroCreate, db: Session = Depends(get_db)):
