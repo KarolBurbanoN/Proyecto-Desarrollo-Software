@@ -192,6 +192,89 @@ header.abajo ul li a {
   width: 60%;
 }
 
+/**--------------------*/
+/**------ VIDEO ------*/
+/**-------------------*/
+
+.video-section {
+  position: relative;
+  background-image: url('../images/Libros.jpg'); /* imagen de fondo */
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  padding: 0 0;
+  text-align: center;
+  color: #fff;
+}
+
+.video-overlay {
+  background-color: rgba(124, 86, 52, 0.8); /* marrón semi-transparente */
+  padding: 100px 20px;
+}
+
+.video-content h2 {
+  font-size: 36px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.video-content p {
+  font-size: 16px;
+  margin-bottom: 40px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.video-content video {
+  width: 90%;
+  max-width: 900px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+/**----------------------*/
+/**------ ACERCA DE -----*/
+/**----------------------*/
+
+.set-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 75%;
+  margin: auto;
+}
+
+.set-row img {
+  width: 50%;
+  height: auto;
+}
+
+#Acerca-de {
+  background: #ffffff;
+  width: 100%;
+  padding: 90px 0px;
+}
+
+.set-row .about-content {
+  padding-left: 30px;
+  margin-bottom: 60px;
+}
+
+.set-row .about-content h2 {
+  font-size: 42px;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+.set-row .about-content p {
+  color: #666;
+  font-size: 20px;
+  line-height: 24px;
+  padding-bottom: 46px;
+  text-align: justify;
+}
+
 /**---------------------*/
 /**------ FOOTER -------*/
 /**---------------------*/
