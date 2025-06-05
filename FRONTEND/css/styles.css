@@ -1,0 +1,582 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Damion&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+body{
+  font-family: 'Barlow', sans-serif;
+  background-color: #101116;
+}
+
+header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  transition: 0.7s;
+  padding: 30px 20px;
+  z-index: 10;
+}
+
+header.abajo {
+  opacity: 95%;
+  background: #101116;
+  padding: 60px 20px;
+}
+
+header.abajo .logo,
+header.abajo ul li a {
+  opacity: 100%;
+}
+.container{
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.menu{
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000;
+}
+
+.logo{
+  width: 100px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu .navbar ul{
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.menu .navbar ul li{
+  position: relative;
+  float: left;
+  
+}
+
+.menu .navbar ul li a{
+  font-size: 18px;
+  padding: 20px;
+  color: #FDFDFD;
+  display: block;
+  text-transform: uppercase;
+  transition: .3s;
+}
+
+.menu .navbar ul li a:hover {
+  color: #f1f1f1;
+}
+
+.menu .navbar ul li a.btn-link::before {
+  content: none;
+}
+
+.menu .navbar ul li a::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #fff;
+  transition: .3s;
+}
+
+.menu .navbar ul li a:hover::before {
+  width: 100%;
+  background: #ffffff;
+}
+
+.menu .navbar ul li a.active {
+  color: #ffffff;
+}
+
+.menu .navbar ul li a.active::before {
+  width: 100%;
+  background: #ffffff;
+}
+
+#menu{
+  display: none;
+}
+
+.menu-icono{
+  width: 35px;
+  height: auto;
+}
+
+.menu label {
+  display: initial;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.zona-inicio {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: url(../images/ManosConLibros.jpg);
+  background-size: cover;
+  background-position: center center;
+
+}
+
+.inicio-content {
+  position: relative;
+  top: 0;
+  transform: translateY(-90px);
+
+  display: flex;
+  align-items: center;
+  padding: 200px 0 270px 0;
+}
+
+.hero-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero-texto {
+  max-width: 500px;
+  text-align: center;
+  color: #FDFDFD;
+}
+
+.hero-texto img.logo-texto {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.hero-texto p {
+  font-size: 22px;
+  line-height: 1.5;
+  color: #fff;
+  font-weight: 400;
+}
+
+.hero-imagen img {
+  max-width: 500px;
+  width: 100%;
+  height: auto;
+}
+
+.header-img {
+  width: 60%;
+}
+
+/**---------------------*/
+/**------ FOOTER -------*/
+/**---------------------*/
+
+.footer {
+  background-color: #9C6644;
+  width: 100%;
+  padding: 40px 0 10px 0;
+  color: #FDFDFD;
+}
+
+.footer .container {
+  display: flex;
+  flex-wrap: wrap; /* Para que en móviles se acomode en columna */
+  justify-content: space-between; /* Espacio entre logo y secciones */
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.links{
+  min-width: 150px;
+}
+
+.logo-2 {
+  width: 200px;
+  min-width: 170px;
+}
+
+.links h4 {
+  color: #FDFDFD;
+  text-transform: uppercase;
+  margin-bottom: 25px;
+  
+}
+
+.links ul li a {
+  color: #FDFDFD;
+  font-size: 16px;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+
+.socials {
+  display: flex;
+}
+
+.social {
+  margin: 0 15px;
+  height: 40px;
+  width: 40px;
+  border: 2px solid #FDFDFD;
+  border-radius: 50%;
+}
+
+.social:hover {
+  background-color: #FDFDFD;
+}
+
+.social img {
+  margin: 8px 0 0 8.5px;
+}
+
+/**---------------------*/
+/**---- MEDIA QUERY ----*/
+/**---------------------*/
+
+@media(max-width: 991px) {
+
+  .menu {
+    padding: 12.5px;
+  }
+
+  .menu label {
+    display: initial;
+  }
+
+  .menu .navbar {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: rgba(16, 17, 22, 0.95);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    flex-direction: column;
+    align-items: center;
+    z-index: 999;
+    text-align: center;
+  }
+
+  #menu:checked ~ .navbar {
+    max-height: 500px; /* ajusta si tu menú tiene más elementos */
+  }
+
+  .menu .navbar ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    gap: 12px;
+  }
+
+  .menu .navbar ul li {
+    width: auto;
+    border: none;
+    text-align: center;
+  }
+
+  .menu .navbar ul li a {
+    position: relative;
+    display: inline-block;
+    font-size: 18px;
+    padding: 10px 5px;
+    color: #ffffff;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+  }
+
+  .menu .navbar ul li a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background-color: #ffffff;
+    transition: width 0.3s ease;
+  }
+
+  .menu .navbar ul li a:hover::before {
+    width: 100%;
+  }
+
+  .menu .navbar ul li a.btn-1,
+  .menu .navbar ul li a.btn-2 {
+    color: #FDFDFD;
+    padding: 10px 25px;
+    margin: 10px;
+    border-radius: 25px;
+    display: inline-block;
+    text-transform: none;
+  }
+
+  .menu .navbar ul li a.btn-1 {
+    background: linear-gradient(90deg, #DDB892 0%, #7F5539 100%);
+  }
+
+  .menu .navbar ul li a.btn-1:hover {
+    background: linear-gradient(90deg, #efe0d1 0%, #d5a88a 100%);
+  }
+
+  .menu .navbar ul li a.btn-2 {
+    border: 1px solid #FDFDFD;
+  }
+
+  .menu .navbar ul li a.btn-2:hover {
+    border: 1px solid #7F5539;
+  }
+
+  header.abajo {
+    background-color: #101116; /* Fondo negro cuando haces scroll */
+  }
+
+  .header-content {
+    flex-direction: column;
+    padding: 180px 30px 30px 30px;
+  }
+
+  .header-txt {
+    width: 100%;
+    padding: 0;
+    text-align: center;
+  }
+
+  .header-txt h1{
+    font-size: 40px;
+  }
+
+  .botones {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn-1 {
+    margin: 0 0 20px 0;
+  }
+
+  .btn-2 {
+    margin: 0 0 20px 0;
+  }
+
+  .header-img {
+    width: 100%;
+    margin-top: 45px;
+  }
+
+  .hero-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .hero-texto img.logo-texto {
+    max-width: 300px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+
+  .hero-imagen img {
+    max-width: 300px;
+    width: 100%;
+    height: auto;
+  }
+
+  .socials {
+    justify-content: center;
+  }
+
+  .social img {
+    margin: 8px 0 0 0;
+  }
+
+  .links h4 {
+    color: #FDFDFD;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+  }
+
+  #set-row,
+  .set-row {
+    flex-direction: column;
+    width: 90%;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .set-row img {
+    display: none; /* oculta la imagen para ahorrar espacio en móvil */
+  }
+
+  #Acerca-de {
+    padding: 60px 0;
+  }
+
+  .set-row .about-content {
+    padding: 0;
+    margin: 0;
+  }
+
+  .set-row .about-content h2 {
+    font-size: 30px;
+    text-align: center;
+  }
+
+  .set-row .about-content p {
+    font-size: 18px;
+    line-height: 1.6;
+    text-align: justify;
+    padding: 0 15px;
+  }
+}
+
+/**---------------------*/
+/**------ FUENTES ------*/
+/**---------------------*/
+
+.barlow-thin {
+    font-family: "Barlow", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+}
+  
+  .barlow-extralight {
+    font-family: "Barlow", sans-serif;
+    font-weight: 200;
+    font-style: normal;
+  }
+  
+  .barlow-light {
+    font-family: "Barlow", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+  }
+  
+  .barlow-regular {
+    font-family: "Barlow", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .barlow-medium {
+    font-family: "Barlow", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+  }
+  
+  .barlow-semibold {
+    font-family: "Barlow", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+  }
+  
+  .barlow-bold {
+    font-family: "Barlow", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+  
+  .barlow-extrabold {
+    font-family: "Barlow", sans-serif;
+    font-weight: 800;
+    font-style: normal;
+  }
+  
+  .barlow-black {
+    font-family: "Barlow", sans-serif;
+    font-weight: 900;
+    font-style: normal;
+  }
+  
+  .barlow-thin-italic {
+    font-family: "Barlow", sans-serif;
+    font-weight: 100;
+    font-style: italic;
+  }
+  
+  .barlow-extralight-italic {
+    font-family: "Barlow", sans-serif;
+    font-weight: 200;
+    font-style: italic;
+  }
+  
+  .barlow-light-italic {
+    font-family: "Barlow", sans-serif;
+    font-weight: 300;
+    font-style: italic;
+  }
+  
+  .barlow-regular-italic {
+    font-family: "Barlow", sans-serif;
+    font-weight: 400;
+    font-style: italic;
+  }
+  
+  .barlow-medium-italic {
+    font-family: "Barlow", sans-serif;
+    font-weight: 500;
+    font-style: italic;
+  }
+  
+  .barlow-semibold-italic {
+    font-family: "Barlow", sans-serif;
+    font-weight: 600;
+    font-style: italic;
+  }
+  
+  .barlow-bold-italic {
+    font-family: "Barlow", sans-serif;
+    font-weight: 700;
+    font-style: italic;
+  }
+  
+  .barlow-extrabold-italic {
+    font-family: "Barlow", sans-serif;
+    font-weight: 800;
+    font-style: italic;
+  }
+  
+  .barlow-black-italic {
+    font-family: "Barlow", sans-serif;
+    font-weight: 900;
+    font-style: italic;
+  }
+
+  .damion-regular {
+  font-family: "Damion", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+section[id] {
+  scroll-margin-top: 120px; /* Ajusta según tu header */
+}
