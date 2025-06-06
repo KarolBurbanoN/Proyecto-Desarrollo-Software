@@ -146,7 +146,7 @@ header.abajo ul li a {
 .inicio-content {
   position: relative;
   top: 0;
-  transform: translateY(-90px);
+  transform: translateY(-90px); /* súbelo */
 
   display: flex;
   align-items: center;
@@ -183,13 +183,241 @@ header.abajo ul li a {
 }
 
 .hero-imagen img {
-  max-width: 500px;
+  max-width: 500px;  /* Puedes subir esto hasta 400px si deseas */
   width: 100%;
   height: auto;
 }
 
+
 .header-img {
   width: 60%;
+}
+
+.titulo-con-linea {
+  position: relative;
+  display: inline-block;
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.titulo-con-linea::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 3px;
+  background-color: #ffffff; /* o #7F5539 para marrón */
+  margin: 10px auto 0;
+  border-radius: 5px;
+}
+
+
+section h2 {
+  position: relative;
+  display: inline-block;
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+section h2::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 3px;
+  background-color: #7F5539;
+  margin: 10px auto 0;
+  border-radius: 5px;
+}
+
+.libros {
+  width: 100%;
+}
+
+.btn-1 {
+  display: inline-block;
+  background: linear-gradient(90deg, #DDB892 0%, #7F5539 100%);
+  padding: 10px 25px;
+  margin-right: 20px;
+  color: #FDFDFD;
+  border-radius: 25px;
+}
+
+.btn-2 {
+  display: inline-block;
+  border: 1px solid #FDFDFD;
+  padding: 10px 35px;
+  margin-right: 20px;
+  color: #FDFDFD;
+  border-radius: 25px;
+}
+
+.btn-1:hover {
+  background: linear-gradient(90deg, #efe0d1 0%, #d5a88a 100%);
+}
+
+.btn-2:hover {
+  border: 1px solid #7F5539;
+}
+
+/**--------------------*/
+/**----- COUNTER ------*/
+/**--------------------*/
+
+#mu-counter {
+	background-color: #fff;
+	background-position: center center;
+	background-size: auto;
+	background-attachment: fixed;
+	display: inline;
+	float: left;
+	position: relative;
+	width: 100%;
+}
+
+.mu-counter-area {
+	display: inline;
+	float: left;
+	padding: 70px 0 50px;
+	width: 100%;
+}
+
+.mu-counter-area h2 {
+	color: #fff;
+	text-align: center;
+}
+
+.mu-counter-block .row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.mu-single-counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  background-color: white;
+}
+
+.mu-single-counter i {
+	font-size: 40px;
+	padding: 15px 40px;
+	margin-bottom: 0px; 
+  justify-content: center;
+  align-items: center center;
+	display: inline-block;
+	padding-bottom: 0;
+	margin-top: -60px;
+	background: #fff;
+  color: #B08968;
+}
+
+
+.counter-value {
+	font-size: 35px;
+	font-weight: 700;
+  text-align: center;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.mu-counter-name {
+  text-align: center;
+
+	color: #333;
+}
+
+
+/**---------------------*/
+/**---- CATEGORIAS ---- */
+/**---------------------*/
+
+.categories {
+  width: 100%;
+  height: auto;
+  margin: auto;
+  margin-top: 225px;
+  padding: 60px 0;
+  background-color: #fafafa;
+}
+
+.cat-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.cat-header h2 {
+  font-size: 38px;
+  padding-bottom: 14px;
+  color: #333;
+}
+
+.cat-header p {
+  font-size: 18px;
+  color: #666;
+}
+
+.cat-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Centra las tarjetas horizontalmente */
+  gap: 30px;
+  max-width: 1200px;       /* Controla el ancho máximo */
+  margin: 0 auto;          /* Centra el grid dentro del section */
+}
+
+.books {
+  width: 250px;
+  padding: 20px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.books:hover {
+  transform: translateY(-5px);
+}
+
+.book-img {
+  width: 120px;
+  height: 120px;
+  background-color: #B08968;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 15px auto; /* centrado horizontal + espacio abajo */
+}
+
+.book-img img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.cat-grid .books:first-child .book-img img {
+  width: 75px;
+  height: 75px;
+  object-fit: contain; /* evita recortes */
+}
+
+.books h4 {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.books p {
+  font-size: 16px;
+  color: #666;
 }
 
 /**--------------------*/
@@ -280,6 +508,9 @@ header.abajo ul li a {
 .btn-ver:hover {
   background-color: #B08968;
 }
+
+
+
 
 /**--------------------*/
 /**------ VIDEO ------*/
@@ -415,6 +646,129 @@ header.abajo ul li a {
   font-weight: 600;
 }
 
+/**------------------------*/
+/**----- CONTACTANOS ------*/
+/**------------------------*/
+
+.contact-section {
+  background-color: #B08968;
+  padding: 50px 0;
+  color: #fff;
+  font-family: sans-serif;
+}
+
+.contact-container {
+  display: flex;
+  max-width: 1500px;
+  margin: auto;
+  gap: 30px;
+  justify-content: space-between;
+  align-items: stretch;
+  flex-wrap: nowrap;
+}
+
+/* FORMULARIO */
+.contact-form {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  width: 100%;          /* <- Puedes usar 100% si está dentro de un grid o flexbox */
+  max-width: 700px;     /* <- Para controlar el ancho máximo */
+  height: 500px;
+  min-height: 400px;
+  box-sizing: border-box;
+}
+
+
+
+.contact-form form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* <- CAMBIAR DE center A stretch */
+  height: 100%;
+  width: 100%; /* <- Asegura que el formulario use todo el ancho */
+}
+
+.contact-form h2 {
+  color: #000;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  height: auto;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.contact-form textarea{
+  height: 200px;
+}
+
+.contact-form button {
+  background-color: #B08968;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.contact-form button:hover {
+  background-color: #7F5539;
+}
+
+/* INFORMACIÓN DE CONTACTO */
+.contact-info-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 200px;     /* <- Ancho fijo */
+  height: 500px;    /* <- Altura igual que el formulario */
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 200px;
+  min-width: 100px;
+}
+
+.info-card {
+  background-color: #fff;
+  color: #000;
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.info-card i {
+  font-size: 30px;
+  color: #7F5539;
+  margin-bottom: 10px;
+}
+
+.info-card h4 {
+  margin-bottom: 8px;
+}
+
+.contact-container img {
+  width: auto;
+  max-width: 600px;
+  height: auto;
+  margin-left: auto;
+}
+
+
 /**---------------------*/
 /**------ FOOTER -------*/
 /**---------------------*/
@@ -459,22 +813,24 @@ header.abajo ul li a {
 
 .socials {
   display: flex;
+  gap: 15px;
+  margin: 15px 0;
 }
 
-.social {
-  margin: 0 15px;
-  height: 40px;
-  width: 40px;
-  border: 2px solid #FDFDFD;
+.socials a i {
+  font-size: 30px;
   border-radius: 50%;
+  padding: 15px;
+  cursor: pointer;
+  color: #FDFDFD;
+  border: 1px solid #FDFDFD;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.social:hover {
+.socials a:hover i {
   background-color: #FDFDFD;
-}
-
-.social img {
-  margin: 8px 0 0 8.5px;
+  color: #9C6644;
+  transform: scale(1.1);
 }
 
 /**---------------------*/
@@ -634,12 +990,46 @@ header.abajo ul li a {
     height: auto;
   }
 
+  .contact-container {
+    flex-direction: column;   /* Cambia de fila a columna */
+    align-items: center;      /* Centra los hijos en columna */
+  }
+
+  .contact-form {
+    width: 100%;
+    max-width: 100%;          /* El formulario usa todo el ancho */
+    height: auto;             /* Altura automática para adaptarse al contenido */
+  }
+
+  .contact-info-wrapper {
+    width: 100%;              /* Que ocupe todo el ancho */
+    height: auto;
+    flex-direction: column;
+    align-items: center;      /* Centra las tarjetas */
+  }
+
+  .contact-info {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .info-card {
+    width: 90%;               /* Las tarjetas ocupan casi todo el ancho */
+  }
+
+  .contact-container img {
+    display: none;            /* Oculta la imagen */
+  }
+
   .socials {
     justify-content: center;
   }
 
-  .social img {
-    margin: 8px 0 0 0;
+  .footer .container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 
   .links h4 {
@@ -801,5 +1191,5 @@ header.abajo ul li a {
 }
 
 section[id] {
-  scroll-margin-top: 120px; /* Ajusta según tu header */
+  scroll-margin-top: 100px; /* Ajusta según tu header */
 }
