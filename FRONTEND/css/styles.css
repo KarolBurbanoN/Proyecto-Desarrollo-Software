@@ -192,6 +192,229 @@ header.abajo ul li a {
   width: 60%;
 }
 
+/**--------------------*/
+/**-- NUEVOS LIBROS --*/
+/**--------------------*/
+
+.nuevos-libros {
+  background-color: #B08968;
+  margin: auto;
+  padding: 50px 0px;
+  text-align: center;
+}
+
+.nuevos-overlay {
+  position: center;
+  background-color: #fff;
+  max-width: 1200px;
+  top: 110px;
+  margin: 0 auto;
+  padding: 60px 40px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.nuevos-header h2 {
+  margin-top: 40px;
+  font-size: 36px;
+  color: #333;
+}
+
+.nuevos-header p {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.libros-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 50px;
+}
+
+.libro-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 170px; /* ← limitar el tamaño real */
+  padding: 20px;
+}
+
+.libro-item img {
+  width: 170px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+
+.libro-label {
+  font-style: italic;
+  font-size: 14px;
+  color: #7F5539;
+  margin-bottom: 10px;
+}
+
+
+.libro-item h4 {
+  font-size: 16px;
+  font-style: italic;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.btn-ver {
+  display: inline-block;
+  padding: 10px 25px;
+  border-radius: 20px;
+  background-color: #e9cca4;
+  color: #333;
+  font-size: 14px;
+  border: none;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.btn-ver:hover {
+  background-color: #B08968;
+}
+
+/**--------------------*/
+/**------ VIDEO ------*/
+/**-------------------*/
+
+.video-section {
+  position: relative;
+  background-image: url('../images/Libros.jpg'); /* imagen de fondo */
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  padding: 0 0;
+  text-align: center;
+  color: #fff;
+}
+
+.video-overlay {
+  background-color: rgba(124, 86, 52, 0.8); /* marrón semi-transparente */
+  padding: 100px 20px;
+}
+
+.video-content h2 {
+  font-size: 36px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.video-content p {
+  font-size: 16px;
+  margin-bottom: 40px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.video-content video {
+  width: 90%;
+  max-width: 900px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+/**----------------------*/
+/**------ ACERCA DE -----*/
+/**----------------------*/
+
+.set-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 75%;
+  margin: auto;
+}
+
+.set-row img {
+  width: 50%;
+  height: auto;
+}
+
+#Acerca-de {
+  background: #ffffff;
+  width: 100%;
+  padding: 90px 0px;
+}
+
+.set-row .about-content {
+  padding-left: 30px;
+  margin-bottom: 60px;
+}
+
+.set-row .about-content h2 {
+  font-size: 42px;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+.set-row .about-content p {
+  color: #666;
+  font-size: 20px;
+  line-height: 24px;
+  padding-bottom: 46px;
+  text-align: justify;
+}
+
+/**---------------------*/
+/**------ RESEÑAS ------*/
+/**---------------------*/
+
+.reviews {
+  padding: 60px 20px;
+  background-color: #FDFDFD;
+  text-align: center;
+}
+
+.reviews-title {
+  font-size: 36px;
+  color: #111;
+  margin-bottom: 40px;
+}
+
+.reviews-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+}
+
+.review {
+  max-width: 300px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgb(99, 82, 54);
+  text-align: center;
+}
+
+.review i {
+  font-size: 40px;
+  color: #7F5539;
+  margin-bottom: 15px;
+}
+
+.review-text {
+  font-size: 16px;
+  color: #333;
+  font-style: italic;
+  margin-bottom: 15px;
+}
+
+.review-author {
+  font-size: 14px;
+  color: #7F5539;
+  font-weight: 600;
+}
+
 /**---------------------*/
 /**------ FOOTER -------*/
 /**---------------------*/

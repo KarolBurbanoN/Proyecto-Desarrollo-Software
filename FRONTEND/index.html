@@ -56,6 +56,124 @@
                 </div>
             </section>
 
+            <!-- Nuevos Libros Section -->
+            <section class="nuevos-libros">
+                <div class="nuevos-overlay">
+                    <div class="nuevos-header">
+                        <h2>Nuevos Libros</h2>
+                        <p>Descubre las últimas novedades en nuestra
+                            biblioteca.</p>
+                    </div>
+
+                    <div class="libros-grid">
+                        <div class="libro-item">
+                            <span class="libro-label">– Última publicación
+                                –</span>
+                            <img src="images/Libros/Demian.jpg" alt="Demian">
+                            <h4>Demian</h4>
+                            <a href="#" class="btn-ver">Ver más</a>
+                        </div>
+
+                        <div class="libro-item">
+                            <span class="libro-label">– Última publicación
+                                –</span>
+                            <img src="images/Libros/Frankenstein.jpg"
+                                alt="Frankenstein">
+                            <h4>Frankenstein</h4>
+                            <a href="#" class="btn-ver">Ver más</a>
+                        </div>
+
+                        <div class="libro-item">
+                            <span class="libro-label">– Última publicación
+                                –</span>
+                            <img src="images/Libros/Jekyll&Hyde.jpeg"
+                                alt="Jekyll & Hyde">
+                            <h4>Jekyll & Hyde</h4>
+                            <a href="#" class="btn-ver">Ver más</a>
+                        </div>
+
+                        <div class="libro-item">
+                            <span class="libro-label">– Última publicación
+                                –</span>
+                            <img src="images/Libros/FantasmaOpera.jpg"
+                                alt="FantasmaOpera">
+                            <h4>El Fantasma de la Opera</h4>
+                            <a href="#" class="btn-ver">Ver más</a>
+                        </div>
+                        <!-- Puedes agregar más libros aquí -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Video Section -->
+            <section class="video-section">
+                <div class="video-overlay">
+                    <div class="video-content">
+                        <h2 class="titulo-con-linea">Video</h2>
+                        <p>Descubre cómo nuestra biblioteca transforma la
+                            experiencia de lectura.</p>
+                        <video controls>
+                            <source src="Videos/presentacion.mp4"
+                                type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </section>
+
+            <!---Acerca de section ----->
+            <section id="Acerca-de">
+                <div class="set-row">
+                    <img src="./images/about-us.png" alt>
+
+                    <div class="about-content">
+                        <h2>Acerca de Nuestra Biblioteca</h2>
+                        <p>La biblioteca virtual Alexandria es una plataforma
+                            digital que ofrece acceso rápido y organizado a una
+                            amplia colección de libros, documentos y recursos
+                            académicos. Diseñada para facilitar el aprendizaje y
+                            la investigación, permite a estudiantes, docentes y
+                            usuarios en general consultar material de distintas
+                            áreas del conocimiento desde cualquier lugar y en
+                            cualquier momento. Su interfaz amigable y su sistema
+                            de búsqueda eficiente la convierten en una
+                            herramienta fundamental para la educación en la era
+                            digital.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reseñas Section -->
+            <section class="reviews">
+                <h2 class="reviews-title">Reseñas</h2>
+                <div class="reviews-grid">
+                    <div class="review">
+                        <i class="fa-solid fa-quote-left"></i>
+                        <p class="review-text">
+                            "Reseña. Haz clic para editar y añadir texto que diga algo bueno sobre ti y tu trabajo. Comparte el reconocimiento de los críticos y genera entusiasmo por tu último proyecto."
+                        </p>
+                        <p class="review-author">Jazmín Lara, Revista
+                            Primicia</p>
+                    </div>
+
+                    <div class="review">
+                        <i class="fa-solid fa-quote-left"></i>
+                        <p class="review-text">
+                            "Reseña. Haz clic para editar y añadir texto que diga algo bueno sobre ti y tu trabajo. Comparte el reconocimiento de los críticos y genera entusiasmo por tu último proyecto."
+                        </p>
+                        <p class="review-author">Alicia Goya, El blog de ABC</p>
+                    </div>
+
+                    <div class="review">
+                        <i class="fa-solid fa-quote-left"></i>
+                        <p class="review-text">
+                            "Reseña. Haz clic para editar y añadir texto que diga algo bueno sobre ti y tu trabajo. Comparte el reconocimiento de los críticos y genera entusiasmo por tu último proyecto."
+                        </p>
+                        <p class="review-author">Sam Durán, Ficlólogo
+                            Educativo</p>
+                    </div>
+                </div>
+            </section>
+
         </main>
 
         <footer class="footer">
@@ -97,5 +215,35 @@
         </footer>
 
         <script src="js/scripts.js"></script>
+        <script>
+            window.addEventListener("scroll", function(){
+                var header = document.querySelector("header");
+                header.classList.toggle("abajo", window.scrollY>0);
+            })
+            
+            const sections = document.querySelectorAll("section[id]");
+            const navLinks = document.querySelectorAll(".navbar ul li a");
+
+            window.addEventListener("scroll", () => {
+                let scrollY = window.scrollY;
+
+                sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100; // ajustar si hay header fijo
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute("id");
+
+                if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+                    navLinks.forEach(link => {
+                    link.classList.remove("active");
+                    if (link.getAttribute("href") === "#" + sectionId) {
+                        link.classList.add("active");
+                    }
+                    });
+                }
+                });
+            });
+
+        </script>
+
     </body>
 </html>
