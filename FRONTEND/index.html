@@ -56,6 +56,78 @@
                 </div>
             </section>
 
+            <!-- Contadores -->
+            <section id="mu-counter">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mu-counter-area">
+                                <div class="mu-counter-block">
+                                    <div class="row">
+                                        <!-- Start Single Counter -->
+                                        <div class="col-md-3 col-sm-6">
+                                            <div class="mu-single-counter">
+                                                <i
+                                                    class="fa-solid fa-file-lines"
+                                                    aria-hidden="true"></i>
+                                                <div class="counter-value"
+                                                    data-count="650">650</div>
+                                                <h5
+                                                    class="mu-counter-name">Pages</h5>
+                                            </div>
+                                        </div>
+                                        <!-- / Single Counter -->
+
+                                        <!-- Start Single Counter -->
+                                        <div class="col-md-3 col-sm-6">
+                                            <div class="mu-single-counter">
+                                                <i class="fa-solid fa-book-open"
+                                                    aria-hidden="true"></i>
+                                                <div class="counter-value"
+                                                    data-count="20">20</div>
+                                                <h5
+                                                    class="mu-counter-name">Total
+                                                    Books</h5>
+                                            </div>
+                                        </div>
+                                        <!-- / Single Counter -->
+
+                                        <!-- Start Single Counter -->
+                                        <div class="col-md-3 col-sm-6">
+                                            <div class="mu-single-counter">
+                                                <i class="fa fa-users"
+                                                    aria-hidden="true"></i>
+                                                <div class="counter-value"
+                                                    data-count="10">10</div>
+                                                <h5
+                                                    class="mu-counter-name">Active
+                                                    Readers</h5>
+                                            </div>
+                                        </div>
+                                        <!-- / Single Counter -->
+
+                                        <!-- Start Single Counter -->
+                                        <div class="col-md-3 col-sm-6">
+                                            <div class="mu-single-counter">
+                                                <i class="fa fa-trophy"
+                                                    aria-hidden="true"></i>
+                                                <div class="counter-value"
+                                                    data-count="03">3</div>
+                                                <h5 class="mu-counter-name">Got
+                                                    Awards</h5>
+                                            </div>
+                                        </div>
+                                        <!-- / Single Counter -->
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- End Counter -->
+
             <!-- Nuevos Libros Section -->
             <section class="nuevos-libros">
                 <div class="nuevos-overlay">
@@ -215,7 +287,57 @@
         </footer>
 
         <script src="js/scripts.js"></script>
+        <script type="text/javascript" src="assets/js/counter.js"></script>
+
         <script>
+            // Contador animado
+            function isInViewport(el) {
+                const rect = el.getBoundingClientRect();
+                return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                );
+            }
+
+            function animateCounter(counter) {
+                const target = +counter.getAttribute('data-count');
+                let count = 0;
+                const duration = 2000; // duración total en ms
+                const increment = target / (duration / 20); // velocidad
+
+                const updateCount = () => {
+                count += increment;
+                if (count < target) {
+                    counter.innerText = Math.floor(count);
+                    requestAnimationFrame(updateCount);
+                } else {
+                    counter.innerText = target;
+                }
+                };
+
+                updateCount();
+            }
+
+            // Ejecutar cuando el DOM esté listo
+            document.addEventListener("DOMContentLoaded", () => {
+                const counters = document.querySelectorAll('.counter-value');
+                let triggered = false;
+
+                function checkAnimation() {
+                if (!triggered && counters.length > 0 && isInViewport(counters[0])) {
+                    counters.forEach(counter => animateCounter(counter));
+                    triggered = true;
+                }
+                }
+
+                window.addEventListener('scroll', checkAnimation);
+                checkAnimation(); // por si ya está visible al cargar
+            });
+
+            // HEADER SCROLL EFFECT
+
             window.addEventListener("scroll", function(){
                 var header = document.querySelector("header");
                 header.classList.toggle("abajo", window.scrollY>0);
