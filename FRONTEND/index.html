@@ -1,443 +1,490 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="css/styles.css">
-        <link rel="icon" href="images/Iconos/Logo.ico" type="image/x-icon">
-        <link rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <link rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-            integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD"
-            crossorigin="anonymous">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="icon" href="images/Iconos/Logo.ico" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
 
-        <title>Biblioteca Alexandria</title>
-    </head>
+    <title>Biblioteca Alexandria</title>
+  </head>
 
-    <body>
-        <header>
-            <div class="menu container">
-                <a href="#top"><img src="images/Iconos/Logo.ico" class="logo" alt></a>
-                <input type="checkbox" id="menu">
-                <label for="menu"><img src="images/menu.png" class="menu-icono"
-                        alt></label>
-                <nav class="navbar">
-                    <ul>
-                        <li><a href="#mu-inicio">Inicio</a></li>
-                        <li><a href="#catego">Categorías</a></li>
-                        <li><a href="#Acerca-de">Acerca de</a></li>
-                        <li><a href="#">Contáctanos</a></li>
-                        <li><a href="login.html" class="btn-1 btn-link">Iniciar
-                                Sesión</a></li>
-                        <li><a href="register.html"
-                                class="btn-2 btn-link">Registrarse</a></li>
-                    </ul>
-                </nav>
+  <body>
+    <header>
+      <div class="menu container">
+        <a href="#top"><img src="images/Iconos/Logo.ico" class="logo" alt /></a>
+        <input type="checkbox" id="menu" />
+        <label for="menu"
+          ><img src="images/menu.png" class="menu-icono" alt
+        /></label>
+        <nav class="navbar">
+          <ul>
+            <li><a href="#mu-inicio">Inicio</a></li>
+            <li><a href="#catego">Categorías</a></li>
+            <li><a href="#Acerca-de">Acerca de</a></li>
+            <li><a href="#contactanos">Contáctanos</a></li>
+            <li>
+              <a href="login.html" class="btn-1 btn-link">Iniciar Sesión</a>
+            </li>
+            <li>
+              <a href="login.html#register" class="btn-2 btn-link">Registrarse</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main role="main">
+      <section id="mu-inicio" class="zona-inicio">
+        <div class="inicio-content container">
+          <div class="hero-content">
+            <div class="hero-texto">
+              <img
+                src="images/Iconos/Título.png"
+                alt="Biblioteca Alexandria"
+                class="logo-texto"
+              />
+              <p>
+                Descubre, lee y crece<br />con nuestra<br /><strong
+                  >biblioteca virtual</strong
+                >
+              </p>
             </div>
-        </header>
-
-        <main role="main">
-            <section id="mu-inicio" class="zona-inicio">
-                <div class="inicio-content container">
-                    <div class="hero-content">
-                        <div class="hero-texto">
-                            <img src="images/Iconos/Título.png"
-                                alt="Biblioteca Alexandria" class="logo-texto">
-                            <p>Descubre, lee y crece<br>con
-                                nuestra<br><strong>biblioteca
-                                    virtual</strong></p>
-                        </div>
-                        <div class="hero-imagen">
-                            <img src="images/Iconos/LibreriaCorazón.png"
-                                alt="Corazón libros" class="logo-heart">
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Contadores -->
-            <section id="mu-counter">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="mu-counter-area">
-                                <div class="mu-counter-block">
-                                    <div class="row">
-                                        <!-- Start Single Counter -->
-                                        <div class="col-md-3 col-sm-6">
-                                            <div class="mu-single-counter">
-                                                <i
-                                                    class="fa-solid fa-file-lines"
-                                                    aria-hidden="true"></i>
-                                                <div class="counter-value"
-                                                    data-count="650">650</div>
-                                                <h5
-                                                    class="mu-counter-name">Pages</h5>
-                                            </div>
-                                        </div>
-                                        <!-- / Single Counter -->
-
-                                        <!-- Start Single Counter -->
-                                        <div class="col-md-3 col-sm-6">
-                                            <div class="mu-single-counter">
-                                                <i class="fa-solid fa-book-open"
-                                                    aria-hidden="true"></i>
-                                                <div class="counter-value"
-                                                    data-count="20">20</div>
-                                                <h5
-                                                    class="mu-counter-name">Total
-                                                    Books</h5>
-                                            </div>
-                                        </div>
-                                        <!-- / Single Counter -->
-
-                                        <!-- Start Single Counter -->
-                                        <div class="col-md-3 col-sm-6">
-                                            <div class="mu-single-counter">
-                                                <i class="fa fa-users"
-                                                    aria-hidden="true"></i>
-                                                <div class="counter-value"
-                                                    data-count="10">10</div>
-                                                <h5
-                                                    class="mu-counter-name">Active
-                                                    Readers</h5>
-                                            </div>
-                                        </div>
-                                        <!-- / Single Counter -->
-
-                                        <!-- Start Single Counter -->
-                                        <div class="col-md-3 col-sm-6">
-                                            <div class="mu-single-counter">
-                                                <i class="fa fa-trophy"
-                                                    aria-hidden="true"></i>
-                                                <div class="counter-value"
-                                                    data-count="03">3</div>
-                                                <h5 class="mu-counter-name">Got
-                                                    Awards</h5>
-                                            </div>
-                                        </div>
-                                        <!-- / Single Counter -->
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <!-- End Counter -->
-
-            <!-- Categories Section -->
-            <section id="catego" class="categories">
-                <div class="cat-overlay">
-
-                    <div class="cat-header">
-                        <h2>Categorías</h2>
-                        <p>Explora nuestras categorías de libros y encuentra tu
-                            próxima lectura.</p>
-                    </div>
-
-                    <div class="cat-grid">
-                        <div class="books">
-                            <div class="book-img">
-                                <img src="images/Iconos/Fantasia.ico" alt>
-                            </div>
-                            <h4>Fantasía</h4>
-                            <p>Sumérgete en mundos imaginarios y relatos
-                                cautivadores.</p>
-                        </div>
-
-                        <div class="books">
-                            <div class="book-img">
-                                <img src="images/Iconos/Comics.ico" alt>
-                            </div>
-                            <h4>Cómics</h4>
-                            <p>Superhéroes y aventuras ilustradas.</p>
-                        </div>
-
-                        <div class="books">
-                            <div class="book-img">
-                                <img src="images/Iconos/Romance.ico" alt>
-                            </div>
-                            <h4>Romance</h4>
-                            <p>Historias de amor que tocan el corazón.</p>
-                        </div>
-
-                        <div class="books">
-                            <div class="book-img">
-                                <img src="images/Iconos/Poema.png" alt>
-                            </div>
-                            <h4>Poesía</h4>
-                            <p>Versos que despiertan emociones.</p>
-                        </div>
-
-                        <div class="books">
-                            <div class="book-img">
-                                <img src="images/Iconos/CienciaFicción.png" alt>
-                            </div>
-                            <h4>Ciencia Ficción</h4>
-                            <p>Explora futuros posibles y tecnología
-                                avanzada.</p>
-                        </div>
-
-                        <div class="books">
-                            <div class="book-img">
-                                <img src="images/Iconos/Terror.png" alt>
-                            </div>
-                            <h4>Terror</h4>
-                            <p>Relatos oscuros que te mantendrán alerta.</p>
-                        </div>
-
-                        <div class="books">
-                            <div class="book-img">
-                                <img src="images/Iconos/Infantil.ico" alt>
-                            </div>
-                            <h4>Infantil</h4>
-                            <p>Lecturas divertidas para los más pequeños.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Nuevos Libros Section -->
-            <section class="nuevos-libros">
-                <div class="nuevos-overlay">
-                    <div class="nuevos-header">
-                        <h2>Nuevos Libros</h2>
-                        <p>Descubre las últimas novedades en nuestra
-                            biblioteca.</p>
-                    </div>
-
-                    <div class="libros-grid">
-                        <div class="libro-item">
-                            <span class="libro-label">– Última publicación
-                                –</span>
-                            <img src="images/Libros/Demian.jpg" alt="Demian">
-                            <h4>Demian</h4>
-                            <a href="#" class="btn-ver">Ver más</a>
-                        </div>
-
-                        <div class="libro-item">
-                            <span class="libro-label">– Última publicación
-                                –</span>
-                            <img src="images/Libros/Frankenstein.jpg"
-                                alt="Frankenstein">
-                            <h4>Frankenstein</h4>
-                            <a href="#" class="btn-ver">Ver más</a>
-                        </div>
-
-                        <div class="libro-item">
-                            <span class="libro-label">– Última publicación
-                                –</span>
-                            <img src="images/Libros/Jekyll&Hyde.jpeg"
-                                alt="Jekyll & Hyde">
-                            <h4>Jekyll & Hyde</h4>
-                            <a href="#" class="btn-ver">Ver más</a>
-                        </div>
-
-                        <div class="libro-item">
-                            <span class="libro-label">– Última publicación
-                                –</span>
-                            <img src="images/Libros/FantasmaOpera.jpg"
-                                alt="FantasmaOpera">
-                            <h4>El Fantasma de la Opera</h4>
-                            <a href="#" class="btn-ver">Ver más</a>
-                        </div>
-                        <!-- Puedes agregar más libros aquí -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- Video Section -->
-            <section class="video-section">
-                <div class="video-overlay">
-                    <div class="video-content">
-                        <h2 class="titulo-con-linea">Video</h2>
-                        <p>Descubre cómo nuestra biblioteca transforma la
-                            experiencia de lectura.</p>
-                        <video controls>
-                            <source src="Videos/presentacion.mp4"
-                                type="video/mp4">
-                        </video>
-                    </div>
-                </div>
-            </section>
-
-            <!---Acerca de section ----->
-            <section id="Acerca-de">
-                <div class="set-row">
-                    <img src="./images/about-us.png" alt>
-
-                    <div class="about-content">
-                        <h2>Acerca de Nuestra Biblioteca</h2>
-                        <p>La biblioteca virtual Alexandria es una plataforma
-                            digital que ofrece acceso rápido y organizado a una
-                            amplia colección de libros, documentos y recursos
-                            académicos. Diseñada para facilitar el aprendizaje y
-                            la investigación, permite a estudiantes, docentes y
-                            usuarios en general consultar material de distintas
-                            áreas del conocimiento desde cualquier lugar y en
-                            cualquier momento. Su interfaz amigable y su sistema
-                            de búsqueda eficiente la convierten en una
-                            herramienta fundamental para la educación en la era
-                            digital.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Reseñas Section -->
-            <section class="reviews">
-                <h2 class="reviews-title">Reseñas</h2>
-                <div class="reviews-grid">
-                    <div class="review">
-                        <i class="fa-solid fa-quote-left"></i>
-                        <p class="review-text">
-                            "Reseña. Haz clic para editar y añadir texto que diga algo bueno sobre ti y tu trabajo. Comparte el reconocimiento de los críticos y genera entusiasmo por tu último proyecto."
-                        </p>
-                        <p class="review-author">Jazmín Lara, Revista
-                            Primicia</p>
-                    </div>
-
-                    <div class="review">
-                        <i class="fa-solid fa-quote-left"></i>
-                        <p class="review-text">
-                            "Reseña. Haz clic para editar y añadir texto que diga algo bueno sobre ti y tu trabajo. Comparte el reconocimiento de los críticos y genera entusiasmo por tu último proyecto."
-                        </p>
-                        <p class="review-author">Alicia Goya, El blog de ABC</p>
-                    </div>
-
-                    <div class="review">
-                        <i class="fa-solid fa-quote-left"></i>
-                        <p class="review-text">
-                            "Reseña. Haz clic para editar y añadir texto que diga algo bueno sobre ti y tu trabajo. Comparte el reconocimiento de los críticos y genera entusiasmo por tu último proyecto."
-                        </p>
-                        <p class="review-author">Sam Durán, Ficlólogo
-                            Educativo</p>
-                    </div>
-                </div>
-            </section>
-
-        </main>
-
-        <footer class="footer">
-            <div class="container">
-                <img class="logo-2" src="images/Logo2.png" alt>
-
-                <div class="links">
-                    <h4>FQA</h4>
-                    <ul>
-                        <li><a href="#">¿Cómo funciona?</a></li>
-                        <li><a href="#">Preguntas frecuentes</a></li>
-                        <li><a href="#">Soporte técnico</a></li>
-                        <li><a href="#">Términos y condiciones</a></li>
-                    </ul>
-                </div>
-
-                <div class="links">
-                    <h4>Política de la tienda</h4>
-                    <ul>
-                        <li><a href="#">Privacidad</a></li>
-                        <li><a href="#">Devoluciones</a></li>
-                        <li><a href="#">Condiciones</a></li>
-                        <li><a href="#">Envíos</a></li>
-                    </ul>
-                </div>
-
-                <div class="links">
-                    <h4>Redes Sociales</h4>
-                    <div class="socials">
-                        <a href="#"><div class="social"><img src="images/s1.svg"
-                                    alt></div></a>
-                        <a href="#"><div class="social"><img src="images/s2.svg"
-                                    alt></div></a>
-                        <a href="#"><div class="social"><img src="images/s3.svg"
-                                    alt></div></a>
-                    </div>
-                </div>
+            <div class="hero-imagen">
+              <img
+                src="images/Iconos/LibreriaCorazón.png"
+                alt="Corazón libros"
+                class="logo-heart"
+              />
             </div>
-        </footer>
+          </div>
+        </div>
+      </section>
 
-        <script src="js/scripts.js"></script>
-        <script type="text/javascript" src="assets/js/counter.js"></script>
+      <!-- Contadores -->
+      <section id="mu-counter">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="mu-counter-area">
+                <div class="mu-counter-block">
+                  <div class="row">
+                    <!-- Start Single Counter -->
+                    <div class="col-md-3 col-sm-6">
+                      <div class="mu-single-counter">
+                        <i
+                          class="fa-solid fa-file-lines"
+                          aria-hidden="true"
+                        ></i>
+                        <div class="counter-value" data-count="650">650</div>
+                        <h5 class="mu-counter-name">Pages</h5>
+                      </div>
+                    </div>
+                    <!-- / Single Counter -->
 
-        <script>
-            // Contador animado
-            function isInViewport(el) {
-                const rect = el.getBoundingClientRect();
-                return (
-                rect.top >= 0 &&
-                rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-                );
-            }
+                    <!-- Start Single Counter -->
+                    <div class="col-md-3 col-sm-6">
+                      <div class="mu-single-counter">
+                        <i class="fa-solid fa-book-open" aria-hidden="true"></i>
+                        <div class="counter-value" data-count="20">20</div>
+                        <h5 class="mu-counter-name">Total Books</h5>
+                      </div>
+                    </div>
 
-            function animateCounter(counter) {
-                const target = +counter.getAttribute('data-count');
-                let count = 0;
-                const duration = 2000; // duración total en ms
-                const increment = target / (duration / 20); // velocidad
+                    <!-- / Single Counter -->
 
-                const updateCount = () => {
-                count += increment;
-                if (count < target) {
-                    counter.innerText = Math.floor(count);
-                    requestAnimationFrame(updateCount);
-                } else {
-                    counter.innerText = target;
-                }
-                };
+                    <!-- Start Single Counter -->
+                    <div class="col-md-3 col-sm-6">
+                      <div class="mu-single-counter">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        <div class="counter-value" data-count="10">10</div>
+                        <h5 class="mu-counter-name">Active Readers</h5>
+                      </div>
+                    </div>
+                    <!-- / Single Counter -->
 
-                updateCount();
-            }
+                    <!-- Start Single Counter -->
+                    <div class="col-md-3 col-sm-6">
+                      <div class="mu-single-counter">
+                        <i class="fa fa-trophy" aria-hidden="true"></i>
+                        <div class="counter-value" data-count="03">3</div>
+                        <h5 class="mu-counter-name">Got Awards</h5>
+                      </div>
+                    </div>
+                    <!-- / Single Counter -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End Counter -->
 
-            // Ejecutar cuando el DOM esté listo
-            document.addEventListener("DOMContentLoaded", () => {
-                const counters = document.querySelectorAll('.counter-value');
-                let triggered = false;
+      <!-- Categories Section -->
+      <section id="catego" class="categories">
+        <div class="cat-overlay">
+          <div class="cat-header">
+            <h2>Categorías</h2>
+            <p>
+              Explora nuestras categorías de libros y encuentra tu próxima
+              lectura.
+            </p>
+          </div>
 
-                function checkAnimation() {
-                if (!triggered && counters.length > 0 && isInViewport(counters[0])) {
-                    counters.forEach(counter => animateCounter(counter));
-                    triggered = true;
-                }
-                }
+          <div class="cat-grid">
+            <div class="books">
+              <div class="book-img">
+                <img src="images/Iconos/Fantasia.ico" alt />
+              </div>
+              <h4>Fantasía</h4>
+              <p>Sumérgete en mundos imaginarios y relatos cautivadores.</p>
+            </div>
 
-                window.addEventListener('scroll', checkAnimation);
-                checkAnimation(); // por si ya está visible al cargar
+            <div class="books">
+              <div class="book-img">
+                <img src="images/Iconos/Comics.ico" alt />
+              </div>
+              <h4>Cómics</h4>
+              <p>Superhéroes y aventuras ilustradas.</p>
+            </div>
+
+            <div class="books">
+              <div class="book-img">
+                <img src="images/Iconos/Romance.ico" alt />
+              </div>
+              <h4>Romance</h4>
+              <p>Historias de amor que tocan el corazón.</p>
+            </div>
+
+            <div class="books">
+              <div class="book-img">
+                <img src="images/Iconos/Poema.png" alt />
+              </div>
+              <h4>Poesía</h4>
+              <p>Versos que despiertan emociones.</p>
+            </div>
+
+            <div class="books">
+              <div class="book-img">
+                <img src="images/Iconos/CienciaFicción.png" alt />
+              </div>
+              <h4>Ciencia Ficción</h4>
+              <p>Explora futuros posibles y tecnología avanzada.</p>
+            </div>
+
+            <div class="books">
+              <div class="book-img">
+                <img src="images/Iconos/Terror.png" alt />
+              </div>
+              <h4>Terror</h4>
+              <p>Relatos oscuros que te mantendrán alerta.</p>
+            </div>
+
+            <div class="books">
+              <div class="book-img">
+                <img src="images/Iconos/Infantil.ico" alt />
+              </div>
+              <h4>Infantil</h4>
+              <p>Lecturas divertidas para los más pequeños.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Nuevos Libros Section -->
+      <section class="nuevos-libros">
+        <div class="nuevos-overlay">
+          <div class="nuevos-header">
+            <h2>Nuevos Libros</h2>
+            <p>Descubre las últimas novedades en nuestra biblioteca.</p>
+          </div>
+
+          <div class="libros-grid">
+            <div class="libro-item">
+              <span class="libro-label">– Última publicación –</span>
+              <img src="images/Libros/Demian.jpg" alt="Demian" />
+              <h4>Demian</h4>
+              <a href="#" class="btn-ver">Ver más</a>
+            </div>
+
+            <div class="libro-item">
+              <span class="libro-label">– Última publicación –</span>
+              <img src="images/Libros/Frankenstein.jpg" alt="Frankenstein" />
+              <h4>Frankenstein</h4>
+              <a href="#" class="btn-ver">Ver más</a>
+            </div>
+
+            <div class="libro-item">
+              <span class="libro-label">– Última publicación –</span>
+              <img src="images/Libros/Jekyll&Hyde.jpeg" alt="Jekyll & Hyde" />
+              <h4>Jekyll & Hyde</h4>
+              <a href="#" class="btn-ver">Ver más</a>
+            </div>
+
+            <div class="libro-item">
+              <span class="libro-label">– Última publicación –</span>
+              <img src="images/Libros/FantasmaOpera.jpg" alt="FantasmaOpera" />
+              <h4>El Fantasma de la Opera</h4>
+              <a href="#" class="btn-ver">Ver más</a>
+            </div>
+            <!-- Puedes agregar más libros aquí -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Video Section -->
+      <section class="video-section">
+        <div class="video-overlay">
+          <div class="video-content">
+            <h2 class="titulo-con-linea">Video</h2>
+            <p>
+              Descubre cómo nuestra biblioteca transforma la experiencia de
+              lectura.
+            </p>
+            <video controls>
+              <source src="Videos/presentacion.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </section>
+
+      <!---Acerca de section ----->
+      <section id="Acerca-de">
+        <div class="set-row">
+          <img src="./images/about-us.png" alt />
+
+          <div class="about-content">
+            <h2>Acerca de Nuestra Biblioteca</h2>
+            <p>
+              La biblioteca virtual Alexandria es una plataforma digital que
+              ofrece acceso rápido y organizado a una amplia colección de
+              libros, documentos y recursos académicos. Diseñada para facilitar
+              el aprendizaje y la investigación, permite a estudiantes, docentes
+              y usuarios en general consultar material de distintas áreas del
+              conocimiento desde cualquier lugar y en cualquier momento. Su
+              interfaz amigable y su sistema de búsqueda eficiente la convierten
+              en una herramienta fundamental para la educación en la era
+              digital.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reseñas Section -->
+      <section class="reviews">
+        <h2 class="reviews-title">Reseñas</h2>
+        <div class="reviews-grid">
+          <div class="review">
+            <i class="fa-solid fa-quote-left"></i>
+            <p class="review-text">
+              "Reseña. Haz clic para editar y añadir texto que diga algo bueno
+              sobre ti y tu trabajo. Comparte el reconocimiento de los críticos
+              y genera entusiasmo por tu último proyecto."
+            </p>
+            <p class="review-author">Jazmín Lara, Revista Primicia</p>
+          </div>
+
+          <div class="review">
+            <i class="fa-solid fa-quote-left"></i>
+            <p class="review-text">
+              "Reseña. Haz clic para editar y añadir texto que diga algo bueno
+              sobre ti y tu trabajo. Comparte el reconocimiento de los críticos
+              y genera entusiasmo por tu último proyecto."
+            </p>
+            <p class="review-author">Alicia Goya, El blog de ABC</p>
+          </div>
+
+          <div class="review">
+            <i class="fa-solid fa-quote-left"></i>
+            <p class="review-text">
+              "Reseña. Haz clic para editar y añadir texto que diga algo bueno
+              sobre ti y tu trabajo. Comparte el reconocimiento de los críticos
+              y genera entusiasmo por tu último proyecto."
+            </p>
+            <p class="review-author">Sam Durán, Ficlólogo Educativo</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact-section" id="contactanos">
+        <div class="contact-container">
+          <div class="contact-form">
+            <h2>Contáctenos</h2>
+            <form>
+              <input type="text" placeholder="Nombre Completo" required />
+              <input
+                type="email"
+                placeholder="Correo Electrónico"
+                required
+              />
+              <textarea
+                placeholder="Escribe tu mensaje..."
+                required
+              ></textarea>
+              <button type="submit">ENVIAR</button>
+            </form>
+          </div>
+
+          <div class="contact-info-wrapper">
+            <div class="contact-info">
+              <div class="info-card">
+                <i class="fas fa-map-marker-alt"></i>
+                <h4>Nuestra Oficina Principal</h4>
+                <p>Some 44 Broadway St.<br />New York, NY 1001</p>
+              </div>
+              <div class="info-card">
+                <i class="fas fa-phone"></i>
+                <h4>Número de Teléfono</h4>
+                <p>234 456 8888<br />800 678 8888 (llamada gratuita)</p>
+              </div>
+              <div class="info-card">
+                <i class="fas fa-envelope"></i>
+                <h4>Correo Electrónico</h4>
+                <p>
+                  <a href="mailto:BiblioAlex@gmail.com">BiblioAlex@gmail.com</a>
+                </p>
+              </div>
+            </div>
+          </div>
+            <img src="images/contact.png" alt="Ilustración de contacto" />
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <img class="logo-2" src="images/Logo2.png" alt />
+
+        <div class="links">
+          <h4>FQA</h4>
+          <ul>
+            <li><a href="#">¿Cómo funciona?</a></li>
+            <li><a href="#">Preguntas frecuentes</a></li>
+            <li><a href="#">Soporte técnico</a></li>
+            <li><a href="#">Términos y condiciones</a></li>
+          </ul>
+        </div>
+
+        <div class="links">
+          <h4>Política de la tienda</h4>
+          <ul>
+            <li><a href="#">Privacidad</a></li>
+            <li><a href="#">Devoluciones</a></li>
+            <li><a href="#">Condiciones</a></li>
+            <li><a href="#">Envíos</a></li>
+          </ul>
+        </div>
+
+        <div class="links">
+          <h4>Redes Sociales</h4>
+          <div class="socials">
+            <a href="https://facebook.com" target="_blank"
+              ><i class="bx bxl-facebook"></i
+            ></a>
+            <a href="https://twitter.com" target="_blank"
+              ><i class="bx bxl-twitter"></i
+            ></a>
+            <a href="https://instagram.com" target="_blank"
+              ><i class="bx bxl-instagram"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/scripts.js"></script>
+    <script type="text/javascript" src="assets/js/counter.js"></script>
+
+    <script>
+      // Detectar cuando el contador es visible
+      function isInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return (
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <=
+            (window.innerHeight || document.documentElement.clientHeight) &&
+          rect.right <=
+            (window.innerWidth || document.documentElement.clientWidth)
+        );
+      }
+
+      function animateCounter(counter) {
+        const target = +counter.getAttribute("data-count");
+        let count = 0;
+        const duration = 2000; // duración total en ms
+        const increment = target / (duration / 20); // velocidad
+
+        const updateCount = () => {
+          count += increment;
+          if (count < target) {
+            counter.innerText = Math.floor(count);
+            requestAnimationFrame(updateCount);
+          } else {
+            counter.innerText = target;
+          }
+        };
+
+        updateCount();
+      }
+
+      // Ejecutar cuando el DOM esté listo
+      document.addEventListener("DOMContentLoaded", () => {
+        const counters = document.querySelectorAll(".counter-value");
+        let triggered = false;
+
+        function checkAnimation() {
+          if (!triggered && counters.length > 0 && isInViewport(counters[0])) {
+            counters.forEach((counter) => animateCounter(counter));
+            triggered = true;
+          }
+        }
+
+        window.addEventListener("scroll", checkAnimation);
+        checkAnimation(); // por si ya está visible al cargar
+      });
+
+      window.addEventListener("scroll", function () {
+        var header = document.querySelector("header");
+        header.classList.toggle("abajo", window.scrollY > 0);
+      });
+
+      const sections = document.querySelectorAll("section[id]");
+      const navLinks = document.querySelectorAll(".navbar ul li a");
+
+      window.addEventListener("scroll", () => {
+        let scrollY = window.scrollY;
+
+        sections.forEach((section) => {
+          const sectionTop = section.offsetTop - 100; // ajustar si hay header fijo
+          const sectionHeight = section.offsetHeight;
+          const sectionId = section.getAttribute("id");
+
+          if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+            navLinks.forEach((link) => {
+              link.classList.remove("active");
+              if (link.getAttribute("href") === "#" + sectionId) {
+                link.classList.add("active");
+              }
             });
-
-            // HEADER SCROLL EFFECT
-
-            window.addEventListener("scroll", function(){
-                var header = document.querySelector("header");
-                header.classList.toggle("abajo", window.scrollY>0);
-            })
-            
-            const sections = document.querySelectorAll("section[id]");
-            const navLinks = document.querySelectorAll(".navbar ul li a");
-
-            window.addEventListener("scroll", () => {
-                let scrollY = window.scrollY;
-
-                sections.forEach(section => {
-                const sectionTop = section.offsetTop - 100; // ajustar si hay header fijo
-                const sectionHeight = section.offsetHeight;
-                const sectionId = section.getAttribute("id");
-
-                if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-                    navLinks.forEach(link => {
-                    link.classList.remove("active");
-                    if (link.getAttribute("href") === "#" + sectionId) {
-                        link.classList.add("active");
-                    }
-                    });
-                }
-                });
-            });
-
-        </script>
-
-    </body>
+          }
+        });
+      });
+    </script>
+  </body>
 </html>

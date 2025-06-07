@@ -146,7 +146,7 @@ header.abajo ul li a {
 .inicio-content {
   position: relative;
   top: 0;
-  transform: translateY(-90px);
+  transform: translateY(-90px); /* súbelo */
 
   display: flex;
   align-items: center;
@@ -183,10 +183,11 @@ header.abajo ul li a {
 }
 
 .hero-imagen img {
-  max-width: 500px;
+  max-width: 500px;  /* Puedes subir esto hasta 400px si deseas */
   width: 100%;
   height: auto;
 }
+
 
 .header-img {
   width: 60%;
@@ -208,6 +209,7 @@ header.abajo ul li a {
   margin: 10px auto 0;
   border-radius: 5px;
 }
+
 
 section h2 {
   position: relative;
@@ -315,6 +317,7 @@ section h2::after {
   color: #B08968;
 }
 
+
 .counter-value {
 	font-size: 35px;
 	font-weight: 700;
@@ -328,6 +331,7 @@ section h2::after {
 
 	color: #333;
 }
+
 
 /**---------------------*/
 /**---- CATEGORIAS ---- */
@@ -416,6 +420,7 @@ section h2::after {
   color: #666;
 }
 
+
 /**--------------------*/
 /**-- NUEVOS LIBROS --*/
 /**--------------------*/
@@ -504,6 +509,9 @@ section h2::after {
 .btn-ver:hover {
   background-color: #B08968;
 }
+
+
+
 
 /**--------------------*/
 /**----- COUNTER ------*/
@@ -578,6 +586,7 @@ section h2::after {
 	color: #333;
 }
 
+
 /**--------------------*/
 /**-- NUEVOS LIBROS --*/
 /**--------------------*/
@@ -666,6 +675,9 @@ section h2::after {
 .btn-ver:hover {
   background-color: #B08968;
 }
+
+
+
 
 /**--------------------*/
 /**------ VIDEO ------*/
@@ -801,6 +813,129 @@ section h2::after {
   font-weight: 600;
 }
 
+/**------------------------*/
+/**----- CONTACTANOS ------*/
+/**------------------------*/
+
+.contact-section {
+  background-color: #B08968;
+  padding: 50px 0;
+  color: #fff;
+  font-family: sans-serif;
+}
+
+.contact-container {
+  display: flex;
+  max-width: 1500px;
+  margin: auto;
+  gap: 30px;
+  justify-content: space-between;
+  align-items: stretch;
+  flex-wrap: nowrap;
+}
+
+/* FORMULARIO */
+.contact-form {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  width: 100%;          /* <- Puedes usar 100% si está dentro de un grid o flexbox */
+  max-width: 700px;     /* <- Para controlar el ancho máximo */
+  height: 500px;
+  min-height: 400px;
+  box-sizing: border-box;
+}
+
+
+
+.contact-form form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* <- CAMBIAR DE center A stretch */
+  height: 100%;
+  width: 100%; /* <- Asegura que el formulario use todo el ancho */
+}
+
+.contact-form h2 {
+  color: #000;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  height: auto;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.contact-form textarea{
+  height: 200px;
+}
+
+.contact-form button {
+  background-color: #B08968;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.contact-form button:hover {
+  background-color: #7F5539;
+}
+
+/* INFORMACIÓN DE CONTACTO */
+.contact-info-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 200px;     /* <- Ancho fijo */
+  height: 500px;    /* <- Altura igual que el formulario */
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 200px;
+  min-width: 100px;
+}
+
+.info-card {
+  background-color: #fff;
+  color: #000;
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.info-card i {
+  font-size: 30px;
+  color: #7F5539;
+  margin-bottom: 10px;
+}
+
+.info-card h4 {
+  margin-bottom: 8px;
+}
+
+.contact-container img {
+  width: auto;
+  max-width: 600px;
+  height: auto;
+  margin-left: auto;
+}
+
+
 /**---------------------*/
 /**------ FOOTER -------*/
 /**---------------------*/
@@ -845,22 +980,24 @@ section h2::after {
 
 .socials {
   display: flex;
+  gap: 15px;
+  margin: 15px 0;
 }
 
-.social {
-  margin: 0 15px;
-  height: 40px;
-  width: 40px;
-  border: 2px solid #FDFDFD;
+.socials a i {
+  font-size: 30px;
   border-radius: 50%;
+  padding: 15px;
+  cursor: pointer;
+  color: #FDFDFD;
+  border: 1px solid #FDFDFD;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.social:hover {
+.socials a:hover i {
   background-color: #FDFDFD;
-}
-
-.social img {
-  margin: 8px 0 0 8.5px;
+  color: #9C6644;
+  transform: scale(1.1);
 }
 
 /**---------------------*/
@@ -1020,12 +1157,46 @@ section h2::after {
     height: auto;
   }
 
+  .contact-container {
+    flex-direction: column;   /* Cambia de fila a columna */
+    align-items: center;      /* Centra los hijos en columna */
+  }
+
+  .contact-form {
+    width: 100%;
+    max-width: 100%;          /* El formulario usa todo el ancho */
+    height: auto;             /* Altura automática para adaptarse al contenido */
+  }
+
+  .contact-info-wrapper {
+    width: 100%;              /* Que ocupe todo el ancho */
+    height: auto;
+    flex-direction: column;
+    align-items: center;      /* Centra las tarjetas */
+  }
+
+  .contact-info {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .info-card {
+    width: 90%;               /* Las tarjetas ocupan casi todo el ancho */
+  }
+
+  .contact-container img {
+    display: none;            /* Oculta la imagen */
+  }
+
   .socials {
     justify-content: center;
   }
 
-  .social img {
-    margin: 8px 0 0 0;
+  .footer .container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 
   .links h4 {
@@ -1187,5 +1358,5 @@ section h2::after {
 }
 
 section[id] {
-  scroll-margin-top: 120px; /* Ajusta según tu header */
+  scroll-margin-top: 100px; /* Ajusta según tu header */
 }
