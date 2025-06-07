@@ -13,3 +13,14 @@ btnSingUp.addEventListener("click", e => {
     formLogin.classList.add("hide");
     formRegister.classList.remove("hide");
 });
+
+// Mostrar formulario correcto según el hash de la URL
+window.addEventListener("DOMContentLoaded", () => {
+    if (window.location.hash === "#register") {
+        formLogin.classList.add("hide");
+        formRegister.classList.remove("hide");
+    } else {
+        formRegister.classList.add("hide");
+        formLogin.classList.remove("hide");
+    }
+});
