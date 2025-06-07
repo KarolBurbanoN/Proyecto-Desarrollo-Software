@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="icon" href="images/Iconos/Logo.ico" type="image/x-icon" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/login.css" />
+    <title>Inicio de Sesión</title>
+  </head>
+  <body>
+    <div class="container-form register hide">
+      <div class="information">
+        <div class="info-childs">
+          <h2>Bienvenido</h2>
+          <p>Si ya tienes una cuenta ingresa tus datos aqui:</p>
+          <input type="button" value="Iniciar Sesión" id="sing-in" />
+          <img
+            src="images/Iconos/GatoLibros.png"
+            alt="Ilustración chica con libro"
+            class="login-image"
+          />
+        </div>
+      </div>
+
+      <div class="form-information">
+        <div class="form-information-childs">
+          <h2>Crea una Cuenta</h2>
+          <div class="icons">
+            <i class="bx bxl-google"></i>
+            <i class="bx bxl-github"></i>
+            <i class="bx bxl-linkedin"></i>
+          </div>
+          <p>o usa tu email para registrarte</p>
+          <form class="form" method="POST" action="/registro">
+            <div class="form-grid">
+              <label>
+                <i class="bx bx-id-card"></i>
+                <select name="tipo_documento" required>
+                  <option value="" disabled selected>Tipo de Documento</option>
+                  <option value="TI">T.I</option>
+                  <option value="CC">C.C</option>
+                  <option value="NIT">NIT</option>
+                  <option value="PASAPORTE">Pasaporte</option>
+                </select>
+              </label>
+              <label>
+                <i class="bx bx-hash"></i>
+                <input
+                  type="text"
+                  name="numero_documento"
+                  placeholder="Número de Documento"
+                  required
+                />
+              </label>
+              <label>
+                <i class="bx bx-user"></i>
+                <input
+                  type="text"
+                  name="nombres"
+                  placeholder="Nombres"
+                  required
+                />
+              </label>
+              <label>
+                <i class="bx bx-user"></i>
+                <input
+                  type="text"
+                  name="apellidos"
+                  placeholder="Apellidos"
+                  required
+                />
+              </label>
+              <label>
+                <i class="bx bx-calendar"></i>
+                <input type="date" name="fecha_nacimiento" required />
+              </label>
+              <label>
+                <i class="bx bx-male-female"></i>
+                <select name="genero">
+                  <option value="" disabled selected>Género (opcional)</option>
+                  <option value="masculino">Masculino</option>
+                  <option value="femenino">Femenino</option>
+                </select>
+              </label>
+              <label>
+                <i class="bx bx-home"></i>
+                <input
+                  type="text"
+                  name="direccion"
+                  placeholder="Dirección (opcional)"
+                />
+              </label>
+              <label>
+                <i class="bx bx-map"></i>
+                <input
+                  type="text"
+                  name="ciudad"
+                  placeholder="Ciudad (opcional)"
+                />
+              </label>
+              <label>
+                <i class="bx bx-phone"></i>
+                <input
+                  type="tel"
+                  name="telefono"
+                  placeholder="Teléfono (opcional)"
+                />
+              </label>
+              <label>
+                <i class="bx bx-envelope"></i>
+                <input
+                  type="email"
+                  name="correo"
+                  placeholder="Correo Electrónico"
+                  required
+                />
+              </label>
+              <label>
+                <i class="bx bx-lock-alt"></i>
+                <input
+                  type="password"
+                  name="contraseña"
+                  placeholder="Contraseña"
+                  required
+                />
+              </label>
+            </div>
+            <input type="submit" value="Registrarse" />
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-form login">
+      <div class="information">
+        <div class="info-childs">
+          <h2>Bienvenido</h2>
+          <p>Si aún no tienes una cuenta por favor registrese aqui:</p>
+          <input type="button" value="Registrarse" id="sing-up" />
+          <img
+            src="images/Iconos/GatoLibros.png"
+            alt="Ilustración chica con libro"
+            class="login-image"
+          />
+        </div>
+      </div>
+      <div class="form-information">
+        <div class="form-information-childs">
+          <h2>Iniciar Sesión</h2>
+          <div class="icons">
+            <i class="bx bxl-google"></i>
+            <i class="bx bxl-github"></i>
+            <i class="bx bxl-linkedin"></i>
+          </div>
+          <p>o iniciar Sesión con una cuenta</p>
+          <form class="form">
+            <label>
+              <i class="bx bx-envelope"></i>
+              <input type="email" placeholder="Correo Electrónico" required />
+            </label>
+            <label>
+              <i class="bx bx-lock-alt"></i>
+              <input type="password" placeholder="Contraseña" required />
+            </label>
+            <input type="submit" value="Iniciar Sesión" />
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="js/login.js"></script>
+  </body>
+</html>
