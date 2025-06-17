@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cuenta</title>
+    <link rel="icon" href="images/Iconos/Logo.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body>
+    <div id="dashboard">
+      <aside class="sidebar-menu">
+        <h1 style="display: flex; align-items: center; gap: 0.5rem;">
+          <img src="images/Iconos/Logo.ico" alt="Icono Biblioteca"
+            style="width: 40px; height: 40px;" />
+          Biblioteca Alexandria
+        </h1>
+        <nav>
+          <ul>
+            <li><button class="menu-btn active"
+                data-target="catalogo">Catálogo</button></li>
+            <li><button class="menu-btn" data-target="prestamos">Mis
+                Préstamos</button></li>
+            <li><button class="menu-btn"
+                data-target="reservas">Reservas</button></li>
+            <li><button class="menu-btn"
+                data-target="perfil">Perfil</button></li>
+            <li><button onclick="logout()" class="menu-btn">Cerrar
+                Sesión</button></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <section id="catalogo" class="active-section">
+          <h2>Explora nuestras opciones</h2>
+          <div class="search-filter-row">
+            <div class="search-container">
+              <input
+                type="text"
+                id="search"
+                placeholder="Buscar por título, autor..." />
+
+              <div class="book-detail-view hidden-section" id="bookDetailView">
+                <div class="book-detail-container">
+                  <div class="book-cover">
+                    <img id="detailBookCover" src="" alt="Portada del libro">
+                  </div>
+                  <div class="book-info">
+                    <h2 id="detailBookTitle"></h2>
+                    <p class="author" id="detailBookAuthor"></p>
+                    <div class="categories" id="detailBookCategories"></div>
+                    <div class="progress-container">
+                      <p>Progress: <span id="detailBookProgress">0</span>%</p>
+                      <div class="progress-bar">
+                        <div class="progress" id="detailBookProgressBar"></div>
+                      </div>
+                    </div>
+                    <button class="read-button" id="readBookBtn">Read Now</button>
+                    
+                    <div class="author-books">
+                      <h3>BOOKS BY THIS AUTHOR</h3>
+                      <ul id="authorBooksList"></ul>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Botón para volver al listado -->
+                <button class="back-button" onclick="hideBookDetail()">← Volver al catálogo</button>
+              </div>
+              
+              <!-- Filtros desplegables -->
+              <div class="filter-container">
+                <button id="filterToggleBtn">Filtros ▼</button>
+                <div id="filtersMenu" class="filters-menu hidden-section">
+                  <div class="filter-group">
+                    <h4>Categorías</h4>
+                    <select id="filter-category">
+                      <option value="all">Todas</option>
+                      <option value="Ciencia Ficción">Ciencia Ficción</option>
+                      <option value="Comics">Comics</option>
+                      <option value="Fantasía">Fantasía</option>
+                      <option value="Infantil">Infantil</option>
+                      <option value="Poesía">Poesía</option>
+                      <option value="Romance">Romance</option>
+                      <option value="Terror">Terror</option>
+                    </select>
+                  </div>
+
+                  <div class="filter-group">
+                    <h4>Calificación mínima</h4>
+                    <select id="filter-rating">
+                      <option value="0">Todas</option>
+                      <option value="3">3+</option>
+                      <option value="4">4+</option>
+                      <option value="4.5">4.5+</option>
+                    </select>
+                  </div>
+
+                  <div class="filter-group">
+                    <h4>Ordenar por</h4>
+                    <select id="filter-order">
+                      <option value="recent">Más recientes</option>
+                      <option value="oldest">Más antiguos</option>
+                      <option value="rating">Mejor calificados</option>
+                    </select>
+                  </div>
+
+                  <button id="applyFiltersBtn">Aplicar filtros</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="book-list" id="bookList"></div>
+          <div class="pagination">
+            <button onclick="prevPage()">Anterior</button>
+            <span id="pageIndicator"></span>
+            <button onclick="nextPage()">Siguiente</button>
+          </div>
+        </section>
+
+        <section id="prestamos" class="hidden-section">
+          <h2>Mis Préstamos</h2>
+          <ul id="prestamosList"></ul>
+        </section>
+
+        <section id="reservas" class="hidden-section">
+          <h2>Reservas Activas</h2>
+          <ul id="reservasList"></ul>
+        </section>
+
+        <section id="perfil" class="hidden-section">
+          <h2>Mi Perfil</h2>
+          <div class="profile-card">
+            <img src="images/Iconos/male.png" alt="Foto de perfil"
+              class="profile-picture" />
+            <div class="profile-info">
+              <h3 id="profile-name">Juan Pérez</h3>
+              <p><strong>Tipo de usuario:</strong> Lector</p>
+              <p><strong>Email:</strong> juan@example.com</p>
+              <button onclick="toggleEditForm()">Editar Perfil</button>
+            </div>
+          </div>
+
+          <form id="edit-profile-form" onsubmit="editProfile(event)"
+            class="hidden">
+            <label>Nombre:
+              <input type="text" id="edit-name" value="Juan Pérez" />
+            </label>
+            <label>Email:
+              <input type="email" id="edit-email" value="juan@example.com" />
+            </label>
+            <label>Contraseña:
+              <input type="password" id="edit-pass"
+                placeholder="Nueva contraseña" />
+            </label>
+            <button type="submit">Guardar Cambios</button>
+          </form>
+        </section>
+
+      </main>
+    </div>
+
+    <script src="js/dashboard.js"></script>
+  </body>
+</html>

@@ -125,10 +125,11 @@ header.abajo ul li a {
 .menu-icono{
   width: 35px;
   height: auto;
+  display: none;
 }
 
 .menu label {
-  display: initial;
+  display: none;
   cursor: pointer;
   padding: 10px;
 }
@@ -844,7 +845,11 @@ section h2::after {
   }
 
   .menu label {
-    display: initial;
+    display: block; /* Mostrar el contenedor en móviles */
+  }
+
+  .menu-icono {
+    display: block; /* Mostrar ícono en móviles */
   }
 
   .menu .navbar {
