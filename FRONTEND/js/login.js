@@ -24,3 +24,11 @@ window.addEventListener("DOMContentLoaded", () => {
         formLogin.classList.remove("hide");
     }
 });
+
+document.getElementById("login-form").addEventListener("submit", function (e) {
+  e.preventDefault(); // Previene que se envíe el formulario de forma normal
+  // Aquí puedes agregar validación básica si lo necesitas
+
+  // Redirige al usuario al dashboard
+  window.location.href = "FRONTEND/dashboard.html";
+});

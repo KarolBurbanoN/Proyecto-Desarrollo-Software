@@ -1,0 +1,572 @@
+/*?--------------------------*/
+/*?---- ESTILOS GLOBALES ----*/
+/*?-------------------------*/
+
+body {
+  background: linear-gradient(145deg, #fbeaff, #e4f0ff);
+  color: #3a3a3a;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  background-color: #9C6644;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #9C6644;
+}
+
+/*?------------------------------*/
+/*?---- ESTRUCTURA PRINCIPAL ----*/
+/*?------------------------------*/
+
+#dashboard {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar-menu {
+  width: 240px;
+  background-color: #ffffff;
+  color: #6a6a6a;
+  padding: 1.5rem;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.sidebar-menu h1 {
+  margin-bottom: 2rem;
+  font-size: 1.6rem;
+  color: #9C6644;
+}
+
+.sidebar-menu nav ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.sidebar-menu nav ul li {
+  margin-bottom: 1rem;
+}
+
+.sidebar-menu nav ul li button {
+  background: none;
+  border: none;
+  color: #7F5539;
+  width: 100%;
+  text-align: left;
+  font-size: 1rem;
+  padding: 0.75rem 0.5rem;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  border-radius: 8px;
+  transition: background-color 0.3s, border-left-color 0.3s;
+}
+
+.sidebar-menu nav ul li button:hover,
+.sidebar-menu nav ul li button.active {
+  background-color: #f2e8ff;
+  border-left-color: #B08968;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  background-color: #ffffffd8;
+  box-sizing: border-box;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+/*?--------------------*/
+/*?---- UTILIDADES ----*/
+/*?--------------------*/
+
+.hidden-section {
+  display: none;
+}
+
+.active-section {
+  display: block;
+}
+
+h2 {
+  margin-bottom: 1.2rem;
+  font-size: 1.8rem;
+  color: #7F5539;
+}
+
+.card {
+  background-color: #f7f0ff;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+  width: 100%;
+  padding: 0.6rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  border: 1px solid #d1c4e9;
+  border-radius: 6px;
+  background-color: #fcfcff;
+}
+
+/*?----------------*/
+/*?---- LECTOR ----*/
+/*?----------------*/
+
+.book-list {
+  display: grid;
+  grid-template-rows: repeat(2, auto);
+  grid-auto-flow: column;
+  gap: 2rem;
+  padding: 2rem 1rem;
+  position: relative;
+  background-color: #f5f1ec; /* Color claro de fondo */
+  overflow-x: auto;
+}
+
+.book-list::before,
+.book-list::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: #caa472; /* Color tipo madera clara */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.book-list::before {
+  top: 48%;
+}
+
+.book-list::after {
+  bottom: 0;
+}
+
+.book {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.book img {
+  width: 120px; /* Portada más pequeña */
+  height: auto;
+  border-radius: 10px;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.book img:hover {
+  transform: scale(1.05);
+}
+
+
+.book ul {
+  padding-left: 1rem;
+}
+
+body.lector-panel.book-info button {
+  display: block;
+  margin: 0.75rem auto; /* centrado horizontal con separación vertical */
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.book-detail-panel {
+  position: fixed;
+  top: 10%;
+  right: 25%;
+  width: 40%;
+  max-width: 600px; /* Máximo ancho */
+  min-width: 400px; /* Mínimo ancho */
+  background: white;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  padding: 2rem;
+  border-radius: 20px;
+  z-index: 1000;
+  display: none; /* Cambia esto en lugar de usar flex */
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.book-detail-panel.active {
+  display: flex; /* Muestra el panel cuando tiene la clase active */
+}
+
+.book-detail-content {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.book-detail-panel img {
+  width: 180px;
+  border-radius: 12px;
+}
+
+.detail-info {
+  flex: 1;
+}
+
+/**----------------*/
+/**--- FILTROS ---*/
+/**----------------*/
+
+.filter-container {
+  position: relative;
+  display: inline-block; /* Cambiamos a inline-block */
+}
+
+#filterToggleBtn {
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  background-color: #9C6644;
+  border: none;
+  color: white;
+  border-radius: 6px;
+}
+
+.filters-menu {
+  position: absolute;
+  background: white;
+  border: 1px solid #e0d7f3;
+  padding: 1.5rem;
+  top: 100%;
+  right: 0; /* Alineamos a la derecha del botón */
+  width: 280px; /* Ancho fijo suficiente */
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+  border-radius: 12px;
+  margin-top: 0.5rem;
+}
+
+.filters-menu.hidden {
+  display: none;
+}
+
+.filter-group {
+  margin-bottom: 1.2rem;
+}
+
+.filter-group h4 {
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+   color: #9C6644;
+}
+
+.filter-group select {
+  width: 100%;
+  padding: 0.5rem;
+}
+
+#applyFiltersBtn {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.search-filter-row {
+  margin-bottom: 1.5rem;
+}
+
+.search-container {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.search-container input[type="text"] {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+/**-----------------------*/
+/**------ Prestamos ------*/
+/**-----------------------*/
+
+body.lector-panel .book-prestamo-card {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+body.lector-panel .book-prestamo-cover img {
+  width: 150px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+body.lector-panel .book-prestamo-info {
+  flex: 1;
+}
+
+body.lector-panel .book-prestamo-info button:hover {
+  background-color: #7F5539;
+}
+
+#prestamosList li {
+  list-style: none;
+  margin-bottom: 2rem;
+}
+
+/*?-----------------------*/
+/*?---- PERFIL USUARIO ----*/
+/*?-----------------------*/
+
+.perfil-container {
+  display: flex;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+  margin-bottom: 2rem;
+}
+
+.perfil-sidebar {
+  width: 240px;
+  background-color: #be9879;
+  color: #3a3a3a;
+  text-align: center;
+  padding: 2rem 1.2rem;
+}
+
+.perfil-foto {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  border: 3px solid #fff;
+}
+
+.perfil-sidebar h3 {
+  margin: 0.5rem 0 0;
+  font-size: 1.5rem;
+}
+
+.perfil-sidebar p {
+  margin: 0.2rem 0;
+  font-size: 1.2rem;
+}
+
+.perfil-rol {
+  font-weight: bold;
+  color: #7F5539;
+}
+
+.perfil-info {
+  flex: 1;
+  background-color: #ffffff;
+  padding: 2.5rem 2rem;
+}
+
+.perfil-info h2 {
+  color: #9C6644;
+  margin-bottom: 2rem;
+}
+
+.perfil-info .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem 2rem;
+}
+
+/* Selectores específicos */
+.perfil-info .form-grid input,
+.perfil-info .form-grid select {
+  background-color: #f5f5f5;
+}
+
+.perfil-info label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #444444;
+}
+
+/* Inputs grises claros */
+.perfil-info input {
+  padding: 0.6rem 0.9rem;
+  border: none;
+  border-radius: 10px;
+  background-color: #dedede; /* Gris claro */
+  font-size: 1rem;
+  margin-top: 0.3rem;
+  color: #333;
+}
+
+/* Etiquetas en negrilla y gris oscuro */
+.perfil-info label span {
+  font-weight: 600;
+  color: #444444; /* Gris oscuro */
+  margin-bottom: 0.2rem;
+  display: block;
+  font-size: 0.95rem;
+}
+
+/* Género selector */
+.gender-selector {
+  margin-bottom: 2rem;
+  font-weight: 600;
+  color: #444;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.gender-selector span {
+  font-weight: 700;
+  margin-right: 1rem;
+}
+
+.gender-selector label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #3a3a3a;
+}
+
+.gender-selector input[type="radio"] {
+  accent-color: #9C6644;
+  cursor: pointer;
+}
+
+.perfil-info input:focus {
+  outline: 2px solid #B08968;
+  background-color: #fff;
+}
+
+.botones-perfil {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.botones-perfil button {
+  padding: 0.6rem 1.5rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.botones-perfil button[type="submit"] {
+  background-color: #9C6644;
+  color: white;
+}
+
+.botones-perfil .cancelar-btn {
+  background-color: transparent;
+  border: 2px solid #9C6644;
+  color: #9C6644;
+}
+
+.botones-perfil .cancelar-btn:hover {
+  background-color: #f7e1d3;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  background-color: #f7f0ff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1rem;
+  gap: 1.5rem;
+}
+
+.profile-picture {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #d1c4e9;
+}
+
+.profile-info h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  color: #5d3a00;
+}
+
+#edit-profile-form.hidden {
+  display: none;
+}
+
+/**-----------------------*/
+/**----- Responsive ------*/
+/**-----------------------*/
+@media (max-width: 768px) {
+  #dashboard {
+    flex-direction: column;
+  }
+
+  .filters-menu {
+    right: 0;
+    left: auto;
+    width: 280px;
+  }
+
+  .sidebar-menu {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .sidebar-menu nav ul {
+    display: flex;
+    gap: 1rem;
+  }
+  .sidebar-menu nav ul li {
+    margin-bottom: 0;
+  }
+  .sidebar-menu nav ul li button {
+    border-left: none;
+    border-bottom: 4px solid transparent;
+  }
+  .sidebar-menu nav ul li button:hover,
+  .sidebar-menu nav ul li button.active {
+    border-bottom-color: #B08968;
+    background-color: transparent;
+  }
+}
+
