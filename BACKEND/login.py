@@ -1,5 +1,5 @@
 # BACKEND/routes/login.py
-from flask import Blueprint, request, redirect, session, render_template
+from flask import Blueprint, flash, jsonify, request, redirect, session, render_template, url_for
 from BASE_DE_DATOS.db import get_db
 from BASE_DE_DATOS.models import Usuario
 from sqlalchemy.orm import Session
@@ -15,10 +15,17 @@ def login():
     db: Session = next(get_db())
 
     user = db.query(Usuario).filter(Usuario.correo == email).first()
-
     if user and bcrypt.checkpw(password.encode("utf-8"), user.contraseña.encode("utf-8")):
         session["usuario"] = user.numero_documento
-        return redirect("/dashboard")
+        session["rol"] = user.rol  # <- Guardamos el rol en la sesión
+
+        # Redirección por rol
+        if user.rol == "administrador":
+            return redirect("/admin")
+        elif user.rol == "bibliotecario":
+            return redirect(("/bibliotecario"))
+        else:  # lector
+            return redirect("/dashboard")
     else:
         return "Correo o contraseña incorrectos", 401
     
@@ -66,6 +73,28 @@ def registro():
     db.commit()
 
     return redirect("/login")
+
+@login_bp.route('/api/auth', methods=['POST'])
+def api_auth():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    
+    db = next(get_db())
+    user = db.query(Usuario).filter(Usuario.correo == email).first()
+    
+    if user and bcrypt.checkpw(password.encode('utf-8'), user.contraseña.encode('utf-8')):
+        session['usuario'] = user.numero_documento
+        return jsonify({
+            'success': True,
+            'user': {
+                'id': user.id_usuario,
+                'name': f"{user.nombres} {user.apellidos}",
+                'email': user.correo,
+                'role': user.rol
+            }
+        })
+    return jsonify({'success': False}), 401
 
 @login_bp.route("/logout")
 def logout():
