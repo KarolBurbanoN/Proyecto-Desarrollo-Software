@@ -32,10 +32,21 @@ def registrar_usuario():
 
     # Cifrar contraseña
     data["contraseña"] = bcrypt.hashpw(data["contraseña"].encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+    #manjeo de estado
+    estado_recibido = data.pop('estado', 'activo').lower()
+    
+    #conversion de valores validos.
 
-    # Establecer estado por defecto
-    data["estado"] = data.get("estado", "activo")
-
+    if estado_recibido in ['activo', 'activa']:
+        data['estado_cuenta'] = 'activa'
+    elif estado_recibido == 'bloqueada':
+        data['estado_cuenta']='bloqueada'
+    else:
+        return jsonify ({
+            "error": "estado no valido",
+            "detalle": "debe ser 'activa'/'activo' o 'bloqueada"
+            }),400
+    
     nuevo_usuario = Usuario(**data)
     db.add(nuevo_usuario)
     db.commit()
@@ -49,7 +60,7 @@ def registrar_usuario():
             "apellidos": nuevo_usuario.apellidos,
             "correo": nuevo_usuario.correo,
             "rol": nuevo_usuario.rol,
-            "estado": nuevo_usuario.estado
+            "estado_cuenta": nuevo_usuario.estado_cuenta
         }
     }), 201
 
@@ -72,7 +83,7 @@ def listar_usuarios():
             "telefono": u.telefono,
             "correo": u.correo,
             "rol": u.rol,
-            "estado": u.estado
+            "estado": u.estado_cuenta 
         })
     return jsonify(resultado)
 
@@ -107,7 +118,7 @@ def actualizar_usuario(numero_documento):
             "apellidos": usuario.apellidos,
             "correo": usuario.correo,
             "rol": usuario.rol,
-            "estado": usuario.estado
+            "estado": usuario.estado_cuenta
         }
     })
 
@@ -189,3 +200,4 @@ def actualizar_perfil_usuario():
             "telefono": usuario.telefono
         }
     })
+
