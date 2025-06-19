@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bibliotecario</title>
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/Iconos/Logo.ico') }}"
+      type="image/x-icon" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}" />
+  </head>
+
+  <body class="bibliotecario-panel">
+    <div id="dashboard">
+      <!-- Menú lateral -->
+      <aside class="sidebar-menu">
+        <h1 style="display: flex; align-items: center; gap: 0.5rem">
+          <img
+            src="{{ url_for('static', filename='images/Iconos/Logo.ico') }}"
+            alt="Icono Biblioteca"
+            style="width: 40px; height: 40px" />
+          Biblioteca Alexandria
+        </h1>
+        <nav>
+          <ul>
+            <li><button class="menu-btn active"
+                data-target="gestion-usuarios">Usuarios</button></li>
+            <li><button class="menu-btn"
+                data-target="gestion-libros">Libros</button></li>
+            <li><button class="menu-btn"
+                data-target="historial">Historial</button></li>
+            <li><button class="menu-btn"
+                data-target="perfil">Perfil</button></li>
+            <li><button onclick="logout()" class="menu-btn">Cerrar
+                sesión</button></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Contenido principal -->
+      <main class="main-content">
+        <!-- Usuarios -->
+        <section id="gestion-usuarios" class="active-section">
+          <h2>Gestión de Usuarios</h2>
+          <!-- Menú superior de pestañas -->
+          <div class="user-tabs">
+            <button class="user-tab active"
+              onclick="mostrarSeccionUsuarios('listar')">Listar
+              usuarios</button>
+            <button class="user-tab"
+              onclick="mostrarSeccionUsuarios('agregar')">Agregar
+              usuario</button>
+          </div>
+
+          <!-- Contenedor de contenido -->
+          <div id="seccion-listar-usuarios">
+            <!-- Barra búsqueda + filtros -->
+            <div class="search-filter-row">
+              <!-- 🔍 Barra de búsqueda -->
+              <div class="search-container">
+                <input
+                  type="text"
+                  id="search-admin"
+                  placeholder="Buscar por título, autor..." />
+
+                <div class="filter-container">
+                  <button id="filterToggleBtn-usuarios">Filtros ▼</button>
+                  <div id="filtersMenu-usuarios" class="filters-menu hidden">
+                    <div class="filter-group">
+                      <h4>Rol</h4>
+                      <select id="filter-rol-usuario">
+                        <option value="todos">Todos</option>
+                        <option value="bibliotecario">Bibliotecario</option>
+                        <option value="regular">Lector</option>
+                      </select>
+                    </div>
+
+                    <div class="filter-group">
+                      <h4>Estado</h4>
+                      <select id="filter-estado-usuario">
+                        <option value="todos">Todos</option>
+                        <option value="activo">Activo</option>
+                        <option value="bloqueado">Bloqueado</option>
+                      </select>
+                    </div>
+
+                    <div class="filter-group">
+                      <h4>Ordenar por</h4>
+                      <select id="filter-fecha-usuario">
+                        <option value="todos">Todos</option>
+                        <option value="reciente">Más reciente</option>
+                        <option value="antiguo">Más antiguo</option>
+                      </select>
+                    </div>
+
+                    <button id="aplicarFiltrosUsuarios">Aplicar filtros</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabla de usuarios -->
+            <div id="listaUsuarios" class="user-table"></div>
+
+            <!-- Paginación -->
+            <div class="pagination">
+              <button onclick="paginaAnteriorUsuarios()">Anterior</button>
+              <span id="paginadorUsuarios"></span>
+              <button onclick="paginaSiguienteUsuarios()">Siguiente</button>
+            </div>
+          </div>
+
+          <div id="seccion-agregar-usuario" class="hidden-section">
+            <div id="formularioUsuario" class="card container-form register">
+              <h3>Registrar nuevo usuario</h3>
+              <form class="form" onsubmit="registrarUsuario(event)">
+                <input type="hidden" id="modo-edicion" value="false" />
+                <input type="hidden" id="usuario-editando-doc" />
+
+                <div class="form-grid">
+                  <label>
+                    <i class="bx bx-id-card"></i>
+                    <select name="tipo_documento" required>
+                      <option value disabled selected>Tipo de Documento</option>
+                      <option value="TI">T.I</option>
+                      <option value="CC">C.C</option>
+                      <option value="NIT">NIT</option>
+                      <option value="PASAPORTE">Pasaporte</option>
+                    </select>
+                  </label>
+                  <label>
+                    <i class="bx bx-hash"></i>
+                    <input type="text" placeholder="Número de documento"
+                      id="numDoc" required />
+                  </label>
+                  <label>
+                    <i class="bx bx-user"></i>
+                    <input type="text" placeholder="Nombres" id="nombres"
+                      required />
+                  </label>
+                  <label>
+                    <i class="bx bx-user"></i>
+                    <input type="text" placeholder="Apellidos" id="apellidos"
+                      required />
+                  </label>
+                  <label>
+                    <i class="bx bx-calendar"></i>
+                    <input type="date" id="fecha" required />
+                  </label>
+                  <label>
+                    <i class="bx bx-male-female"></i>
+                    <select id="genero" required>
+                      <option value>Género</option>
+                      <option value="M">Masculino</option>
+                      <option value="F">Femenino</option>
+                      <option value="O">Otro</option>
+                    </select>
+                  </label>
+                  <label>
+                    <i class="bx bx-home"></i>
+                    <input type="text" placeholder="Dirección" id="direccion" />
+                  </label>
+                  <label>
+                    <i class="bx bx-map"></i>
+                    <input type="text" placeholder="Ciudad" id="ciudad" />
+                  </label>
+                  <label>
+                    <i class="bx bx-phone"></i>
+                    <input type="tel" placeholder="Teléfono" id="telefono" />
+                  </label>
+                  <label>
+                    <i class="bx bx-envelope"></i>
+                    <input type="email" placeholder="Correo electrónico"
+                      id="correo" required />
+                  </label>
+                  <label>
+                    <i class="bx bx-lock"></i>
+                    <input type="password" name="contraseña"
+                      placeholder="Contraseña" required />
+                  </label>
+                  <label>
+                    <select id="rol" required>
+                      <option value>Seleccionar rol</option>
+                      <option value="lector">Lector</option>
+                      <option value="bibliotecario">Bibliotecario</option>
+                      <option value="administrador">Administrador</option>
+                    </select>
+                  </label>
+                </div>
+                <input type="submit" value="Registrar usuario" />
+              </form>
+              <div id="mensajeRegistro" class="mensaje-exito"
+                style="display: none;">
+                ✅ Usuario registrado correctamente
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Libros -->
+        <section id="gestion-libros" class="hidden-section">
+          <h2>Libros registrados</h2>
+
+          <div class="search-filter-row">
+            <div class="search-container">
+              <input
+                type="text"
+                id="search-Bibliotecario"
+                placeholder="Buscar por título, autor..." />
+
+              <!-- Filtros desplegables -->
+              <div class="filter-container">
+                <button id="filterToggleBtn-Bibliotecario">Filtros ▼</button>
+                <div id="filtersMenu-Bibliotecario" class="filters-menu hidden">
+                  <div class="filter-group">
+                    <h4>Categorías</h4>
+                    <select id="filter-category-Bibliotecario">
+                      <option value="all">Todas</option>
+                      <option value="Ciencia Ficción">Ciencia Ficción</option>
+                      <option value="Comics">Comics</option>
+                      <option value="Fantasía">Fantasía</option>
+                      <option value="Infantil">Infantil</option>
+                      <option value="Poesía">Poesía</option>
+                      <option value="Romance">Romance</option>
+                      <option value="Terror">Terror</option>
+                    </select>
+                  </div>
+
+                  <div class="filter-group">
+                    <h4>Calificación mínima</h4>
+                    <select id="filter-rating-admin">
+                      <option value="0">Todas</option>
+                      <option value="3">3+</option>
+                      <option value="4">4+</option>
+                      <option value="4.5">4.5+</option>
+                    </select>
+                  </div>
+
+                  <div class="filter-group">
+                    <h4>Ordenar por</h4>
+                    <select id="filter-order-admin">
+                      <option value="recent">Más recientes</option>
+                      <option value="oldest">Más antiguos</option>
+                      <option value="rating">Mejor calificados</option>
+                    </select>
+                  </div>
+
+                  <button id="applyFiltersBtn-Bibliotecario">Aplicar
+                    filtros</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="book-list" id="BibliotecarioBookList"></div>
+
+          <div class="pagination">
+            <button onclick="prevPageBibliotecario()">Anterior</button>
+            <span id="pageIndicator"></span>
+            <button onclick="nextPageBibliotecario()">Siguiente</button>
+          </div>
+
+          <h2>Gestión de Libros</h2>
+          <button onclick="mostrarFormularioLibro()">Agregar libro</button>
+          <div id="formularioLibro" class="hidden-section card">
+            <h3>Registrar nuevo libro</h3>
+            <form id="formLibro" class="form" onsubmit="registrarLibro(event)">
+              <div class="form-grid">
+                <label>
+                  <i class="bx bx-captions"></i>
+                  <input type="text" id="tituloLibro" placeholder="Título"
+                    required />
+                </label>
+                <label>
+                  <i class="bx bx-user"></i>
+                  <input type="text" id="autorLibro" placeholder="Autor"
+                    required />
+                </label>
+                <label>
+                  <i class="bx bx-department-store"></i>
+                  <input type="text" id="editorialLibro" placeholder="Editorial"
+                    required />
+                </label>
+                <label>
+                  <i class="bx bx-calendar"></i>
+                  <input type="number" id="anioLibro"
+                    placeholder="Año de publicación" min="1000" max="2100"
+                    required />
+                </label>
+                <label>
+                  <i class="bx bx-hash"></i>
+                  <input type="text" id="isbnLibro" placeholder="ISBN"
+                    required />
+                </label>
+                <label>
+                  <i class="bx bx-book-bookmark"></i>
+                  <input type="text" id="generoLibro" placeholder="Género"
+                    required />
+                </label>
+                <label>
+                  <i class="bx bx-checkbox-checked"></i>
+                  <select id="estadoLibro" required>
+                    <option value>Estado</option>
+                    <option value="disponible">Disponible</option>
+                    <option value="no disponible">No disponible</option>
+                  </select>
+                </label>
+              </div>
+              <input type="submit" value="Registrar libro" />
+            </form>
+          </div>
+
+          <div id="listaLibros"></div>
+
+          <div id="mensajeLibro" class="mensaje-exito" style="display: none;">
+            ✅ Libro registrado correctamente
+          </div>
+          <div id="mensajeErrorLibro" class="mensaje-error"
+            style="display: none;">
+            ❌ Error al registrar el libro. Por favor, verifica los datos.
+          </div>
+
+        </section>
+
+        <!-- Historial -->
+        <section id="historial" class="hidden-section">
+          <h2>Historial de préstamos y devoluciones</h2>
+          <p>[Aquí se listará el historial de movimientos de libros]</p>
+        </section>
+
+        <section id="perfil" class="hidden-section">
+          <div class="perfil-container">
+            <!-- Bloque izquierdo -->
+            <div class="perfil-sidebar">
+              <img
+                src="{{ url_for('static', filename='images/Iconos/male.png') }}"
+                alt="Foto de perfil"
+                class="perfil-foto" />
+              <h3>{{ usuario.nombres }} {{ usuario.apellidos }}</h3>
+              <p class="perfil-rol">{{ usuario.rol | capitalize }}</p>
+            </div>
+
+            <!-- Bloque derecho -->
+            <div class="perfil-info">
+              <h2>Información Personal</h2>
+              <div id="perfilResumen">
+                <p><strong>Nombre:</strong> <span id="resumen-nombre">{{
+                    usuario.nombres }}</span></p>
+                <p><strong>Apellidos:</strong> <span id="resumen-apellidos">{{
+                    usuario.apellidos }}</span></p>
+                <p><strong>Email:</strong> <span id="resumen-email">{{
+                    usuario.correo }}</span></p>
+                <p><strong>Dirección:</strong> <span id="resumen-direccion">{{
+                    usuario.direccion }}</span></p>
+                <p><strong>Teléfono:</strong> <span id="resumen-telefono">{{
+                    usuario.telefono }}</span></p>
+                <p><strong>Ciudad:</strong> <span id="resumen-ciudad">{{
+                    usuario.ciudad }}</span></p>
+                <p><strong>Género:</strong> <span id="resumen-genero">{{
+                    usuario.genero }}</span></p>
+
+                <button onclick="mostrarFormularioPerfil()">Editar
+                  perfil</button>
+              </div>
+              <form id="edit-profile-form" onsubmit="editProfile(event)"
+                class="hidden-section">
+                <div class="gender-selector">
+                  <span>Género:</span>
+                  <label><input type="radio" name="genero" value="M" />
+                    Masculino</label>
+                  <label><input type="radio" name="genero" value="F" />
+                    Femenino</label>
+                  <label><input type="radio" name="genero" value="O" />
+                    Otro</label>
+                </div>
+                <div class="form-grid">
+                  <div class="form-field">
+                    <span>Nombre</span>
+                    <input type="text" id="edit-nombre"
+                      value="{{ usuario.nombres }}" />
+                  </div>
+                  <div class="form-field">
+                    <span>Apellidos</span>
+                    <input type="text" id="edit-apellidos"
+                      value="{{ usuario.apellidos }}" />
+                  </div>
+                  <div class="form-field">
+                    <span>Email</span>
+                    <input type="email" id="edit-email"
+                      value="{{ usuario.correo }}" />
+                  </div>
+                  <div class="form-field">
+                    <span>Contraseña</span>
+                    <input type="password" id="edit-pass"
+                      placeholder="Nueva contraseña" />
+                  </div>
+                  <div class="form-field">
+                    <span>Dirección</span>
+                    <input type="text" id="edit-address"
+                      placeholder="{{ usuario.direccion }}" />
+                  </div>
+                  <div class="form-field">
+                    <span>Teléfono</span>
+                    <input type="tel" id="edit-phone"
+                      placeholder="{{ usuario.telefono }}" />
+                  </div>
+                  <div class="form-field">
+                    <span>Ciudad</span>
+                    <input type="text" id="edit-city"
+                      placeholder="{{ usuario.ciudad }}" />
+                  </div>
+                </div>
+
+                <div class="botones-perfil">
+                  <button type="button" onclick="cancelarEdicionPerfil()"
+                    class="cancelar-btn">Cancelar</button>
+                  <button type="submit">Guardar Cambios</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Panel emergente de detalles -->
+      <div id="bookDetailPanel" class="book-detail-panel hidden-section">
+        <div class="book-detail-content">
+          <img id="detailCover" src alt="Portada del libro" />
+          <div class="detail-info">
+            <h3 id="detailTitle"></h3>
+            <p><strong>Autor:</strong> <span id="detailAuthor"></span></p>
+            <p><strong>Estado:</strong> <span id="detailStatus"></span></p>
+            <p><strong>Calificación:</strong> <span
+                id="detailRating"></span></p>
+            <h5>Reseñas:</h5>
+            <ul id="detailReviews"></ul>
+            <div id="detailButton"></div>
+          </div>
+        </div>
+        <button onclick="closeDetailPanel()">Cerrar</button>
+      </div>
+
+      <script
+        src="{{ url_for('static', filename='js/bibliotecario.js') }}"></script>
+      <script>
+      function logout() {
+        window.location.href = "{{ url_for('login.logout') }}";
+      }
+    </script>
+    </body>
+  </html>

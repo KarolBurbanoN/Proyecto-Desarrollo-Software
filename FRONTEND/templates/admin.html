@@ -361,34 +361,40 @@
                 <div class="form-grid">
                   <div class="form-field">
                     <span>Nombre</span>
-                    <input type="text" id="edit-nombre" value="{{ usuario.nombres }}" />
+                    <input type="text" id="edit-nombre"
+                      value="{{ usuario.nombres }}" />
                   </div>
                   <div class="form-field">
                     <span>Apellidos</span>
-                    <input type="text" id="edit-apellidos" value="{{ usuario.apellidos }}" />
+                    <input type="text" id="edit-apellidos"
+                      value="{{ usuario.apellidos }}" />
                   </div>
                   <div class="form-field">
                     <span>Email</span>
-                    <input type="email" id="edit-email" value="{{ usuario.correo }}" />
+                    <input type="email" id="edit-email"
+                      value="{{ usuario.correo }}" />
                   </div>
                   <div class="form-field">
                     <span>Contraseña</span>
-                    <input type="password" id="edit-pass" placeholder="Nueva contraseña" />
+                    <input type="password" id="edit-pass"
+                      placeholder="Nueva contraseña" />
                   </div>
                   <div class="form-field">
                     <span>Dirección</span>
-                    <input type="text" id="edit-address" placeholder="Calle 123..." />
+                    <input type="text" id="edit-address"
+                      placeholder="{{ usuario.direccion }}" />
                   </div>
                   <div class="form-field">
                     <span>Teléfono</span>
-                    <input type="tel" id="edit-phone" placeholder="3001234567" />
+                    <input type="tel" id="edit-phone"
+                      placeholder="{{ usuario.telefono }}" />
                   </div>
                   <div class="form-field">
                     <span>Ciudad</span>
-                    <input type="text" id="edit-city" placeholder="Tuluá" />
+                    <input type="text" id="edit-city"
+                      placeholder="{{ usuario.ciudad }}" />
                   </div>
                 </div>
-
 
                 <div class="botones-perfil">
                   <button type="button" onclick="cancelarEdicionPerfil()" class="cancelar-btn">Cancelar</button>

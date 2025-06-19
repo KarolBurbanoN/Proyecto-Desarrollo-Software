@@ -168,7 +168,7 @@ def actualizar_perfil_usuario():
         return jsonify({"error": "No autorizado"}), 401
     
     db: Session = next(get_db())
-    usuario = db.query(Usuario).filter_by(numero_documento=Session["usuario"]).first()
+    usuario = db.query(Usuario).filter_by(numero_documento=session["usuario"]).first()  # Corregido: session en lugar de Session
     
     if not usuario:
         return jsonify({"error": "Usuario no encontrado"}), 404

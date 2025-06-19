@@ -292,7 +292,6 @@ function mostrarSeccionUsuarios(seccion) {
 
 }
 
-
 async function registrarUsuario(event) {
   event.preventDefault();
 
@@ -510,10 +509,10 @@ function toggleEstadoUsuario(doc) {
   }
 }
 
-function renderBooksAdmin() {
-  const bookList = document.getElementById('adminBookList');
-  const search = document.getElementById('search-admin').value.toLowerCase();
-  const category = document.getElementById('filter-category-admin').value;
+function renderBooksBibliotecario() {
+  const bookList = document.getElementById('BibliotecarioBookList');
+  const search = document.getElementById('search-Bibliotecario').value.toLowerCase();
+  const category = document.getElementById('filter-category-Bibliotecario').value;
 
   const booksToUse = filteredBooks || books;
 
@@ -538,7 +537,7 @@ function renderBooksAdmin() {
     div.className = 'book';
 
     div.innerHTML = `
-      <img src="${book.cover}" alt="${book.title}" onclick="showAdminBookDetails(${index})" style="cursor:pointer;">
+      <img src="${book.cover}" alt="${book.title}" onclick="showBibliotecarioBookDetails(${index})" style="cursor:pointer;">
     `;
 
     bookList.appendChild(div);
@@ -549,7 +548,7 @@ function renderBooksAdmin() {
 }
 
 // Nueva función específica para el panel de administrador
-function showAdminBookDetails(index) {
+function showBibliotecarioBookDetails(index) {
   const book = books[index];
   document.getElementById('detailCover').src = book.cover;
   document.getElementById('detailTitle').textContent = book.title;
@@ -558,9 +557,8 @@ function showAdminBookDetails(index) {
   document.getElementById('detailRating').textContent = '⭐'.repeat(Math.round(book.rating)) + ` (${book.rating.toFixed(1)})`;
   document.getElementById('detailReviews').innerHTML = book.reviews.map(r => `<li>${r}</li>`).join('');
   
-  // Botones para administrador
   document.getElementById('detailButton').innerHTML = `
-    <div class="admin-buttons">
+    <div class="bibliotecario-buttons">
       <button onclick="editarLibro(${index})">Editar</button>
       <button onclick="eliminarLibro(${index})" class="delete-btn">Eliminar</button>
     </div>
@@ -585,24 +583,24 @@ function eliminarLibro(index) {
   const book = books[index];
   if (confirm(`¿Estás seguro de querer eliminar "${book.title}"?`)) {
     books.splice(index, 1);
-    renderBooksAdmin();
+    renderBooksBibliotecario();
     closeDetailPanel();
     alert(`Libro "${book.title}" eliminado correctamente`);
   }
 }
 
-function nextPageAdmin() {
+function nextPageBibliotecario() {
   const totalPages = Math.ceil(books.length / booksPerPage);
   if (currentPage < totalPages) {
     currentPage++;
-    renderBooksAdmin();
+    renderBooksBibliotecario();
   }
 }
 
-function prevPageAdmin() {
+function prevPageBibliotecario() {
   if (currentPage > 1) {
     currentPage--;
-    renderBooksAdmin();
+    renderBooksBibliotecario();
   }
 }
 
@@ -625,7 +623,7 @@ function registrarLibro(event) {
   };
 
   books.push(nuevoLibro);
-  renderBooksAdmin();
+  renderBooksBibliotecario();
 
   document.getElementById('formLibro').reset();
   document.getElementById('formularioLibro').classList.add('hidden-section');
@@ -730,15 +728,15 @@ function logout() {
 }
 
 //* Filtros desplegables para admin
-document.getElementById('filterToggleBtn-admin').addEventListener('click', () => {
-  const menu = document.getElementById('filtersMenu-admin');
+document.getElementById('filterToggleBtn-Bibliotecario').addEventListener('click', () => {
+  const menu = document.getElementById('filtersMenu-Bibliotecario');
   menu.classList.toggle('hidden');
 });
 
-document.getElementById('applyFiltersBtn-admin').addEventListener('click', () => {
-  const category = document.getElementById('filter-category-admin').value;
-  const minRating = parseFloat(document.getElementById('filter-rating-admin').value);
-  const order = document.getElementById('filter-order-admin').value;
+document.getElementById('applyFiltersBtn-Bibliotecario').addEventListener('click', () => {
+  const category = document.getElementById('filter-category-Bibliotecario').value;
+  const minRating = parseFloat(document.getElementById('filter-rating-Bibliotecario').value);
+  const order = document.getElementById('filter-order-Bibliotecario').value;
 
   filteredBooks = books.filter(book => book.rating >= minRating);
 
@@ -755,8 +753,8 @@ document.getElementById('applyFiltersBtn-admin').addEventListener('click', () =>
   }
 
   currentPage = 1;
-  renderBooksAdmin();
-  document.getElementById('filtersMenu-admin').classList.add('hidden');
+  renderBooksBibliotecario();
+  document.getElementById('filtersMenu-Bibliotecario').classList.add('hidden');
 });
 
 //* Filtros desplegables para usuarios
@@ -794,11 +792,11 @@ document.querySelectorAll('.menu-btn').forEach(btn => {
   });
 });
 
-document.getElementById('search-admin').addEventListener('input', () => {
+document.getElementById('search-Bibliotecario').addEventListener('input', () => {
   currentPage = 1;
-  renderBooksAdmin();
+  renderBooksBibliotecario();
 });
 
 // Inicializar dashboard
 renderUsuarios();
-renderBooksAdmin();
+renderBooksBibliotecario();

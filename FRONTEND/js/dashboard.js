@@ -560,6 +560,66 @@ function cancelarEdicionPerfil() {
   document.getElementById('perfilResumen').classList.remove('hidden-section');
 }
 
+async function editProfile(event) {
+  event.preventDefault();
+  
+  // Obtener los datos del formulario
+  const formData = {
+    nombres: document.getElementById('edit-nombre').value,
+    apellidos: document.getElementById('edit-apellidos').value,
+    correo: document.getElementById('edit-email').value,
+    genero: document.querySelector('input[name="genero"]:checked').value,
+    direccion: document.getElementById('edit-address').value,
+    telefono: document.getElementById('edit-phone').value,
+    ciudad: document.getElementById('edit-city').value
+  };
+  
+  // Agregar contraseña solo si se proporcionó
+  const nuevaContraseña = document.getElementById('edit-pass').value;
+  if (nuevaContraseña) {
+    formData.contraseña = nuevaContraseña;
+  }
+  
+  try {
+    // Enviar los datos al servidor
+    const response = await fetch('/api/usuarios/perfil', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+      credentials: 'include' // Para incluir las cookies de sesión
+    });
+    
+    if (!response.ok) {
+      throw new Error('Error al actualizar el perfil');
+    }
+    
+    const data = await response.json();
+    
+    // Actualizar la vista con los nuevos datos
+    document.getElementById('resumen-nombre').textContent = data.usuario.nombres;
+    document.getElementById('resumen-apellidos').textContent = data.usuario.apellidos;
+    document.getElementById('resumen-email').textContent = data.usuario.correo;
+    document.getElementById('resumen-direccion').textContent = data.usuario.direccion;
+    document.getElementById('resumen-telefono').textContent = data.usuario.telefono;
+    document.getElementById('resumen-ciudad').textContent = data.usuario.ciudad;
+    document.getElementById('resumen-genero').textContent = 
+      data.usuario.genero === 'M' ? 'Masculino' : 
+      data.usuario.genero === 'F' ? 'Femenino' : 'Otro';
+    
+    // Mostrar mensaje de éxito
+    alert('Perfil actualizado correctamente');
+    
+    // Volver a la vista de resumen
+    cancelarEdicionPerfil();
+    
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Error al actualizar el perfil: ' + error.message);
+  }
+}
+
 function logout() {
   alert('Sesión cerrada.');
   // Puedes usar location.reload() si quieres refrescar la página
