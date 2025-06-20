@@ -6,294 +6,37 @@ let currentUser = {
   role: 'lector'
 };
 
-const books = [
-  // Romance
-  {
-    title: 'Cien años de soledad',
-    author: 'Gabriel García Márquez',
-    available: true,
-    rating: 4.8,
-    category: 'Romance',
-    addedDate: '2022-12-01',
-    reviews: ["Una obra maestra."],
-    cover: 'https://covers.openlibrary.org/b/id/9886522-M.jpg'
-  },
-  {
-    title: 'El amor en los tiempos del cólera',
-    author: 'Gabriel García Márquez',
-    available: false,
-    rating: 4.5,
-    category: 'Romance',
-    addedDate: '2021-08-15',
-    reviews: ["Historia de amor a través del tiempo."],
-    cover: 'https://covers.openlibrary.org/b/id/14839677-M.jpg'
-  },
-  {
-    title: 'Orgullo y prejuicio',
-    author: 'Jane Austen',
-    available: true,
-    rating: 4.7,
-    category: 'Romance',
-    addedDate: '2023-01-10',
-    reviews: ["Clásico romántico imperdible."],
-    cover: 'https://covers.openlibrary.org/b/id/7712438-M.jpg'
-  },
-  {
-    title: 'Jane Eyre',
-    author: 'Charlotte Brontë',
-    available: true,
-    rating: 4.6,
-    category: 'Romance',
-    addedDate: '2023-02-25',
-    reviews: ["Una historia profunda y emotiva."],
-    cover: 'https://covers.openlibrary.org/b/id/13900709-M.jpg'
-  },
-  {
-    title: 'Bajo la misma estrella',
-    author: 'John Green',
-    available: true,
-    rating: 4.4,
-    category: 'Romance',
-    addedDate: '2023-03-18',
-    reviews: ["Una historia moderna y conmovedora."],
-    cover: 'https://covers.openlibrary.org/b/id/12333346-M.jpg'
-  },
-
-  // Terror
-  {
-    title: 'La ciudad y los perros',
-    author: 'Mario Vargas Llosa',
-    available: true,
-    rating: 4.3,
-    category: 'Terror',
-    addedDate: '2023-02-10',
-    reviews: ["Retrato crítico de la sociedad."],
-    cover: 'https://covers.openlibrary.org/b/id/13952189-M.jpg'
-  },
-  {
-    title: 'It',
-    author: 'Stephen King',
-    available: true,
-    rating: 4.7,
-    category: 'Terror',
-    addedDate: '2023-04-01',
-    reviews: ["Terror psicológico magistral."],
-    cover: 'https://covers.openlibrary.org/b/id/14655624-M.jpg'
-  },
-  {
-    title: 'El resplandor',
-    author: 'Stephen King',
-    available: false,
-    rating: 4.6,
-    category: 'Terror',
-    addedDate: '2023-01-15',
-    reviews: ["Suspenso y horror inolvidable."],
-    cover: 'https://covers.openlibrary.org/b/id/14655766-M.jpg'
-  },
-  {
-    title: 'Drácula',
-    author: 'Bram Stoker',
-    available: true,
-    rating: 4.5,
-    category: 'Terror',
-    addedDate: '2022-11-20',
-    reviews: ["Clásico del horror gótico."],
-    cover: 'https://covers.openlibrary.org/b/id/10114404-M.jpg'
-  },
-  {
-    title: 'Frankenstein',
-    author: 'Mary Shelley',
-    available: true,
-    rating: 4.4,
-    category: 'Terror',
-    addedDate: '2023-03-10',
-    reviews: ["Inmortal historia de la ciencia y horror."],
-    cover: 'https://covers.openlibrary.org/b/id/10756700-M.jpg'
-  },
-
-  // Ciencia Ficción
-  {
-    title: 'Ficciones',
-    author: 'Jorge Luis Borges',
-    available: false,
-    rating: 4.9,
-    category: 'Ciencia Ficción',
-    addedDate: '2023-07-20',
-    reviews: ["Obra maestra filosófica."],
-    cover: 'https://covers.openlibrary.org/b/id/7888787-L.jpg'
-  },
-  {
-    title: 'Dune',
-    author: 'Frank Herbert',
-    available: true,
-    rating: 4.8,
-    category: 'Ciencia Ficción',
-    addedDate: '2023-04-05',
-    reviews: ["Clásico de la ciencia ficción épica."],
-    cover: 'https://covers.openlibrary.org/b/id/8231850-L.jpg'
-  },
-  {
-    title: 'Neuromante',
-    author: 'William Gibson',
-    available: true,
-    rating: 4.5,
-    category: 'Ciencia Ficción',
-    addedDate: '2023-06-10',
-    reviews: ["Pionero del cyberpunk."],
-    cover: 'https://covers.openlibrary.org/b/id/8231874-L.jpg'
-  },
-  {
-    title: 'El fin de la eternidad',
-    author: 'Isaac Asimov',
-    available: true,
-    rating: 4.6,
-    category: 'Ciencia Ficción',
-    addedDate: '2023-05-12',
-    reviews: ["Un viaje en el tiempo fascinante."],
-    cover: 'https://covers.openlibrary.org/b/id/8231877-L.jpg'
-  },
-  {
-    title: 'La guerra de los mundos',
-    author: 'H. G. Wells',
-    available: false,
-    rating: 4.3,
-    category: 'Ciencia Ficción',
-    addedDate: '2023-02-22',
-    reviews: ["Invasión extraterrestre clásica."],
-    cover: 'https://covers.openlibrary.org/b/id/8231899-L.jpg'
-  },
-
-  // Fantasía
-  {
-    title: 'Rayuela',
-    author: 'Julio Cortázar',
-    available: true,
-    rating: 4.7,
-    category: 'Fantasía',
-    addedDate: '2023-05-05',
-    reviews: ["Innovador y desafiante."],
-    cover: 'https://covers.openlibrary.org/b/id/8228691-L.jpg'
-  },
-  {
-    title: 'El Hobbit',
-    author: 'J.R.R. Tolkien',
-    available: true,
-    rating: 4.8,
-    category: 'Fantasía',
-    addedDate: '2023-01-20',
-    reviews: ["Clásico de la fantasía épica."],
-    cover: 'https://covers.openlibrary.org/b/id/8231880-L.jpg'
-  },
-  {
-    title: 'Harry Potter y la piedra filosofal',
-    author: 'J.K. Rowling',
-    available: true,
-    rating: 4.7,
-    category: 'Fantasía',
-    addedDate: '2023-06-15',
-    reviews: ["Mágico y envolvente."],
-    cover: 'https://covers.openlibrary.org/b/id/14925450-M.jpg'
-  },
-  {
-    title: 'El nombre del viento',
-    author: 'Patrick Rothfuss',
-    available: false,
-    rating: 4.6,
-    category: 'Fantasía',
-    addedDate: '2023-04-20',
-    reviews: ["Narrativa excepcional."],
-    cover: 'https://covers.openlibrary.org/b/id/8231896-L.jpg'
-  },
-  {
-    title: 'La princesa prometida',
-    author: 'William Goldman',
-    available: true,
-    rating: 4.5,
-    category: 'Fantasía',
-    addedDate: '2023-03-11',
-    reviews: ["Aventura y romance clásico."],
-    cover: 'https://covers.openlibrary.org/b/id/8231901-L.jpg'
-  },
-
-  // Comics
-  {
-    title: 'Watchmen',
-    author: 'Alan Moore',
-    available: true,
-    rating: 4.9,
-    category: 'Comics',
-    addedDate: '2023-07-01',
-    reviews: ["Revolucionario y oscuro."],
-    cover: 'https://covers.openlibrary.org/b/id/8030406-M.jpg'
-  },
-  {
-    title: 'Maus',
-    author: 'Art Spiegelman',
-    available: true,
-    rating: 4.8,
-    category: 'Comics',
-    addedDate: '2023-05-15',
-    reviews: ["Profundo y conmovedor."],
-    cover: 'https://covers.openlibrary.org/b/id/14383494-M.jpg'
-  },
-  {
-    title: 'Sandman',
-    author: 'Neil Gaiman',
-    available: true,
-    rating: 4.7,
-    category: 'Comics',
-    addedDate: '2023-04-01',
-    reviews: ["Místico y literario."],
-    cover: 'https://covers.openlibrary.org/b/id/11222507-M.jpg'
-  },
-  {
-    title: 'Batman: El regreso del Caballero Oscuro',
-    author: 'Frank Miller',
-    available: true,
-    rating: 4.6,
-    category: 'Comics',
-    addedDate: '2023-03-18',
-    reviews: ["Oscuro y épico."],
-    cover: 'https://covers.openlibrary.org/b/id/14636539-M.jpg'
-  },
-  {
-    title: 'Persepolis',
-    author: 'Marjane Satrapi',
-    available: false,
-    rating: 4.5,
-    category: 'Comics',
-    addedDate: '2023-02-10',
-    reviews: ["Biografía gráfica emotiva."],
-    cover: 'https://covers.openlibrary.org/b/id/12909206-M.jpg'
-  }
-];
-
-const prestamos = [
-  {
-    title: 'Cien años de soledad',
-    due: '2025-05-20',
-    index: books.findIndex(b => b.title === 'Cien años de soledad'),
-    userReview: null,
-    userRating: null
-  },
-  {
-    title: 'La ciudad y los perros',
-    due: '2025-05-25',
-    index: books.findIndex(b => b.title === 'La ciudad y los perros'),
-    userReview: null,
-    userRating: null
-  }
-];
-
 const reservas = {}; // { 'Título del libro': [lista de usuarios] }
 
-currentUser.name = 'Juan Pérez';
-currentUser.email = 'juan@example.com';
-currentUser.role = 'lector';
+// Función para cargar los préstamos del usuario desde la base de datos
+async function loadPrestamos() {
+  try {
+    const response = await fetch('/api/prestamos/usuario');
+    if (!response.ok) {
+      throw new Error('Error al obtener los préstamos');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error al cargar préstamos:', error);
+    return [];
+  }
+}
 
+// Función para cargar las reservas del usuario desde la base de datos
+async function loadReservas() {
+  try {
+    const response = await fetch('/api/reservas/usuario');
+    if (!response.ok) {
+      throw new Error('Error al obtener las reservas');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error al cargar reservas:', error);
+    return [];
+  }
+}
 
-let filteredBooks = null;
-
+// Función principal para renderizar libros
 async function renderBooks() {
   try {
     const response = await fetch('/api/libros');
@@ -305,40 +48,66 @@ async function renderBooks() {
     const bookList = document.getElementById('bookList');
     bookList.innerHTML = '';
     
-    // Aplicar filtros
+    // Obtener valores de los filtros
     const search = document.getElementById('search').value.toLowerCase();
     const category = document.getElementById('filter-category').value;
+    const minRating = parseFloat(document.getElementById('filter-rating').value);
+    const order = document.getElementById('filter-order').value;
     
+    // Aplicar filtros
     let filtered = booksFromDB.filter(book => {
+      // Filtro de búsqueda
       const matchesSearch = 
         book.titulo.toLowerCase().includes(search) ||
-        book.autores.ssme(a => a.nombre.toLowerCase().includes(search));
+        book.autores.some(a => a.nombre.toLowerCase().includes(search));
+      
+      // Filtro de categoría
       const matchesCategory = category === 'all' || book.genero === category;
-      return matchesSearch && matchesCategory;
+      
+      // Filtro de calificación
+      const matchesRating = book.promedio_calificacion >= minRating;
+      
+      return matchesSearch && matchesCategory && matchesRating;
     });
     
+    // Aplicar orden
+    if (order === 'recent') {
+      filtered.sort((a, b) => new Date(b.año_publicacion || 0) - new Date(a.año_publicacion || 0));
+    } else if (order === 'oldest') {
+      filtered.sort((a, b) => new Date(a.año_publicacion || 0) - new Date(b.año_publicacion || 0));
+    } else if (order === 'rating') {
+      filtered.sort((a, b) => (b.promedio_calificacion || 0) - (a.promedio_calificacion || 0));
+    }
+    
     // Paginación
+    const totalPages = Math.ceil(filtered.length / booksPerPage);
     const start = (currentPage - 1) * booksPerPage;
     const end = start + booksPerPage;
     const paginated = filtered.slice(start, end);
     
     // Renderizar libros
-    paginated.forEach(book => {
-      const div = document.createElement('div');
-      div.className = 'book';
-      
-      div.innerHTML = `
-        <img src="${book.portada || 'https://via.placeholder.com/150'}" 
-             alt="${book.titulo}" 
-             onclick="showBookDetails('${book.ISBN}')" 
-             style="cursor:pointer;">
-      `;
-      
-      bookList.appendChild(div);
-    });
+    if (paginated.length === 0) {
+      bookList.innerHTML = '<p class="no-results">No se encontraron libros que coincidan con los filtros.</p>';
+    } else {
+      paginated.forEach(book => {
+        const div = document.createElement('div');
+        div.className = 'book';
+        
+        div.innerHTML = `
+          <img src="${book.portada || 'https://via.placeholder.com/150'}" 
+               alt="${book.titulo}" 
+               onclick="showBookDetails('${book.ISBN}')" 
+               style="cursor:pointer;">
+          </div>
+        `;
+        
+        bookList.appendChild(div);
+      });
+    }
     
+    // Actualizar indicador de página
     document.getElementById('pageIndicator').innerText =
-      `Página ${currentPage} de ${Math.max(1, Math.ceil(filtered.length / booksPerPage))}`;
+      `Página ${currentPage} de ${Math.max(1, totalPages)}`;
       
   } catch (error) {
     console.error('Error al cargar libros:', error);
@@ -347,6 +116,23 @@ async function renderBooks() {
   }
 }
 
+// Configurar eventos de los filtros
+function setupFilterEvents() {
+  // Evento para mostrar/ocultar menú de filtros
+  document.getElementById('filterToggleBtn').addEventListener('click', () => {
+    const menu = document.getElementById('filtersMenu');
+    menu.classList.toggle('hidden');
+  });
+  
+  // Evento para aplicar filtros
+  document.getElementById('applyFiltersBtn').addEventListener('click', () => {
+    currentPage = 1; // Resetear a primera página
+    renderBooks();
+    document.getElementById('filtersMenu').classList.add('hidden');
+  });
+}
+
+// Función para mostrar detalles del libro (actualizada)
 async function showBookDetails(isbn) {
   try {
     const response = await fetch(`/api/libros/${isbn}`);
@@ -355,7 +141,7 @@ async function showBookDetails(isbn) {
     }
     const book = await response.json();
     
-    // Obtener disponibilidad (necesitarías implementar esta función)
+    // Verificar disponibilidad
     const disponible = await verificarDisponibilidad(isbn);
     
     // Mostrar detalles
@@ -398,7 +184,7 @@ async function verificarDisponibilidad(isbn) {
       return false;
     }
     const data = await response.json();
-    return data.disponible;
+    return data.disponible;  // ✅ Este campo sí existe
   } catch (error) {
     console.error('Error al verificar disponibilidad:', error);
     return false;
@@ -406,23 +192,26 @@ async function verificarDisponibilidad(isbn) {
 }
 
 // Función para prestar libro
+// Función para prestar libro (actualizada)
 async function prestarLibro(isbn) {
   try {
     const response = await fetch('/api/prestamos', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        ISBN: isbn,
-        usuario_id: currentUser.id // Necesitas tener esta información
-      })
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({ ISBN: isbn })
     });
     
     if (!response.ok) {
-      throw new Error('No se pudo realizar el préstamo');
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'No se pudo realizar el préstamo');
     }
     
     alert('Libro prestado correctamente');
     renderBooks();
+    renderPrestamos();
     closeDetailPanel();
     
   } catch (error) {
@@ -431,24 +220,26 @@ async function prestarLibro(isbn) {
   }
 }
 
-// Función para reservar libro
+// Función para reservar libro (actualizada)
 async function reservarLibro(isbn) {
   try {
     const response = await fetch('/api/reservas', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        ISBN: isbn,
-        usuario_id: currentUser.id // Necesitas tener esta información
-      })
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({ ISBN: isbn })
     });
     
     if (!response.ok) {
-      throw new Error('No se pudo realizar la reserva');
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'No se pudo realizar la reserva');
     }
     
     alert('Libro reservado correctamente. Te notificaremos cuando esté disponible.');
     renderBooks();
+    renderReservas();
     closeDetailPanel();
     
   } catch (error) {
@@ -457,36 +248,191 @@ async function reservarLibro(isbn) {
   }
 }
 
-function submitReview(e, index, fromPrestamos = false) {
+// Función para devolver libro (actualizada)
+async function devolverLibro(idPrestamo) {
+  try {
+    const response = await fetch(`/api/prestamos/${idPrestamo}/devolver`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'No se pudo realizar la devolución');
+    }
+    
+    alert('Libro devuelto correctamente');
+    renderPrestamos();
+    renderBooks();
+    renderReservas(); // Asegurar que se actualicen las reservas
+    
+  } catch (error) {
+    console.error('Error al devolver libro:', error);
+    alert('Error al devolver libro: ' + error.message);
+  }
+}
+
+// Función para renderizar reservas (actualizada)
+async function renderReservas() {
+  const reservasList = document.getElementById('reservasList');
+  reservasList.innerHTML = '';
+
+  try {
+    const response = await fetch('/api/reservas/usuario');
+    if (!response.ok) {
+      throw new Error('Error al obtener las reservas');
+    }
+    const reservas = await response.json();
+    
+    if (reservas.length === 0) {
+      reservasList.innerHTML = '<p>No tienes reservas activas</p>';
+      return;
+    }
+
+    reservas.forEach(reserva => {
+      // Solo mostrar reservas pendientes o notificadas
+      if (reserva.estado === 'pendiente' || reserva.estado === 'notificado') {
+        const li = document.createElement('li');
+        li.className = 'reserva-item';
+        
+        const fechaReserva = new Date(reserva.fecha_reserva).toLocaleDateString();
+        
+        li.innerHTML = `
+          <div class="card book-reserva-card">
+            <div class="book-reserva-cover">
+              <img src="${reserva.libro.portada || 'https://via.placeholder.com/150'}" 
+                   alt="${reserva.libro.titulo}" />
+            </div>
+            <div class="book-reserva-info">
+              <h3>${reserva.libro.titulo}</h3>
+              <p><strong>Autor:</strong> ${reserva.libro.autores.map(a => a.nombre).join(', ')}</p>
+              <p><strong>Fecha reserva:</strong> ${fechaReserva}</p>
+              <p><strong>Estado:</strong> ${reserva.estado === 'notificado' ? 'Disponible para préstamo' : 'En espera (posición: ' + reserva.posicion + ')'}</p>
+              ${reserva.estado === 'notificado' ? `
+                <button onclick="convertirReservaEnPrestamo(${reserva.id_reserva}, '${reserva.libro.ISBN}')">Prestar ahora</button>
+              ` : `
+                <button onclick="cancelarReserva(${reserva.id_reserva})">Cancelar reserva</button>
+              `}
+            </div>
+          </div>
+        `;
+        
+        reservasList.appendChild(li);
+      }
+    });
+  } catch (error) {
+    console.error('Error al renderizar reservas:', error);
+    reservasList.innerHTML = '<p class="error">Error al cargar las reservas</p>';
+  }
+}
+
+async function convertirReservaEnPrestamo(idReserva, isbn) {
+  try {
+    // Primero crear el préstamo
+    const prestamoResponse = await fetch('/api/prestamos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({ ISBN: isbn })
+    });
+
+    if (!prestamoResponse.ok) {
+      const errorData = await prestamoResponse.json();
+      throw new Error(errorData.error || 'No se pudo prestar el libro');
+    }
+
+    // Luego marcar la reserva como completada
+    const reservaResponse = await fetch(`/api/reservas/${idReserva}/completar`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    if (!reservaResponse.ok) {
+      throw new Error('No se pudo marcar la reserva como completada');
+    }
+
+    alert('Libro prestado correctamente');
+    renderBooks();
+    renderReservas(); // Actualizar lista de reservas
+    renderPrestamos(); // Actualizar lista de préstamos
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Error al prestar libro: ' + error.message);
+  }
+}
+
+// Función para cancelar reserva
+async function cancelarReserva(idReserva) {
+  try {
+    const response = await fetch(`/api/reservas/${idReserva}`, {
+      method: 'DELETE',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'No se pudo cancelar la reserva');
+    }
+    
+    alert('Reserva cancelada correctamente');
+    renderReservas();
+    
+  } catch (error) {
+    console.error('Error al cancelar reserva:', error);
+    alert('Error al cancelar reserva: ' + error.message);
+  }
+}
+
+async function submitReview(e, idPrestamo) {
   e.preventDefault();
+
   const reviewInput = e.target.querySelector('input');
   const ratingInput = e.target.querySelector('select');
   const review = reviewInput.value;
   const rating = parseInt(ratingInput.value);
 
-  books[index].reviews.push(review);
-  books[index].rating = ((books[index].rating * (books[index].reviews.length - 1)) + rating) / books[index].reviews.length;
+  try {
+    const response = await fetch(`/api/prestamos/${idPrestamo}/resena`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({
+        comentario: review,
+        calificacion: rating
+      })
+    });
 
-  // Guardar reseña en préstamo
-  const p = prestamos.find(p => p.index === index);
-  if (p) {
-    p.userReview = review;
-    p.userRating = rating;
-  }
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'No se pudo guardar la reseña');
+    }
 
-  if (fromPrestamos) {
+
+    alert('Reseña enviada correctamente');
     renderPrestamos();
-  } else {
-    renderBooks();
+
+  } catch (error) {
+    console.error('Error al enviar reseña:', error);
+    alert('Error al enviar reseña: ' + error.message);
   }
 }
 
 function nextPage() {
-  const totalPages = Math.ceil(books.length / booksPerPage);
-  if (currentPage < totalPages) {
-    currentPage++;
-    renderBooks();
-  }
+  currentPage++;
+  renderBooks();
 }
 
 function prevPage() {
@@ -496,129 +442,66 @@ function prevPage() {
   }
 }
 
-function renderPrestamos() {
+
+// Función para renderizar préstamos (actualizada)
+async function renderPrestamos() {
   const prestamosList = document.getElementById('prestamosList');
   prestamosList.innerHTML = '';
-
-  prestamos.forEach((p) => {
-    const book = books[p.index];
-
-    const li = document.createElement('li');
-
-    // Mostrar formulario si no hay reseña, mostrar solo la reseña si ya existe
-    let contenidoResena = '';
-    if (p.userReview && p.userRating) {
-      contenidoResena = `
-        <p><strong>Tu calificación:</strong> ${'⭐'.repeat(p.userRating)} (${p.userRating})</p>
-        <p><strong>Tu reseña:</strong> ${p.userReview}</p>
-        <button onclick="devolverLibro(${p.index})">Devolver libro</button>
-      `;
-    } else {
-      contenidoResena = `
-        <form onsubmit="submitReview(event, ${p.index}, true)">
-          <input type="text" placeholder="Escribe una reseña..." required>
-          <select>
-            <option value="5">5 ⭐</option>
-            <option value="4">4 ⭐</option>
-            <option value="3">3 ⭐</option>
-            <option value="2">2 ⭐</option>
-            <option value="1">1 ⭐</option>
-          </select>
-          <button type="submit">Enviar Reseña</button>
-        </form>
-      `;
+  
+  try {
+    const prestamos = await loadPrestamos();
+    
+    if (prestamos.length === 0) {
+      prestamosList.innerHTML = '<p>No tienes préstamos activos</p>';
+      return;
     }
 
-    li.innerHTML = `
-      <div class="card book-prestamo-card">
-        <div class="book-prestamo-cover">
-          <img src="${book.cover}" alt="${book.title}" />
-        </div>
-        <div class="book-prestamo-info">
-          <h3>${p.title}</h3>
-          <p><strong>Autor:</strong> ${book.author}</p>
-          <p><strong>Devolver antes del:</strong> ${p.due}</p>
-          ${contenidoResena}
-        </div>
-      </div>
-    `;
-
-    prestamosList.appendChild(li);
-  });
-}
-
-function devolverLibro(index) {
-  const book = books[index];
-  const title = book.title;
-
-  // Marcar como disponible
-  book.available = true;
-
-  // Eliminar préstamo
-  const prestamoIndex = prestamos.findIndex(p => p.index === index);
-  if (prestamoIndex !== -1) {
-    prestamos.splice(prestamoIndex, 1);
-  }
-
-  // Ver si hay reservas
-  if (reservas[title] && reservas[title].length > 0) {
-    const siguienteUsuario = reservas[title][0];
-    alert(`¡${siguienteUsuario}, el libro "${title}" ya está disponible para ti!`);
-
-    // Si el usuario actual es el primero en la fila
-    if (siguienteUsuario === currentUser.name) {
-      book.available = false;
-      const dueDate = new Date();
-      dueDate.setDate(dueDate.getDate() + 14);
-      prestamos.push({
-        title: book.title,
-        due: dueDate.toISOString().split('T')[0],
-        index,
-        userReview: null,
-        userRating: null
-      });
-
-      reservas[title].shift(); // quita al usuario de la cola
-    }
-  }
-
-  renderBooks();
-  renderPrestamos();
-  renderReservas();
-
-  alert('¡Gracias por devolver el libro! 😊');
-}
-
-function renderReservas() {
-  const reservasList = document.getElementById('reservasList');
-  reservasList.innerHTML = '';
-
-  Object.entries(reservas).forEach(([title, usuarios]) => {
-    if (usuarios.includes(currentUser.name)) {
+    prestamos.forEach(prestamo => {
       const li = document.createElement('li');
-      li.textContent = `${title} - En espera (${usuarios.indexOf(currentUser.name) + 1}º en la fila)`;
-      reservasList.appendChild(li);
-    }
-  });
-}
+      li.className = 'prestamo-item';
+      
+      // Formatear fechas
+      const fechaPrestamo = new Date(prestamo.fecha_prestamo).toLocaleDateString();
+      const fechaVencimiento = new Date(prestamo.fecha_vencimiento).toLocaleDateString();
+      
+      li.innerHTML = `
+        <div class="card book-prestamo-card">
+          <div class="book-prestamo-cover">
+            <img src="${prestamo.libro.portada || 'https://via.placeholder.com/150'}" 
+                 alt="${prestamo.libro.titulo}" />
+          </div>
+          <div class="book-prestamo-info">
+            <h3>${prestamo.libro.titulo}</h3>
+            <p><strong>Autor:</strong> ${prestamo.libro.autores.map(a => a.nombre).join(', ')}</p>
+            <p><strong>Fecha préstamo:</strong> ${fechaPrestamo}</p>
+            <p><strong>Devolver antes del:</strong> ${fechaVencimiento}</p>
+            <p><strong>Devolver antes del:</strong> ${fechaVencimiento}</p>
 
-function reservarLibro(index) {
-  const book = books[index];
-  const title = book.title;
-
-  if (!reservas[title]) {
-    reservas[title] = [];
+            ${prestamo.puede_resenar ? `
+              <form onsubmit="submitReview(event, ${prestamo.id_prestamo})">
+                <input type="text" placeholder="Escribe una reseña..." required>
+                <select>
+                  <option value="5">5 ⭐</option>
+                  <option value="4">4 ⭐</option>
+                  <option value="3">3 ⭐</option>
+                  <option value="2">2 ⭐</option>
+                  <option value="1">1 ⭐</option>
+                </select>
+                <button type="submit">Enviar Reseña</button>
+              </form>
+            ` : `
+              <button onclick="devolverLibro(${prestamo.id_prestamo})">Devolver libro</button>
+            `}
+          </div>
+        </div>
+      `;
+      
+      prestamosList.appendChild(li);
+    });
+  } catch (error) {
+    console.error('Error al renderizar préstamos:', error);
+    prestamosList.innerHTML = '<p class="error">Error al cargar los préstamos</p>';
   }
-
-  // Evitar reservas duplicadas
-  if (!reservas[title].includes(currentUser.name)) {
-    reservas[title].push(currentUser.name);
-    alert(`Has reservado "${title}". Se te notificará cuando esté disponible.`);
-  } else {
-    alert(`Ya has reservado "${title}".`);
-  }
-
-  renderReservas();
 }
 
 function mostrarFormularioPerfil() {
@@ -713,32 +596,6 @@ function logout() {
 document.getElementById('filterToggleBtn').addEventListener('click', () => {
   const menu = document.getElementById('filtersMenu');
   menu.classList.toggle('hidden');
-});
-
-document.getElementById('applyFiltersBtn').addEventListener('click', () => {
-  const selectedCategories = Array.from(document.querySelectorAll('.filter-category:checked')).map(cb => cb.value);
-  const selectedAuthors = Array.from(document.querySelectorAll('.filter-author:checked')).map(cb => cb.value);
-  const minRating = parseFloat(document.getElementById('filter-rating').value);
-  const order = document.getElementById('filter-order').value;
-
-  filteredBooks = books.filter(book => {
-    const matchCategory = selectedCategories.length === 0 || selectedCategories.includes(book.category);
-    const matchAuthor = selectedAuthors.length === 0 || selectedAuthors.includes(book.author);
-    const matchRating = book.rating >= minRating;
-    return matchCategory && matchAuthor && matchRating;
-  });
-
-  if(order === 'recent') {
-    filteredBooks.sort((a,b) => new Date(b.addedDate) - new Date(a.addedDate));
-  } else if(order === 'oldest') {
-    filteredBooks.sort((a,b) => new Date(a.addedDate) - new Date(b.addedDate));
-  } else if(order === 'rating') {
-    filteredBooks.sort((a,b) => b.rating - a.rating);
-  }
-
-  currentPage = 1;
-  renderBooks();
-  document.getElementById('filtersMenu').classList.add('hidden');
 });
 
 // Navegación sidebar
@@ -859,8 +716,43 @@ function editProfile(event) {
 }
 
 
-// Inicializar dashboard
-renderBooks();
-renderPrestamos();
-renderReservas();
-cargarPerfilUsuario(); 
+// Al inicializar el dashboard
+async function initDashboard() {
+  try {
+    // Obtener información del usuario actual
+    const userResponse = await fetch('/api/usuarios/perfil', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    
+    if (!userResponse.ok) {
+      throw new Error('Error al cargar información del usuario');
+    }
+    
+    const userData = await userResponse.json();
+    currentUser = {
+      id: userData.id_usuario,
+      name: `${userData.nombres} ${userData.apellidos}`,
+      email: userData.correo,
+      role: userData.rol
+    };
+    
+    // Renderizar todas las secciones
+    setupFilterEvents();
+    renderBooks();
+    renderPrestamos();
+    renderReservas();
+    cargarPerfilUsuario();
+    
+  } catch (error) {
+    console.error('Error al inicializar dashboard:', error);
+    alert('Error al cargar datos del usuario');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupFilterEvents(); // 🔄 Asegura que se ejecute cuando el DOM esté listo
+});
+
+initDashboard();

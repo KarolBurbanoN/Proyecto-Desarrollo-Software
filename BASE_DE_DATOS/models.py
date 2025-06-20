@@ -106,6 +106,7 @@ class Prestamo(Base):
     fecha_prestamo = Column(Date, nullable=False)
     fecha_vencimiento = Column(Date, nullable=False)
     estado = Column(String(20), default='activo')
+    puede_resenar = Column(Boolean, default=True)
 
     usuario = relationship("Usuario")
     ejemplar = relationship("Ejemplar")
@@ -144,6 +145,7 @@ class Reserva(Base):
     ISBN = Column(Integer, ForeignKey('libro.ISBN'))
     fecha_reserva = Column(Date, nullable=False)
     estado = Column(String(20), default='pendiente')
+    notificado = Column(Boolean, default=False)
 
     usuario = relationship("Usuario")
     libro = relationship("Libro")

@@ -137,6 +137,7 @@ class PrestamoBase(BaseModel):
     fecha_prestamo: date
     fecha_vencimiento: date
     estado: Optional[str] = 'activo'
+    puede_resenar: Optional[bool] = True
 
 class PrestamoCreate(PrestamoBase):
     pass
@@ -185,6 +186,7 @@ class ReservaBase(BaseModel):
     ISBN: int
     fecha_reserva: date
     estado: Optional[str] = 'pendiente'
+    notificado: Optional[bool] = False
 
 class ReservaCreate(ReservaBase):
     pass

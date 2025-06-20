@@ -16,19 +16,20 @@ def login():
 
     user = db.query(Usuario).filter(Usuario.correo == email).first()
     if user and bcrypt.checkpw(password.encode("utf-8"), user.contraseña.encode("utf-8")):
-        session["usuario"] = user.numero_documento
-        session["rol"] = user.rol  # <- Guardamos el rol en la sesión
+        session["usuario"] = user.numero_documento     # ← Para compatibilidad con paneles
+        session["usuario_id"] = user.id_usuario        # ← Para API REST
+        session["rol"] = user.rol                      # ← Para validación por rol
 
         # Redirección por rol
         if user.rol == "administrador":
             return redirect("/admin")
         elif user.rol == "bibliotecario":
-            return redirect(("/bibliotecario"))
+            return redirect("/bibliotecario")
         else:  # lector
             return redirect("/dashboard")
     else:
         return "Correo o contraseña incorrectos", 401
-    
+
 @login_bp.route("/registro", methods=["POST"])
 def registro():
     db: Session = next(get_db())
@@ -66,7 +67,7 @@ def registro():
         telefono=telefono,
         correo=correo,
         contraseña=contraseña_cifrada,
-        rol=rol  # <-- agregar esto
+        rol=rol
     )
 
     db.add(nuevo_usuario)
@@ -84,7 +85,10 @@ def api_auth():
     user = db.query(Usuario).filter(Usuario.correo == email).first()
     
     if user and bcrypt.checkpw(password.encode('utf-8'), user.contraseña.encode('utf-8')):
-        session['usuario'] = user.numero_documento
+        session["usuario"] = user.numero_documento  # ← Para render_template
+        session["usuario_id"] = user.id_usuario     # ← Para API
+        session["rol"] = user.rol
+
         return jsonify({
             'success': True,
             'user': {

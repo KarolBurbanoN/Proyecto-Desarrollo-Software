@@ -534,6 +534,52 @@ body.lector-panel .book-prestamo-info button:hover {
   margin-bottom: 2rem;
 }
 
+
+/**-----------------------*/
+/**------ Reservas ------*/
+/**-----------------------*/
+.book-reserva-card {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  align-items: flex-start;
+}
+
+.book-reserva-cover img {
+  width: 120px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.book-reserva-info {
+  flex: 1;
+}
+
+.book-reserva-info h3 {
+  margin-top: 0;
+}
+
+.book-reserva-info button {
+  background-color: #B08968;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.book-reserva-info button:hover {
+  background-color: #7F5539;
+}
+
+#reservasList li {
+  list-style: none;
+  margin-bottom: 2rem;
+}
+
 /*?-----------------------*/
 /*?---- ADMINISTRADOR ----*/
 /*?-----------------------*/
@@ -812,6 +858,55 @@ body.admin-panel.book-info button {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Estilos para las tarjetas de préstamos y reservas */
+.book-prestamo-card, .book-reserva-card {
+    display: flex;
+    gap: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    background-color: white;
+}
+
+.book-prestamo-cover, .book-reserva-cover {
+    flex: 0 0 100px;
+}
+
+.book-prestamo-cover img, .book-reserva-cover img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.book-prestamo-info, .book-reserva-info {
+    flex: 1;
+}
+
+.book-prestamo-info h3, .book-reserva-info h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+/* Estado de los préstamos */
+.estado-prestamo {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.estado-activo {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.estado-vencido {
+    background-color: #f8d7da;
+    color: #721c24;
 }
 
 /*?-----------------------*/

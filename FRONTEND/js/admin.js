@@ -360,7 +360,8 @@ function renderUsuarios() {
   const contenedor = document.getElementById('listaUsuarios');
   contenedor.innerHTML = '';
 
-  const busqueda = document.getElementById('filtroBuscar').value.toLowerCase();
+  const searchInput = document.getElementById('search-usuarios');
+  const busqueda = searchInput ? searchInput.value.toLowerCase() : '';  
   const filtroRol = document.getElementById('filter-rol-usuario').value;
   const filtroEstado = document.getElementById('filter-estado-usuario').value;
   const ordenFecha = document.getElementById('filter-fecha-usuario').value;
@@ -492,7 +493,6 @@ function editarUsuario(doc) {
   document.getElementById('numDoc').readOnly = true;
 }
 
-
 function eliminarUsuario(doc) {
   if (confirm("¿Seguro que deseas eliminar este usuario?")) {
     usuarios = usuarios.filter(u => u.numero_documento !== doc);
@@ -515,29 +515,113 @@ async function renderBooksAdmin() {
       throw new Error('Error al obtener los libros');
     }
     const booksFromDB = await response.json();
-    
+
     const bookList = document.getElementById('adminBookList');
     bookList.innerHTML = '';
-    
-    booksFromDB.forEach((book) => {
-      const div = document.createElement('div');
-      div.className = 'book';
-      
-      div.innerHTML = `
-        <img src="${book.portada || 'https://via.placeholder.com/150'}" 
-             alt="${book.titulo}" 
-             onclick="showAdminBookDetails('${book.ISBN}')" 
-             style="cursor:pointer;">
-      `;
-      
-      bookList.appendChild(div);
+
+    // Obtener valores de los filtros
+    const search = document.getElementById('search-admin').value.toLowerCase();
+    const category = document.getElementById('filter-category-admin').value;
+    const minRating = parseFloat(document.getElementById('filter-rating-admin').value);
+    const order = document.getElementById('filter-order-admin').value;
+
+    // Aplicar filtros
+    let filtered = booksFromDB.filter(book => {
+      const title = book.titulo?.toLowerCase() || '';
+      const authors = Array.isArray(book.autores) ? book.autores.map(a => a.nombre.toLowerCase()).join(' ') : '';
+      const genero = book.genero || '';
+      const rating = book.promedio_calificacion || 0;
+
+      const matchesSearch = title.includes(search) || authors.includes(search);
+      const matchesCategory = category === 'all' || genero === category;
+      const matchesRating = rating >= minRating;
+
+      return matchesSearch && matchesCategory && matchesRating;
     });
-    
+
+    // Aplicar orden
+    if (order === 'recent') {
+      filtered.sort((a, b) => new Date(b.fecha_agregado || b.año_publicacion || '2000-01-01') -
+                               new Date(a.fecha_agregado || a.año_publicacion || '2000-01-01'));
+    } else if (order === 'oldest') {
+      filtered.sort((a, b) => new Date(a.fecha_agregado || a.año_publicacion || '2000-01-01') -
+                               new Date(b.fecha_agregado || b.año_publicacion || '2000-01-01'));
+    } else if (order === 'rating') {
+      filtered.sort((a, b) => (b.promedio_calificacion || 0) - (a.promedio_calificacion || 0));
+    }
+
+    // Paginación
+    const totalPages = Math.ceil(filtered.length / booksPerPage);
+    const start = (currentPage - 1) * booksPerPage;
+    const end = start + booksPerPage;
+    const paginated = filtered.slice(start, end);
+
+    // Renderizar libros
+    if (paginated.length === 0) {
+      bookList.innerHTML = '<p class="no-results">No se encontraron libros que coincidan con los filtros.</p>';
+    } else {
+      paginated.forEach(book => {
+        const div = document.createElement('div');
+        div.className = 'book';
+
+        const rating = book.promedio_calificacion || 0;
+        const portada = book.portada || 'https://via.placeholder.com/150';
+
+        div.innerHTML = `
+          <img src="${portada}" alt="${book.titulo}" style="cursor:pointer;">
+          
+        `;
+        bookList.appendChild(div);
+      });
+    }
+
+    document.getElementById('pageIndicator').innerText =
+      `Página ${currentPage} de ${Math.max(1, totalPages)}`;
   } catch (error) {
     console.error('Error al cargar libros:', error);
-    document.getElementById('adminBookList').innerHTML = 
+    document.getElementById('adminBookList').innerHTML =
       '<p class="error">Error al cargar los libros. Intente nuevamente.</p>';
   }
+}
+
+
+// Configurar eventos de los filtros para admin
+function setupAdminFilterEvents() {
+  // Evento para mostrar/ocultar menú de filtros
+  document.getElementById('filterToggleBtn-admin').addEventListener('click', () => {
+    const menu = document.getElementById('filtersMenu-admin');
+    menu.classList.toggle('hidden');
+  });
+  
+  // Evento para aplicar filtros
+  document.getElementById('applyFiltersBtn-admin').addEventListener('click', () => {
+    console.log('Click en aplicar filtros');
+    currentPage = 1; // Resetear a primera página
+    renderBooksAdmin();
+    document.getElementById('filtersMenu-admin').classList.add('hidden');
+  });
+  
+  // Evento de búsqueda
+  document.getElementById('search-admin').addEventListener('input', () => {
+    currentPage = 1;
+    renderBooksAdmin();
+  });
+
+  // Eventos para cambios en los select de filtros
+  document.getElementById('filter-category-admin').addEventListener('change', () => {
+    currentPage = 1;
+    renderBooksAdmin();
+  });
+  
+  document.getElementById('filter-rating-admin').addEventListener('change', () => {
+    currentPage = 1;
+    renderBooksAdmin();
+  });
+  
+  document.getElementById('filter-order-admin').addEventListener('change', () => {
+    currentPage = 1;
+    renderBooksAdmin();
+  });
 }
 
 // Nueva función específica para el panel de administrador
@@ -585,6 +669,9 @@ function mostrarSeccionLibros(seccion) {
   if (seccion === 'listar') {
     document.querySelector('#gestion-libros .user-tab:nth-child(1)').classList.add('active');
     document.getElementById('seccion-listar-libros').classList.remove('hidden-section');
+    setupAdminFilterEvents();
+    renderBooksAdmin();
+
   } else {
     document.querySelector('#gestion-libros .user-tab:nth-child(2)').classList.add('active');
     document.getElementById('seccion-agregar-libro').classList.remove('hidden-section');
@@ -596,7 +683,6 @@ function mostrarSeccionLibros(seccion) {
     document.getElementById("previewPortada").style.display = "none";
   }
 }
-
 
 async function registrarLibro(event) {
   event.preventDefault();
@@ -852,32 +938,6 @@ document.getElementById('filterToggleBtn-admin').addEventListener('click', () =>
   menu.classList.toggle('hidden');
 });
 
-document.getElementById('applyFiltersBtn-admin').addEventListener('click', () => {
-  const selectedCategories = Array.from(document.querySelectorAll('.filter-category-admin:checked')).map(cb => cb.value);
-  const selectedAuthors = Array.from(document.querySelectorAll('.filter-author-admin:checked')).map(cb => cb.value);
-  const minRating = parseFloat(document.getElementById('filter-rating-admin').value);
-  const order = document.getElementById('filter-order-admin').value;
-
-  filteredBooks = books.filter(book => {
-    const matchCategory = selectedCategories.length === 0 || selectedCategories.includes(book.category);
-    const matchAuthor = selectedAuthors.length === 0 || selectedAuthors.includes(book.author);
-    const matchRating = book.rating >= minRating;
-    return matchCategory && matchAuthor && matchRating;
-  });
-
-  if(order === 'recent') {
-    filteredBooks.sort((a,b) => new Date(b.addedDate) - new Date(a.addedDate));
-  } else if(order === 'oldest') {
-    filteredBooks.sort((a,b) => new Date(a.addedDate) - new Date(b.addedDate));
-  } else if(order === 'rating') {
-    filteredBooks.sort((a,b) => b.rating - a.rating);
-  }
-
-  currentPage = 1;
-  renderBooksAdmin();
-  document.getElementById('filtersMenu-admin').classList.add('hidden');
-});
-
 //* Filtros desplegables para usuarios
 
 document.getElementById('filterToggleBtn-usuarios').addEventListener('click', () => {
@@ -918,6 +978,12 @@ document.getElementById('search-admin').addEventListener('input', () => {
   renderBooksAdmin();
 });
 
+// Activar búsqueda de usuarios en tiempo real
+document.getElementById('search-usuarios').addEventListener('input', () => {
+  paginaActualUsuarios = 1;
+  renderUsuarios();
+});
+
 // Vista previa de portada en tiempo real
 document.getElementById("urlPortadaLibro").addEventListener("input", () => {
   const url = document.getElementById("urlPortadaLibro").value;
@@ -933,6 +999,8 @@ document.getElementById("urlPortadaLibro").addEventListener("input", () => {
 });
 
 
-// Inicializar dashboard
-renderUsuarios();
-renderBooksAdmin();
+window.addEventListener('DOMContentLoaded', () => {
+  renderUsuarios();
+  setupAdminFilterEvents();
+  renderBooksAdmin();
+});

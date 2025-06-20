@@ -10,7 +10,9 @@ from BASE_DE_DATOS.db import get_db
 from BASE_DE_DATOS import models
 from BASE_DE_DATOS.models import Usuario
 from BACKEND.usuarios import usuarios_bp
-from BACKEND.libros import libros_bp 
+from BACKEND.libros import libros_bp
+from BACKEND.prestamos import prestamos_bp
+from BACKEND.reservas import reservas_bp
 
 
 app = Flask(
@@ -41,7 +43,7 @@ def get_libros():
         'portada': libro.portada,
         'promedio_calificacion': float(libro.promedio_calificacion) if libro.promedio_calificacion else 0.0,
         'genero': libro.genero,
-        'editorial': libro.editorial
+        'editorial': libro.editorial,
     } for libro in libros])
 
 @api_bp.route('/actualizar-perfil', methods=['POST'])
@@ -50,7 +52,7 @@ def actualizar_perfil():
         return jsonify({'error': 'No autorizado'}), 401
     
     db = next(get_db())
-    usuario = db.query(Usuario).filter(Usuario.id_usuario == session['user_id']).first()
+    usuario = db.query(Usuario).filter(Usuario.id_usuario == session['usuario_id']).first()
     
     if not usuario:
         return jsonify({'error': 'Usuario no encontrado'}), 404
@@ -78,6 +80,8 @@ def actualizar_perfil():
 app.register_blueprint(login_bp)
 app.register_blueprint(usuarios_bp)
 app.register_blueprint(libros_bp)
+app.register_blueprint(prestamos_bp)  # Nuevo
+app.register_blueprint(reservas_bp)   # Nuevo
 
 # ========== Rutas principales de la app ==========
 @app.route("/")
