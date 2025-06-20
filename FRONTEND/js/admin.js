@@ -277,6 +277,8 @@ function mostrarSeccionUsuarios(seccion) {
   if (seccion === 'listar') {
     document.querySelector('.user-tab:nth-child(1)').classList.add('active');
     document.getElementById('seccion-listar-usuarios').classList.remove('hidden-section');
+  
+    renderUsuariosDesdeBackend();
   } else {
     document.querySelector('.user-tab:nth-child(2)').classList.add('active');
     document.getElementById('seccion-agregar-usuario').classList.remove('hidden-section');
@@ -359,14 +361,21 @@ async function registrarUsuario(event) {
 }
 
 function renderUsuarios() {
+  console.log("🔁 renderUsuarios recibidos:", usuariosFiltrados.length, "filtrados de", usuarios.length);
   const contenedor = document.getElementById('listaUsuarios');
   contenedor.innerHTML = '';
 
-  const busqueda = document.getElementById('filtroBuscar').value.toLowerCase();
-  const filtroRol = document.getElementById('filter-rol-usuario').value;
-  const filtroEstado = document.getElementById('filter-estado-usuario').value;
-  const ordenFecha = document.getElementById('filter-fecha-usuario').value;
-
+  const filtroBuscarElement = document.getElementById('filtroBuscar');
+  const filtroRolElement = document.getElementById('filter-rol-usuario');
+  const filtroEstadoElement = document.getElementById('filter-estado-usuario');
+  const filtroFechaElement = document.getElementById('filter-fecha-usuario');
+  
+  const busqueda = filtroBuscarElement ? filtroBuscarElement.value.toLowerCase() : '';
+  const filtroRol = filtroRolElement ? filtroRolElement.value : 'todos';
+  const filtroEstado = filtroEstadoElement ? filtroEstadoElement.value : 'todos';
+  const ordenFecha = filtroFechaElement ? filtroFechaElement.value : 'reciente';
+  
+  
   // 1. Filtro base
   usuariosFiltrados = usuarios.filter(usuario => {
     const coincideBusqueda =
@@ -375,10 +384,11 @@ function renderUsuarios() {
       usuario.numero_documento.includes(busqueda);
 
     const coincideRol = filtroRol === 'todos' || usuario.rol === filtroRol;
-    const coincideEstado = filtroEstado === 'todos' || usuario.estado === filtroEstado;
+    const coincideEstado = filtroEstado === 'todos' || usuario.estado_cuenta === filtroEstado;
 
     return coincideBusqueda && coincideRol && coincideEstado;
   });
+
 
   // 2. Orden por fecha
   usuariosFiltrados.sort((a, b) => {
@@ -404,18 +414,12 @@ function renderUsuarios() {
     div.className = 'card';
 
     div.innerHTML = `
-      <div><strong>${usuario.nombres} ${usuario.apellidos}</strong><br><small>${usuario.numero_documento}</small></div>
+      <div><strong>${usuario.nombres}</strong></div>
       <div>${usuario.correo}</div>
-      <div>${usuario.rol.charAt(0).toUpperCase() + usuario.rol.slice(1)}</div>
-      <div>
-        <span class="estado-${usuario.estado}">${usuario.estado}</span>
-      </div>
-      <div class="acciones">
-        <button class="edit" title="Editar" onclick="editarUsuario('${usuario.numero_documento}')">✏️</button>
-        <button class="delete" title="Eliminar" onclick="eliminarUsuario('${usuario.numero_documento}')">🗑️</button>
-        <button class="block" title="${usuario.estado === 'activo' ? 'Bloquear' : 'Desbloquear'}" onclick="toggleEstadoUsuario('${usuario.numero_documento}')">🚫</button>
-      </div>
+      <div>${usuario.telefono}</div>
+      <div><span class="estado-${usuario.estado_cuenta}">${usuario.estado_cuenta}</span></div>
     `;
+
 
     contenedor.appendChild(div);
   });
@@ -456,9 +460,12 @@ function filtrarUsuarios() {
 }
 
 async function renderUsuariosDesdeBackend() {
+  console.log("👉 renderUsuariosDesdeBackend se está ejecutando"); debugger;
   try {
     const response = await fetch("/api/usuarios/");
+    console.log("💾 Response fetch:", response);
     const data = await response.json();
+    console.log("📋 Data recibida:", data);
     usuarios = data;
     renderUsuarios(); // ya tienes esta función implementada
   } catch (error) {
