@@ -10,6 +10,7 @@ from BASE_DE_DATOS.db import get_db
 from BASE_DE_DATOS import models
 from BASE_DE_DATOS.models import Usuario
 from BACKEND.usuarios import usuarios_bp
+from BACKEND.libros import libros_bp 
 
 
 app = Flask(
@@ -23,6 +24,7 @@ CORS(app, supports_credentials=True)
 
 # ========== Definir el blueprint y sus rutas PRIMERO ==========
 api_bp = Blueprint('api', __name__)
+
 
 @api_bp.route('/')
 def base():
@@ -75,6 +77,7 @@ def actualizar_perfil():
 # ========== Registrar blueprints DESPUÉS de definir todas las rutas ==========
 app.register_blueprint(login_bp)
 app.register_blueprint(usuarios_bp)
+app.register_blueprint(libros_bp)
 
 # ========== Rutas principales de la app ==========
 @app.route("/")

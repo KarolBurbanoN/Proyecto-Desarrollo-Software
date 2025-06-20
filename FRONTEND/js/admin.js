@@ -5,7 +5,6 @@ let usuariosFiltrados = [];
 let paginaActualUsuarios = 1;
 const usuariosPorPagina = 5;
 
-
 const books = [
   // Romance
   {
@@ -292,7 +291,6 @@ function mostrarSeccionUsuarios(seccion) {
 
 }
 
-
 async function registrarUsuario(event) {
   event.preventDefault();
 
@@ -510,84 +508,233 @@ function toggleEstadoUsuario(doc) {
   }
 }
 
-function renderBooksAdmin() {
-  const bookList = document.getElementById('adminBookList');
-  const search = document.getElementById('search-admin').value.toLowerCase();
-  const category = document.getElementById('filter-category-admin').value;
-
-  const booksToUse = filteredBooks || books;
-
-  let filtered = booksToUse.filter(book =>
-    book.title.toLowerCase().includes(search) ||
-    book.author.toLowerCase().includes(search)
-  );
-
-  if (category !== 'all') {
-    filtered = filtered.filter(book => book.category === category);
+async function renderBooksAdmin() {
+  try {
+    const response = await fetch('/api/libros');
+    if (!response.ok) {
+      throw new Error('Error al obtener los libros');
+    }
+    const booksFromDB = await response.json();
+    
+    const bookList = document.getElementById('adminBookList');
+    bookList.innerHTML = '';
+    
+    booksFromDB.forEach((book) => {
+      const div = document.createElement('div');
+      div.className = 'book';
+      
+      div.innerHTML = `
+        <img src="${book.portada || 'https://via.placeholder.com/150'}" 
+             alt="${book.titulo}" 
+             onclick="showAdminBookDetails('${book.ISBN}')" 
+             style="cursor:pointer;">
+      `;
+      
+      bookList.appendChild(div);
+    });
+    
+  } catch (error) {
+    console.error('Error al cargar libros:', error);
+    document.getElementById('adminBookList').innerHTML = 
+      '<p class="error">Error al cargar los libros. Intente nuevamente.</p>';
   }
-
-  const start = (currentPage - 1) * booksPerPage;
-  const end = start + booksPerPage;
-  const paginated = filtered.slice(start, end);
-
-  bookList.innerHTML = '';
-  paginated.forEach((book) => {
-    const index = books.indexOf(book);
-
-    const div = document.createElement('div');
-    div.className = 'book';
-
-    div.innerHTML = `
-      <img src="${book.cover}" alt="${book.title}" onclick="showAdminBookDetails(${index})" style="cursor:pointer;">
-    `;
-
-    bookList.appendChild(div);
-  });
-
-  document.getElementById('pageIndicator').innerText =
-    `Página ${currentPage} de ${Math.max(1, Math.ceil(filtered.length / booksPerPage))}`;
 }
 
 // Nueva función específica para el panel de administrador
-function showAdminBookDetails(index) {
-  const book = books[index];
-  document.getElementById('detailCover').src = book.cover;
-  document.getElementById('detailTitle').textContent = book.title;
-  document.getElementById('detailAuthor').textContent = book.author;
-  document.getElementById('detailStatus').textContent = book.available ? 'Disponible' : 'No disponible';
-  document.getElementById('detailRating').textContent = '⭐'.repeat(Math.round(book.rating)) + ` (${book.rating.toFixed(1)})`;
-  document.getElementById('detailReviews').innerHTML = book.reviews.map(r => `<li>${r}</li>`).join('');
-  
-  // Botones para administrador
-  document.getElementById('detailButton').innerHTML = `
-    <div class="admin-buttons">
-      <button onclick="editarLibro(${index})">Editar</button>
-      <button onclick="eliminarLibro(${index})" class="delete-btn">Eliminar</button>
-    </div>
-  `;
-
-  document.getElementById('bookDetailPanel').classList.add('active');
+async function showAdminBookDetails(isbn) {
+  try {
+    const response = await fetch(`/api/libros/${isbn}`);
+    if (!response.ok) {
+      throw new Error('Libro no encontrado');
+    }
+    const book = await response.json();
+    
+    // Mostrar detalles en el panel
+    document.getElementById('detailCover').src = book.portada || 'https://via.placeholder.com/150';
+    document.getElementById('detailTitle').textContent = book.titulo;
+    document.getElementById('detailAuthor').textContent = book.autores.map(a => a.nombre).join(', ');
+    document.getElementById('detailStatus').textContent = 'Disponible'; // Puedes agregar este campo a tu modelo
+    document.getElementById('detailRating').textContent = book.promedio_calificacion ? 
+      '⭐'.repeat(Math.round(book.promedio_calificacion)) + ` (${book.promedio_calificacion.toFixed(1)})` : 'Sin calificaciones';
+    document.getElementById('detailDescription').textContent = book.descripcion_libro || 'No hay descripción disponible.';
+    
+    // Botones de administración
+    document.getElementById('detailButton').innerHTML = `
+      <div class="admin-buttons">
+        <button onclick="editarLibro('${book.ISBN}')">Editar</button>
+        <button onclick="eliminarLibro('${book.ISBN}')" class="delete-btn">Eliminar</button>
+      </div>
+    `;
+    
+    document.getElementById('bookDetailPanel').classList.add('active');
+    
+  } catch (error) {
+    console.error('Error al cargar detalles:', error);
+    alert('No se pudieron cargar los detalles del libro');
+  }
 }
 
 function closeDetailPanel() {
   document.getElementById('bookDetailPanel').classList.remove('active');
 }
 
-function editarLibro(index) {
-  const book = books[index];
-  // Aquí implementarías la lógica para editar el libro
-  console.log("Editando libro:", book.title);
-  alert(`Editando libro: ${book.title}`);
-  // Podrías abrir un formulario de edición aquí
+function mostrarSeccionLibros(seccion) {
+  document.querySelectorAll('#gestion-libros .user-tab').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('#seccion-listar-libros, #seccion-agregar-libro').forEach(div => div.classList.add('hidden-section'));
+
+  if (seccion === 'listar') {
+    document.querySelector('#gestion-libros .user-tab:nth-child(1)').classList.add('active');
+    document.getElementById('seccion-listar-libros').classList.remove('hidden-section');
+  } else {
+    document.querySelector('#gestion-libros .user-tab:nth-child(2)').classList.add('active');
+    document.getElementById('seccion-agregar-libro').classList.remove('hidden-section');
+  }
+
+  // Reinicia el formulario si es agregar
+  if (seccion === 'agregar') {
+    document.getElementById('formLibro').reset();
+    document.getElementById("previewPortada").style.display = "none";
+  }
 }
 
-function eliminarLibro(index) {
-  const book = books[index];
-  if (confirm(`¿Estás seguro de querer eliminar "${book.title}"?`)) {
-    books.splice(index, 1);
+
+async function registrarLibro(event) {
+  event.preventDefault();
+
+  const nuevoLibro = {
+    titulo: document.getElementById('tituloLibro').value.trim(),
+    autores: [document.getElementById('autorLibro').value.trim()],
+    editorial: document.getElementById('editorialLibro').value.trim(),
+    year: parseInt(document.getElementById('anioLibro').value),
+    ISBN: document.getElementById('isbnLibro').value.trim(),
+    genero: document.getElementById('generoLibro').value.trim(),
+    portada: document.getElementById('urlPortadaLibro').value.trim(),
+    descripcion_libro: document.getElementById('descripcionLibro').value.trim() 
+  };
+
+  try {
+    const response = await fetch('/api/libros/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(nuevoLibro)
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Error al registrar el libro");
+    }
+
+    document.getElementById('formLibro').reset();
+    document.getElementById('formularioLibro').classList.add('hidden-section');
+    document.getElementById('mensajeLibro').textContent = "✅ Libro registrado correctamente";
+    document.getElementById('mensajeLibro').style.display = 'block';
+
+    setTimeout(() => {
+      document.getElementById('mensajeLibro').style.display = 'none';
+    }, 3000);
+
+    // Actualizar la lista de libros
+    renderBooksAdmin();
+
+  } catch (err) {
+    console.error("Error al registrar libro:", err);
+    document.getElementById('mensajeErrorLibro').textContent = `❌ ${err.message}`;
+    document.getElementById('mensajeErrorLibro').style.display = 'block';
+    
+    setTimeout(() => {
+      document.getElementById('mensajeErrorLibro').style.display = 'none';
+    }, 3000);
+  }
+}
+
+async function editarLibro(isbn) {
+  try {
+    // Obtener datos actuales del libro
+    const response = await fetch(`/api/libros/${isbn}`);
+    const book = await response.json();
+    
+    // Mostrar formulario de edición con los datos
+    mostrarFormularioLibro();
+    
+    // Rellenar formulario con datos existentes
+    document.getElementById('tituloLibro').value = book.titulo;
+    document.getElementById('autorLibro').value = book.autores.map(a => a.nombre).join(', ');
+    document.getElementById('editorialLibro').value = book.editorial;
+    document.getElementById('anioLibro').value = book.año_publicacion || '';
+    document.getElementById('isbnLibro').value = book.ISBN;
+    document.getElementById('generoLibro').value = book.genero;
+    document.getElementById('urlPortadaLibro').value = book.portada || '';
+    
+    // Actualizar vista previa de portada
+    const preview = document.getElementById("previewPortada");
+    if (book.portada) {
+      preview.src = book.portada;
+      preview.style.display = "block";
+    }
+    
+    // Cambiar el comportamiento del formulario para edición
+    const form = document.getElementById('formLibro');
+    form.onsubmit = async function(e) {
+      e.preventDefault();
+      await actualizarLibro(isbn);
+    };
+    
+  } catch (error) {
+    console.error('Error al editar libro:', error);
+    alert('No se pudo cargar el libro para edición');
+  }
+}
+
+async function actualizarLibro(isbn) {
+  const libroActualizado = {
+    titulo: document.getElementById('tituloLibro').value.trim(),
+    autores: [document.getElementById('autorLibro').value.trim()],
+    editorial: document.getElementById('editorialLibro').value.trim(),
+    year: parseInt(document.getElementById('anioLibro').value) || null,
+    genero: document.getElementById('generoLibro').value.trim(),
+    portada: document.getElementById('urlPortadaLibro').value.trim()
+  };
+
+  try {
+    const response = await fetch(`/api/libros/${isbn}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(libroActualizado)
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al actualizar el libro');
+    }
+
+    alert('Libro actualizado correctamente');
+    renderBooksAdmin();
+    document.getElementById('formularioLibro').classList.add('hidden-section');
+    
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Error al actualizar el libro: ' + error.message);
+  }
+}
+
+async function eliminarLibro(isbn) {
+  if (!confirm(`¿Estás seguro de querer eliminar este libro?`)) return;
+
+  try {
+    const response = await fetch(`/api/libros/${isbn}`, {
+      method: 'DELETE'
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al eliminar el libro');
+    }
+
+    alert('Libro eliminado correctamente');
     renderBooksAdmin();
     closeDetailPanel();
-    alert(`Libro "${book.title}" eliminado correctamente`);
+    
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Error al eliminar el libro: ' + error.message);
   }
 }
 
@@ -604,36 +751,6 @@ function prevPageAdmin() {
     currentPage--;
     renderBooksAdmin();
   }
-}
-
-function registrarLibro(event) {
-  event.preventDefault();
-
-  const nuevoLibro = {
-    title: document.getElementById('tituloLibro').value.trim(),
-    author: document.getElementById('autorLibro').value.trim(),
-    editorial: document.getElementById('editorialLibro').value.trim(),
-    year: parseInt(document.getElementById('anioLibro').value),
-    isbn: document.getElementById('isbnLibro').value.trim(),
-    category: document.getElementById('categoriaLibro').value.trim(),
-    genre: document.getElementById('generoLibro').value.trim(),
-    available: document.getElementById('estadoLibro').value === 'disponible',
-    rating: 0,
-    addedDate: new Date().toISOString().split('T')[0],
-    reviews: [],
-    cover: 'https://covers.openlibrary.org/b/id/10909258-M.jpg' // Imagen por defecto
-  };
-
-  books.push(nuevoLibro);
-  renderBooksAdmin();
-
-  document.getElementById('formLibro').reset();
-  document.getElementById('formularioLibro').classList.add('hidden-section');
-  document.getElementById('mensajeLibro').style.display = 'block';
-
-  setTimeout(() => {
-    document.getElementById('mensajeLibro').style.display = 'none';
-  }, 3000);
 }
 
 function mostrarFormularioLibro() {
@@ -736,15 +853,17 @@ document.getElementById('filterToggleBtn-admin').addEventListener('click', () =>
 });
 
 document.getElementById('applyFiltersBtn-admin').addEventListener('click', () => {
-  const category = document.getElementById('filter-category-admin').value;
+  const selectedCategories = Array.from(document.querySelectorAll('.filter-category-admin:checked')).map(cb => cb.value);
+  const selectedAuthors = Array.from(document.querySelectorAll('.filter-author-admin:checked')).map(cb => cb.value);
   const minRating = parseFloat(document.getElementById('filter-rating-admin').value);
   const order = document.getElementById('filter-order-admin').value;
 
-  filteredBooks = books.filter(book => book.rating >= minRating);
-
-  if(category !== 'all') {
-    filteredBooks = filteredBooks.filter(book => book.category === category);
-  }
+  filteredBooks = books.filter(book => {
+    const matchCategory = selectedCategories.length === 0 || selectedCategories.includes(book.category);
+    const matchAuthor = selectedAuthors.length === 0 || selectedAuthors.includes(book.author);
+    const matchRating = book.rating >= minRating;
+    return matchCategory && matchAuthor && matchRating;
+  });
 
   if(order === 'recent') {
     filteredBooks.sort((a,b) => new Date(b.addedDate) - new Date(a.addedDate));
@@ -798,6 +917,21 @@ document.getElementById('search-admin').addEventListener('input', () => {
   currentPage = 1;
   renderBooksAdmin();
 });
+
+// Vista previa de portada en tiempo real
+document.getElementById("urlPortadaLibro").addEventListener("input", () => {
+  const url = document.getElementById("urlPortadaLibro").value;
+  const preview = document.getElementById("previewPortada");
+
+  if (url && (url.startsWith("http://") || url.startsWith("https://"))) {
+    preview.src = url;
+    preview.style.display = "block";
+  } else {
+    preview.src = "";
+    preview.style.display = "none";
+  }
+});
+
 
 // Inicializar dashboard
 renderUsuarios();

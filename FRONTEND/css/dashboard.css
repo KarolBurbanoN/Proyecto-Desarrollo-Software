@@ -1,6 +1,6 @@
-/*?--------------------------*/
+/*?---------------------------*/
 /*?---- ESTILOS GLOBALES ----*/
-/*?-------------------------*/
+/*?--------------------------*/
 
 body {
   background: linear-gradient(145deg, #fbeaff, #e4f0ff);
@@ -132,10 +132,9 @@ select {
   background-color: #fcfcff;
 }
 
-/*?----------------*/
-/*?---- LECTOR ----*/
-/*?----------------*/
-
+/**----------------*/
+/**---- LIBROS ----*/
+/**----------------*/
 .book-list {
   display: grid;
   grid-template-rows: repeat(2, auto);
@@ -186,7 +185,6 @@ select {
 .book img:hover {
   transform: scale(1.05);
 }
-
 
 .book ul {
   padding-left: 1rem;
@@ -312,38 +310,9 @@ body.lector-panel.book-info button {
   margin-bottom: 0;
 }
 
-/**-----------------------*/
-/**------ Prestamos ------*/
-/**-----------------------*/
-
-body.lector-panel .book-prestamo-card {
-  display: flex;
-  gap: 1.5rem;
-  align-items: flex-start;
-}
-
-body.lector-panel .book-prestamo-cover img {
-  width: 150px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-
-body.lector-panel .book-prestamo-info {
-  flex: 1;
-}
-
-body.lector-panel .book-prestamo-info button:hover {
-  background-color: #7F5539;
-}
-
-#prestamosList li {
-  list-style: none;
-  margin-bottom: 2rem;
-}
-
-/*?-----------------------*/
-/*?---- PERFIL USUARIO ----*/
-/*?-----------------------*/
+/**------------------------*/
+/**---- PERFIL USUARIO ----*/
+/**------------------------*/
 
 .perfil-container {
   display: flex;
@@ -530,13 +499,47 @@ body.lector-panel .book-prestamo-info button:hover {
 #edit-profile-form.hidden {
   display: none;
 }
+/**------------------------*/
+
+/*?------------------------*/
+/*?-------- LECTOR --------*/
+/*?------------------------*/
+
+/**-----------------------*/
+/**------ Prestamos ------*/
+/**-----------------------*/
+
+body.lector-panel .book-prestamo-card {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+body.lector-panel .book-prestamo-cover img {
+  width: 150px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+body.lector-panel .book-prestamo-info {
+  flex: 1;
+}
+
+body.lector-panel .book-prestamo-info button:hover {
+  background-color: #7F5539;
+}
+
+#prestamosList li {
+  list-style: none;
+  margin-bottom: 2rem;
+}
 
 /*?-----------------------*/
 /*?---- ADMINISTRADOR ----*/
 /*?-----------------------*/
 
-/**--------------------*/
-/**----- Usuario -----*/
+/**---------------------*/
+/**------ Usuario ------*/
 /**--------------------*/
 
 .user-tabs {
@@ -748,7 +751,11 @@ body.lector-panel .book-prestamo-info button:hover {
   animation: fadeIn 0.4s ease-in;
 }
 
-/* Estilo específico para botones dentro de .book-info */
+/**----------------*/
+/**---- LIBROS ----*/
+/**----------------*/
+
+/** Estilo específico para botones dentro de .book-info */
 
 body.admin-panel.book-info button {
   font-size: 0.75rem;
@@ -778,10 +785,40 @@ body.admin-panel.book-info button {
   background-color: #c0392b;
 }
 
+.descripcion-field {
+  grid-column: 1 / -1;
+  margin-top: 1rem;
+  max-width: 100%;
+}
+
+.descripcion-field textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: none;
+  border-radius: 20px;
+  background-color: #ffffff;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .05);
+  transition: background-color 0.2s;
+}
+
+.descripcion-field textarea:focus {
+  outline: 2px solid #B08968;
+  background-color: #ffffff;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/*?-----------------------*/
+/*?---- BIBLIOTECARIO ----*/
+/*?-----------------------*/
+
+
 
 /**-----------------------*/
 /**----- Responsive ------*/

@@ -73,6 +73,7 @@ class Libro(Base):
     categoria_id = Column(Integer, ForeignKey('categoria.id_categoria'))
     genero = Column(String(50))
     promedio_calificacion = Column(Numeric(3, 2), default=0.0)
+    portada = Column(String(255))
 
     categoria = relationship("Categoria")
     autores = relationship("Autor", secondary=libro_autor, backref="libros")

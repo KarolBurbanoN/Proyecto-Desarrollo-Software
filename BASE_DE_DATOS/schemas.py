@@ -80,6 +80,7 @@ class LibroBase(BaseModel):
     categoria_id: int
     genero: Optional[str] = None
     promedio_calificacion: Optional[float] = 0.0
+    portada: str
 
 class LibroCreate(LibroBase):
     pass

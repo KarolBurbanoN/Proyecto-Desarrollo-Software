@@ -294,61 +294,167 @@ currentUser.role = 'lector';
 
 let filteredBooks = null;
 
-function renderBooks() {
-  const bookList = document.getElementById('bookList');
-  const search = document.getElementById('search').value.toLowerCase();
-  const category = document.getElementById('filter-category').value;
-
-  const booksToUse = filteredBooks || books;
-
-  let filtered = booksToUse.filter(book =>
-    book.title.toLowerCase().includes(search) ||
-    book.author.toLowerCase().includes(search)
-  );
-
-  if (category !== 'all') {
-    filtered = filtered.filter(book => book.category === category);
+async function renderBooks() {
+  try {
+    const response = await fetch('/api/libros');
+    if (!response.ok) {
+      throw new Error('Error al obtener los libros');
+    }
+    const booksFromDB = await response.json();
+    
+    const bookList = document.getElementById('bookList');
+    bookList.innerHTML = '';
+    
+    // Aplicar filtros
+    const search = document.getElementById('search').value.toLowerCase();
+    const category = document.getElementById('filter-category').value;
+    
+    let filtered = booksFromDB.filter(book => {
+      const matchesSearch = 
+        book.titulo.toLowerCase().includes(search) ||
+        book.autores.ssme(a => a.nombre.toLowerCase().includes(search));
+      const matchesCategory = category === 'all' || book.genero === category;
+      return matchesSearch && matchesCategory;
+    });
+    
+    // Paginación
+    const start = (currentPage - 1) * booksPerPage;
+    const end = start + booksPerPage;
+    const paginated = filtered.slice(start, end);
+    
+    // Renderizar libros
+    paginated.forEach(book => {
+      const div = document.createElement('div');
+      div.className = 'book';
+      
+      div.innerHTML = `
+        <img src="${book.portada || 'https://via.placeholder.com/150'}" 
+             alt="${book.titulo}" 
+             onclick="showBookDetails('${book.ISBN}')" 
+             style="cursor:pointer;">
+      `;
+      
+      bookList.appendChild(div);
+    });
+    
+    document.getElementById('pageIndicator').innerText =
+      `Página ${currentPage} de ${Math.max(1, Math.ceil(filtered.length / booksPerPage))}`;
+      
+  } catch (error) {
+    console.error('Error al cargar libros:', error);
+    document.getElementById('bookList').innerHTML = 
+      '<p class="error">Error al cargar los libros. Intente nuevamente.</p>';
   }
-
-  const start = (currentPage - 1) * booksPerPage;
-  const end = start + booksPerPage;
-  const paginated = filtered.slice(start, end);
-
-  bookList.innerHTML = '';
-  paginated.forEach((book) => {
-    const index = books.indexOf(book);
-
-    const div = document.createElement('div');
-    div.className = 'book';
-
-    div.innerHTML = `
-      <img src="${book.cover}" alt="${book.title}" onclick="showBookDetails(${index})" style="cursor:pointer;">
-    `;
-
-    bookList.appendChild(div);
-  });
-
-  document.getElementById('pageIndicator').innerText =
-    `Página ${currentPage} de ${Math.max(1, Math.ceil(filtered.length / booksPerPage))}`;
 }
 
-function showBookDetails(index) {
-  const book = books[index];
-  document.getElementById('detailCover').src = book.cover;
-  document.getElementById('detailTitle').textContent = book.title;
-  document.getElementById('detailAuthor').textContent = book.author;
-  document.getElementById('detailStatus').textContent = book.available ? 'Disponible' : 'No disponible';
-  document.getElementById('detailRating').textContent = '⭐'.repeat(Math.round(book.rating)) + ` (${book.rating.toFixed(1)})`;
-  document.getElementById('detailReviews').innerHTML = book.reviews.map(r => `<li>${r}</li>`).join('');
-  document.getElementById('detailButton').innerHTML = book.available
-    ? `<button onclick="prestarLibro(${index})">Prestar</button>`
-    : `<button onclick="reservarLibro(${index})">Reservar</button>`;
+async function showBookDetails(isbn) {
+  try {
+    const response = await fetch(`/api/libros/${isbn}`);
+    if (!response.ok) {
+      throw new Error('Libro no encontrado');
+    }
+    const book = await response.json();
+    
+    // Obtener disponibilidad (necesitarías implementar esta función)
+    const disponible = await verificarDisponibilidad(isbn);
+    
+    // Mostrar detalles
+    document.getElementById('detailCover').src = book.portada || 'https://via.placeholder.com/150';
+    document.getElementById('detailTitle').textContent = book.titulo;
+    document.getElementById('detailAuthor').textContent = book.autores.map(a => a.nombre).join(', ');
+    document.getElementById('detailStatus').textContent = disponible ? 'Disponible' : 'No disponible';
+    document.getElementById('detailRating').textContent = book.promedio_calificacion ? 
+      '⭐'.repeat(Math.round(book.promedio_calificacion)) + ` (${book.promedio_calificacion.toFixed(1)})` : 'Sin calificaciones';
+    document.getElementById('detailDescription').textContent = book.descripcion_libro || 'No hay descripción disponible.';
 
+    // Botones de acción
+    if (disponible) {
+      document.getElementById('detailButton').innerHTML = `
+        <button onclick="prestarLibro('${book.ISBN}')">Prestar</button>
+      `;
+    } else {
+      document.getElementById('detailButton').innerHTML = `
+        <button onclick="reservarLibro('${book.ISBN}')">Reservar</button>
+      `;
+    }
+    
     document.getElementById('bookDetailPanel').classList.add('active');
+    
+  } catch (error) {
+    console.error('Error al cargar detalles:', error);
+    alert('No se pudieron cargar los detalles del libro');
+  }
 }
 
 function closeDetailPanel() {
   document.getElementById('bookDetailPanel').classList.remove('active');
+}
+
+// Función para verificar disponibilidad (necesitas implementar el endpoint correspondiente)
+async function verificarDisponibilidad(isbn) {
+  try {
+    const response = await fetch(`/api/libros/${isbn}/disponibilidad`);
+    if (!response.ok) {
+      return false;
+    }
+    const data = await response.json();
+    return data.disponible;
+  } catch (error) {
+    console.error('Error al verificar disponibilidad:', error);
+    return false;
+  }
+}
+
+// Función para prestar libro
+async function prestarLibro(isbn) {
+  try {
+    const response = await fetch('/api/prestamos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        ISBN: isbn,
+        usuario_id: currentUser.id // Necesitas tener esta información
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error('No se pudo realizar el préstamo');
+    }
+    
+    alert('Libro prestado correctamente');
+    renderBooks();
+    closeDetailPanel();
+    
+  } catch (error) {
+    console.error('Error al prestar libro:', error);
+    alert('Error al prestar libro: ' + error.message);
+  }
+}
+
+// Función para reservar libro
+async function reservarLibro(isbn) {
+  try {
+    const response = await fetch('/api/reservas', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        ISBN: isbn,
+        usuario_id: currentUser.id // Necesitas tener esta información
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error('No se pudo realizar la reserva');
+    }
+    
+    alert('Libro reservado correctamente. Te notificaremos cuando esté disponible.');
+    renderBooks();
+    closeDetailPanel();
+    
+  } catch (error) {
+    console.error('Error al reservar libro:', error);
+    alert('Error al reservar libro: ' + error.message);
+  }
 }
 
 function submitReview(e, index, fromPrestamos = false) {
@@ -441,27 +547,6 @@ function renderPrestamos() {
   });
 }
 
-function prestarLibro(index) {
-  const book = books[index];
-  if (!book.available) return;
-
-  book.available = false;
-
-  const dueDate = new Date();
-  dueDate.setDate(dueDate.getDate() + 14);
-  prestamos.push({
-    title: book.title,
-    due: dueDate.toISOString().split('T')[0],
-    index,
-    userReview: null,
-    userRating: null
-  });
-
-
-  renderBooks();
-  renderPrestamos();
-}
-
 function devolverLibro(index) {
   const book = books[index];
   const title = book.title;
@@ -516,7 +601,6 @@ function renderReservas() {
     }
   });
 }
-
 
 function reservarLibro(index) {
   const book = books[index];

@@ -1,4 +1,4 @@
-# BACKEND/routes/usuarios.py
+# BACKEND/usuarios.py
 
 from flask import Blueprint, request, jsonify, session
 from BASE_DE_DATOS.db import get_db
@@ -7,8 +7,6 @@ from sqlalchemy.orm import Session
 import bcrypt
 
 usuarios_bp = Blueprint("usuarios", __name__, url_prefix="/api/usuarios")
-
-# BACKEND/routes/usuarios.py
 
 @usuarios_bp.route("/", methods=["POST"])
 def registrar_usuario():
@@ -200,4 +198,3 @@ def actualizar_perfil_usuario():
             "telefono": usuario.telefono
         }
     })
-
