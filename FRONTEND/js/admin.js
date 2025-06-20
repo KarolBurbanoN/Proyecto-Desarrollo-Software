@@ -508,9 +508,71 @@ function toggleEstadoUsuario(doc) {
   }
 }
 
+
+// Implementar un throttling para las peticiones
+const requestQueue = [];
+let isProcessing = false;
+
+async function processQueue() {
+    if (isProcessing || requestQueue.length === 0) return;
+    
+    isProcessing = true;
+    const request = requestQueue.shift();
+    
+    try {
+        const response = await fetch(request.url, request.options);
+        request.resolve(response);
+    } catch (error) {
+        request.reject(error);
+    } finally {
+        isProcessing = false;
+        setTimeout(processQueue, 100); // Procesar siguiente solicitud después de 100ms
+    }
+}
+
+function throttledFetch(url, options = {}) {
+    return new Promise((resolve, reject) => {
+        requestQueue.push({ url, options, resolve, reject });
+        processQueue();
+    });
+}
+
+async function fetchWithRetry(url, options = {}, retries = 3) {
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) throw new Error('Response not OK');
+        return response;
+    } catch (error) {
+        if (retries > 0) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            return fetchWithRetry(url, options, retries - 1);
+        }
+        throw error;
+    }
+}
+
+// Simple sistema de caché
+const apiCache = new Map();
+
+async function cachedFetch(url) {
+    if (apiCache.has(url)) {
+        return apiCache.get(url);
+    }
+    
+    const response = await fetchWithRetry(url);
+    const data = await response.json();
+    
+    // Guardar en caché por 30 segundos
+    apiCache.set(url, data);
+    setTimeout(() => apiCache.delete(url), 30000);
+    
+    return data;
+}
+
 async function renderBooksAdmin() {
   try {
     const response = await fetch('/api/libros');
+    
     if (!response.ok) {
       throw new Error('Error al obtener los libros');
     }
@@ -518,12 +580,13 @@ async function renderBooksAdmin() {
 
     const bookList = document.getElementById('adminBookList');
     bookList.innerHTML = '';
-
-    // Obtener valores de los filtros
+    
+     // Obtener valores de los filtros
     const search = document.getElementById('search-admin').value.toLowerCase();
     const category = document.getElementById('filter-category-admin').value;
     const minRating = parseFloat(document.getElementById('filter-rating-admin').value);
     const order = document.getElementById('filter-order-admin').value;
+
 
     // Aplicar filtros
     let filtered = booksFromDB.filter(book => {
@@ -555,6 +618,8 @@ async function renderBooksAdmin() {
     const start = (currentPage - 1) * booksPerPage;
     const end = start + booksPerPage;
     const paginated = filtered.slice(start, end);
+    
+    console.log("Libros obtenidos del backend:", booksFromDB); //---> validr la estructura de los libros
 
     // Renderizar libros
     if (paginated.length === 0) {
@@ -567,10 +632,18 @@ async function renderBooksAdmin() {
         const rating = book.promedio_calificacion || 0;
         const portada = book.portada || 'https://via.placeholder.com/150';
 
+        const autores = Array.isArray(book.autores) ? 
+                      book.autores.map(a => a.nombre).join(', ') : 'Autor desconocido';
+
         div.innerHTML = `
-          <img src="${portada}" alt="${book.titulo}" style="cursor:pointer;">
-          
+          <img src="${portada}" alt="${book.titulo}" 
+              onclick="showAdminBookDetails('${book.ISBN}')"
+              style="cursor:pointer; width: 120px; height: auto; display: block; margin: 0 auto;">
+        
         `;
+
+
+        
         bookList.appendChild(div);
       });
     }
@@ -585,18 +658,31 @@ async function renderBooksAdmin() {
 }
 
 
+
 // Configurar eventos de los filtros para admin
 function setupAdminFilterEvents() {
-  // Evento para mostrar/ocultar menú de filtros
-  document.getElementById('filterToggleBtn-admin').addEventListener('click', () => {
-    const menu = document.getElementById('filtersMenu-admin');
-    menu.classList.toggle('hidden');
-  });
+// Evento para mostrar/ocultar menú de filtros
+  const filterToggle = document.getElementById('filterToggleBtn-admin');
+  const filtersMenu = document.getElementById('filtersMenu-admin');
   
-  // Evento para aplicar filtros
-  document.getElementById('applyFiltersBtn-admin').addEventListener('click', () => {
-    console.log('Click en aplicar filtros');
-    currentPage = 1; // Resetear a primera página
+  if (filterToggle && filtersMenu) {
+    filterToggle.addEventListener('click', (e) => {
+      e.stopPropagation(); // Evita que el clic se propague
+      filtersMenu.classList.toggle('hidden');
+    });
+    
+    // Cerrar el menú al hacer clic fuera de él
+    document.addEventListener('click', (e) => {
+      if (!filtersMenu.contains(e.target) && e.target !== filterToggle) {
+        filtersMenu.classList.add('hidden');
+      }
+    });
+  }
+
+   // Evento para aplicar filtros
+  document.getElementById('applyFiltersBtn-admin').addEventListener('click', (e) => {
+    e.preventDefault();
+    currentPage = 1;
     renderBooksAdmin();
     document.getElementById('filtersMenu-admin').classList.add('hidden');
   });
@@ -624,6 +710,33 @@ function setupAdminFilterEvents() {
   });
 }
 
+
+// Configurar eventos de los filtros para usuarios
+function setupUserFilterEvents() {
+  const filterToggle = document.getElementById('filterToggleBtn-usuarios');
+  const filtersMenu = document.getElementById('filtersMenu-usuarios');
+  
+  if (filterToggle && filtersMenu) {
+    filterToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      filtersMenu.classList.toggle('hidden');
+    });
+    
+    document.addEventListener('click', (e) => {
+      if (!filtersMenu.contains(e.target) && e.target !== filterToggle) {
+        filtersMenu.classList.add('hidden');
+      }
+    });
+  }
+  
+  document.getElementById('aplicarFiltrosUsuarios').addEventListener('click', (e) => {
+    e.preventDefault();
+    paginaActualUsuarios = 1;
+    renderUsuarios();
+    document.getElementById('filtersMenu-usuarios').classList.add('hidden');
+  });
+}
+
 // Nueva función específica para el panel de administrador
 async function showAdminBookDetails(isbn) {
   try {
@@ -633,6 +746,9 @@ async function showAdminBookDetails(isbn) {
     }
     const book = await response.json();
     
+    const autores = Array.isArray(book.autores) ? 
+                  book.autores.map(a => a.nombre).join(', ') : 'Autor desconocido';
+
     // Mostrar detalles en el panel
     document.getElementById('detailCover').src = book.portada || 'https://via.placeholder.com/150';
     document.getElementById('detailTitle').textContent = book.titulo;
@@ -669,8 +785,9 @@ function mostrarSeccionLibros(seccion) {
   if (seccion === 'listar') {
     document.querySelector('#gestion-libros .user-tab:nth-child(1)').classList.add('active');
     document.getElementById('seccion-listar-libros').classList.remove('hidden-section');
-    setupAdminFilterEvents();
-    renderBooksAdmin();
+    // Asegurarnos de configurar los eventos cuando se muestra la sección
+    setTimeout(setupAdminFilterEvents, 0);
+
 
   } else {
     document.querySelector('#gestion-libros .user-tab:nth-child(2)').classList.add('active');
@@ -680,7 +797,10 @@ function mostrarSeccionLibros(seccion) {
   // Reinicia el formulario si es agregar
   if (seccion === 'agregar') {
     document.getElementById('formLibro').reset();
+    document.getElementById("previewPortada").src = "";
     document.getElementById("previewPortada").style.display = "none";
+    document.getElementById('mensajeLibro').style.display = 'none';
+    document.getElementById('mensajeErrorLibro').style.display = 'none'
   }
 }
 
@@ -705,22 +825,38 @@ async function registrarLibro(event) {
       body: JSON.stringify(nuevoLibro)
     });
 
+
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.error || "Error al registrar el libro");
     }
 
+
+     // 1. RESETEAR FORMULARIO SIN OCULTARLO
     document.getElementById('formLibro').reset();
-    document.getElementById('formularioLibro').classList.add('hidden-section');
-    document.getElementById('mensajeLibro').textContent = "✅ Libro registrado correctamente";
+
+    // 2. LIMPIAR PREVIEW DE PORTADA
+    document.getElementById("previewPortada").src = "";
+    document.getElementById("previewPortada").style.display = "none";
+
+    // 3. MOSTRAR MENSAJE DE ÉXITO
+   document.getElementById('mensajeLibro').textContent = "✅ Libro registrado correctamente";
     document.getElementById('mensajeLibro').style.display = 'block';
 
+   // 4. OCULTAR MENSAJE DE ERROR SI ESTABA VISIBLE
+    document.getElementById('mensajeErrorLibro').style.display = 'none';
+
+    // Actualizar la lista de libros
+    renderBooksAdmin();
+
+    //document.getElementById('formularioLibro').classList.add('hidden-section');
+    
     setTimeout(() => {
       document.getElementById('mensajeLibro').style.display = 'none';
     }, 3000);
 
-    // Actualizar la lista de libros
-    renderBooksAdmin();
+    
 
   } catch (err) {
     console.error("Error al registrar libro:", err);
@@ -1002,5 +1138,10 @@ document.getElementById("urlPortadaLibro").addEventListener("input", () => {
 window.addEventListener('DOMContentLoaded', () => {
   renderUsuarios();
   setupAdminFilterEvents();
+  setupUserFilterEvents(); 
   renderBooksAdmin();
+  
+  // También necesitamos inicializar los eventos para los usuarios
+  renderUsuariosDesdeBackend();
 });
+

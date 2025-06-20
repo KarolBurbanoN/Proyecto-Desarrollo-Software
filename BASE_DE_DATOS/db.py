@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 
 # Conexión a la base de datos PostgreSQL
 # IMPORTANTE: Cambiar la contraseña (12345) por la que tengan configurada en su PostgreSQL
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:2459@localhost:5432/biblioteca_alexandria"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:BTS@localhost:5432/biblioteca_alexandria"
 
 # Se crea el "motor" que se conecta a la base de datos
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
