@@ -354,6 +354,8 @@ async function registrarUsuario(event) {
     alert(error.message || "Ocurrió un error al guardar el usuario.");
     console.error(error);
   }
+
+  
 }
 
 function renderUsuarios() {
@@ -1134,6 +1136,76 @@ document.getElementById("urlPortadaLibro").addEventListener("input", () => {
   }
 });
 
+// Password strength checker - Mover este código al final del archivo
+function setupPasswordStrengthChecker() {
+  const passwordInput = document.getElementById('password');
+  const showHide = document.querySelector('.show_hide');
+  const indicator = document.querySelector('.password-indicator');
+  const iconText = document.querySelector('.icon-text');
+  const indicatorText = document.querySelector('.indicator-text');
+
+  if (!passwordInput || !showHide || !indicator) return;
+
+  // Mostrar/ocultar contraseña
+  showHide.addEventListener('click', () => {
+    if(passwordInput.type === 'password'){
+      passwordInput.type = 'text';
+      showHide.classList.replace('bx-hide', 'bx-show');
+    } else {
+      passwordInput.type = 'password';
+      showHide.classList.replace('bx-show', 'bx-hide');
+    }
+  });
+
+  // Verificador de fortaleza
+  let alphabet = /[a-zA-Z]/, // letras a-z y A-Z
+      numbers = /[0-9]/,     // números 0-9
+      scharacters = /[!,@,#,$,%,^,&,*,?,_,(,),-,+,=,~]/; // caracteres especiales
+
+  passwordInput.addEventListener('input', () => {
+    indicator.classList.add('active');
+    
+    let val = passwordInput.value;
+    indicator.className = 'password-indicator active'; // Reset classes
+    
+    if(val.match(alphabet) || val.match(numbers) || val.match(scharacters)){
+      indicatorText.textContent = "Contraseña débil";
+      indicator.classList.add('password-weak');
+      showHide.style.color = "#FF6333";
+      if (iconText) iconText.style.color = "#FF6333";
+    }
+    
+    if(val.match(alphabet) && val.match(numbers) && val.length >= 6){
+      indicatorText.textContent = "Contraseña media";
+      indicator.classList.add('password-medium');
+      showHide.style.color = "#cc8500";
+      if (iconText) iconText.style.color = "#cc8500";
+    }
+    
+    if(val.match(alphabet) && val.match(numbers) && val.match(scharacters) && val.length >= 8){
+      indicatorText.textContent = "Contraseña fuerte";
+      indicator.classList.add('password-strong');
+      showHide.style.color = "#22C32A";
+      if (iconText) iconText.style.color = "#22C32A";
+    }
+    
+    if(val === ""){
+      indicator.classList.remove('active');
+      showHide.style.color = "#A6A6A6";
+      if (iconText) iconText.style.color = "#A6A6A6";
+    }
+  });
+}
+
+// Al final del archivo, modificar el DOMContentLoaded para incluir el setup
+window.addEventListener('DOMContentLoaded', () => {
+  renderUsuarios();
+  setupAdminFilterEvents();
+  setupUserFilterEvents(); 
+  renderBooksAdmin();
+  renderUsuariosDesdeBackend();
+  setupPasswordStrengthChecker(); // Añadir esta línea
+});
 
 window.addEventListener('DOMContentLoaded', () => {
   renderUsuarios();

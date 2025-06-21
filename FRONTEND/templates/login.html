@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="icon" href="{{ url_for('static', filename='images/Iconos/Logo.ico') }}" type="image/x-icon" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/Iconos/Logo.ico') }}"
+      type="image/x-icon"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
@@ -14,7 +18,10 @@
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/login.css') }}"
+    />
 
     <title>Inicio de Sesión</title>
   </head>
@@ -130,11 +137,24 @@
                 <i class="bx bx-lock-alt"></i>
                 <input
                   type="password"
+                  id="password"
                   name="contraseña"
                   placeholder="Contraseña"
                   required
                 />
+                <i
+                  class="bx bx-hide show_hide"
+                  style="position: absolute; right: 15px; cursor: pointer"
+                ></i>
               </label>
+              <div class="password-strength-container">
+                <div class="indicator">
+                  <div class="icon-text">
+                    <i class="bx bx-error-circle error_icon"></i>
+                    <span class="text"></span>
+                  </div>
+                </div>
+              </div>
             </div>
             <input type="submit" value="Registrarse" />
           </form>
@@ -167,11 +187,26 @@
           <form class="form" method="POST" action="/login">
             <label>
               <i class="bx bx-envelope"></i>
-              <input type="email" name="email" placeholder="Correo Electrónico" required />
+              <input
+                type="email"
+                name="email"
+                placeholder="Correo Electrónico"
+                required
+              />
             </label>
             <label>
               <i class="bx bx-lock-alt"></i>
-              <input type="password" name="password" placeholder="Contraseña" required />
+              <input
+                type="password"
+                id="login-password"
+                name="password" 
+                placeholder="Contraseña" 
+                required 
+              />
+              <i
+                class="bx bx-hide show_hide"
+                style="position: absolute; right: 15px; cursor: pointer"
+              ></i>
             </label>
             <input type="submit" value="Iniciar Sesión" />
           </form>

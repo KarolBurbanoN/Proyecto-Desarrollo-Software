@@ -69,7 +69,7 @@
                 <input
                   type="text"
                   id="search-usuarios"
-                  placeholder="Buscar por nombre, documento..."/>
+                  placeholder="Buscar por nombre, documento..." />
 
                 <div class="filter-container">
                   <button id="filterToggleBtn-usuarios">Filtros ▼</button>
@@ -184,9 +184,18 @@
                   </label>
                   <label>
                     <i class="bx bx-lock"></i>
-                    <input type="password" name="contraseña"
+                    <input type="password" name="contraseña" id="password"
                       placeholder="Contraseña" required />
+                    <i class="bx bx-hide show_hide"
+                      style="position: absolute; right: 10px; cursor: pointer;"></i>
                   </label>
+                  <!-- Mover el indicador fuera del label -->
+                  <div class="password-indicator">
+                    <div class="icon-text">
+                      <i class="bx bx-error-circle error_icon"></i>
+                      <h6 class="indicator-text"></h6>
+                    </div>
+                  </div>
                   <label>
                     <select id="rol" required>
                       <option value>Seleccionar rol</option>
@@ -276,7 +285,7 @@
               <span id="pageIndicator"></span>
               <button onclick="nextPageAdmin()">Siguiente</button>
             </div>
-          </div> 
+          </div>
 
           <!-- Contenedor de contenido para agregar libros -->
           <div id="seccion-agregar-libro" class="hidden-section">

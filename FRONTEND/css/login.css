@@ -261,6 +261,8 @@ body {
     transform: translateY(-300%);
 }
 
+
+
 /* === RESPONSIVE === */
 @media screen and (max-width: 750px) {
     html {
@@ -278,6 +280,77 @@ body {
     .container-form.login {
         height: 100vh;
     }
+}
+
+/* Password Strength Indicator */
+.password-strength-container {
+  width: 100%;
+  margin-top: 5px;
+  padding: 0 10px;
+}
+
+.indicator {
+  display: none;
+}
+
+.indicator.active {
+  display: block;
+}
+
+.icon-text {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.icon-text .error_icon {
+  font-size: 16px;
+}
+
+.icon-text .text {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.show_hide {
+  position: absolute;
+  right: 15px;
+  cursor: pointer;
+  color: #a7a7a7;
+}
+
+/* Colores para los estados de la contraseña */
+.password-weak {
+  color: #FF6333 !important;
+}
+
+.password-medium {
+  color: #cc8500 !important;
+}
+
+.password-strong {
+  color: #22C32A !important;
+}
+
+/* Asegurar que el label de contraseña tenga posición relativa */
+.form-grid label {
+  position: relative;
+}
+
+/* Estilo para el botón mostrar/ocultar */
+.show_hide {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #a7a7a7;
+  z-index: 2;
+}
+
+/* Asegurar que los labels de contraseña tengan posición relativa */
+.form label {
+  position: relative;
 }
 
 @media screen and (max-width: 580px) {

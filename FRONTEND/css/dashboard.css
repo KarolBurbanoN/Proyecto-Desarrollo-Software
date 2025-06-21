@@ -25,6 +25,62 @@ button:hover {
   background-color: #9C6644;
 }
 
+/* Password Strength Indicator */
+.password-indicator {
+  display: none;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.password-indicator.active {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.password-indicator .icon-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.password-indicator .error_icon {
+  font-size: 1rem;
+}
+
+.password-indicator .indicator-text {
+  margin: 0;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+/* Estilos para los diferentes niveles de fortaleza */
+.password-weak {
+  color: #c62828;
+}
+
+.password-medium {
+  color: #f57f17;
+}
+
+.password-strong {
+  color: #2e7d32;
+}
+
+/* Estilo para el icono de mostrar/ocultar */
+.show_hide {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #A6A6A6;
+  cursor: pointer;
+  z-index: 2;
+}
+
 /*?------------------------------*/
 /*?---- ESTRUCTURA PRINCIPAL ----*/
 /*?------------------------------*/
