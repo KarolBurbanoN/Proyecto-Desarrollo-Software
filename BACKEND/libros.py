@@ -194,3 +194,97 @@ def crear_prestamo():
     db.commit()
     
     return jsonify({"mensaje": "Préstamo realizado correctamente"}), 201
+
+@libros_bp.route("/autores/<int:id_autor>", methods=["GET"])
+def obtener_autor(id_autor):
+    db: Session = next(get_db())
+    autor = db.query(models.Autor).filter_by(id_autor=id_autor).first()
+
+    if not autor:
+        return jsonify({"error": "Autor no encontrado"}), 404
+
+    return jsonify({
+        "id_autor": autor.id_autor,
+        "nombre": autor.nombre,
+        "biografia": autor.biografia,
+        "nacionalidad": autor.nacionalidad
+    }) 
+    
+@libros_bp.route("/autores/<int:id_autor>", methods=["PUT"])
+def actualizar_autor(id_autor):
+    db: Session = next(get_db())
+    autor = db.query(models.Autor).filter_by(id_autor=id_autor).first()
+
+    if not autor:
+        return jsonify({"error": "Autor no encontrado"}), 404
+
+    data = request.get_json()
+    if "nombre" in data: autor.nombre = data["nombre"]
+    if "biografia" in data: autor.biografia = data["biografia"]
+    if "nacionalidad" in data: autor.nacionalidad = data["nacionalidad"]
+
+    db.commit()
+    return jsonify({"mensaje": "Autor actualizado correctamente"})
+
+@libros_bp.route("/autores/<int:id_autor>", methods=["DELETE"])
+def eliminar_autor(id_autor):
+    db: Session = next(get_db())
+    autor = db.query(models.Autor).filter_by(id_autor=id_autor).first()
+
+    if not autor:
+        return jsonify({"error": "Autor no encontrado"}), 404
+
+    try:
+        autor.libros.clear()  # Elimina relaciones en libro_autor
+        db.delete(autor)      # Luego elimina el autor
+        db.commit()
+
+        return jsonify({"mensaje": "Autor eliminado correctamente"})
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": f"No se pudo eliminar el autor: {str(e)}"}), 500
+
+@libros_bp.route("/autores", methods=["GET"])
+def listar_autores():
+    db: Session = next(get_db())
+    autores = db.query(models.Autor).all()
+    return jsonify([
+        {
+            "id_autor": autor.id_autor,
+            "nombre": autor.nombre,
+            "biografia": autor.biografia,
+            "nacionalidad": autor.nacionalidad,
+            "libros": [libro.titulo for libro in autor.libros]  # <- ESTO AGREGA LA LISTA DE LIBROS
+        } for autor in autores
+    ])
+
+
+@libros_bp.route("/autores", methods=["POST"])
+def registrar_autor():
+    db: Session = next(get_db())
+    data = request.get_json()
+
+    if not data.get("nombre"):
+        return jsonify({"error": "El nombre del autor es obligatorio"}), 400
+
+    autor_existente = db.query(models.Autor).filter_by(nombre=data["nombre"]).first()
+    if autor_existente:
+        return jsonify({"error": "El autor ya existe"}), 400
+
+    nuevo_autor = models.Autor(
+        nombre=data["nombre"],
+        biografia=data.get("biografia"),
+        nacionalidad=data.get("nacionalidad")
+    )
+
+    db.add(nuevo_autor)
+    db.commit()
+    return jsonify({
+        "mensaje": "Autor registrado correctamente",
+        "autor": {
+            "id_autor": nuevo_autor.id_autor,
+            "nombre": nuevo_autor.nombre,
+            "biografia": nuevo_autor.biografia,
+            "nacionalidad": nuevo_autor.nacionalidad
+        }
+    }), 201

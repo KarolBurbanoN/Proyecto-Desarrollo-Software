@@ -208,11 +208,237 @@
                 style="position: absolute; right: 15px; cursor: pointer"
               ></i>
             </label>
+            <!-- Agrega este enlace -->
+            <a
+              href="#"
+              id="forgot-password"
+              style="
+                display: block;
+                text-align: center;
+                margin-top: 5px;
+                color: #555;
+                font-size: 0.8rem;
+              "
+              >¿Olvidaste tu contraseña?</a
+            >
+
+            <!-- Agrega este modal al final del body, antes del script -->
+            <div
+              id="password-recovery-modal"
+              class="modal"
+              style="
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+                justify-content: center;
+                align-items: center;
+              "
+            >
+              <div
+                class="modal-content"
+                style="
+                  background-color: #ede0d4;
+                  padding: 20px;
+                  border-radius: 10px;
+                  width: 90%;
+                  max-width: 400px;
+                "
+              >
+                <span
+                  class="close-modal"
+                  style="float: right; cursor: pointer; font-size: 1.5rem"
+                  >&times;</span
+                >
+
+                <!-- Paso 1: Ingresar email -->
+                <div id="step-1">
+                  <h3 style="margin-bottom: 15px">Recuperar contraseña</h3>
+                  <p style="margin-bottom: 15px">
+                    Ingresa tu correo electrónico para recibir un código de
+                    verificación
+                  </p>
+                  <label style="display: block; margin-bottom: 15px">
+                    <i class="bx bx-envelope"></i>
+                    <input
+                      type="email"
+                      id="recovery-email"
+                      name="email"
+                      placeholder="Correo electrónico"
+                      style="
+                        width: 100%;
+                        padding: 10px 30px;
+                        border-radius: 20px;
+                        border: none;
+                      "
+                    />
+                  </label>
+                  <button
+                    id="send-code-btn"
+                    style="
+                      background-color: #9191bd;
+                      color: white;
+                      border: none;
+                      padding: 10px 20px;
+                      border-radius: 20px;
+                      cursor: pointer;
+                    "
+                    type="button"
+                  >
+                    Enviar código
+                  </button>
+                </div>
+
+                <!-- Paso 2: Ingresar código -->
+                <div id="step-2" style="display: none">
+                  <h3 style="margin-bottom: 15px">Verificación</h3>
+                  <p style="margin-bottom: 15px">
+                    Hemos enviado un código a tu correo electrónico. Por favor
+                    ingrésalo a continuación.
+                  </p>
+                  <label style="display: block; margin-bottom: 15px">
+                    <i class="bx bx-key"></i>
+                    <input
+                      type="text"
+                      id="verification-code"
+                      placeholder="Código de verificación"
+                      style="
+                        width: 100%;
+                        padding: 10px;
+                        border-radius: 20px;
+                        border: none;
+                      "
+                    />
+                  </label>
+                  <button
+                    id="verify-code-btn"
+                    style="
+                      background-color: #9191bd;
+                      color: white;
+                      border: none;
+                      padding: 10px 20px;
+                      border-radius: 20px;
+                      cursor: pointer;
+                      margin-right: 10px;
+                    "
+                    type="button"
+                  >
+                    Verificar código
+                  </button>
+                  <a href="#" id="resend-code" style="font-size: 0.8rem"
+                    >Reenviar código</a
+                  >
+                </div>
+
+                <!-- Paso 3: Nueva contraseña -->
+                <div id="step-3" style="display: none">
+                  <h3 style="margin-bottom: 15px">Nueva contraseña</h3>
+                  <label
+                    style="
+                      display: block;
+                      margin-bottom: 15px;
+                      position: relative;
+                    "
+                  >
+                    <i class="bx bx-lock-alt"></i>
+                    <input
+                      type="password"
+                      id="new-password"
+                      placeholder="Nueva contraseña"
+                      style="
+                        width: 100%;
+                        padding: 10px;
+                        border-radius: 20px;
+                        border: none;
+                      "
+                    />
+                    <i
+                      class="bx bx-hide show_hide"
+                      style="
+                        position: absolute;
+                        right: 15px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        cursor: pointer;
+                      "
+                    ></i>
+                  </label>
+                  <div class="password-strength-container">
+                    <div class="indicator">
+                      <div class="icon-text">
+                        <i class="bx bx-error-circle error_icon"></i>
+                        <span class="text"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <label
+                    style="
+                      display: block;
+                      margin-bottom: 15px;
+                      position: relative;
+                    "
+                  >
+                    <i class="bx bx-lock-alt"></i>
+                    <input
+                      type="password"
+                      id="confirm-password"
+                      placeholder="Confirmar contraseña"
+                      style="
+                        width: 100%;
+                        padding: 10px;
+                        border-radius: 20px;
+                        border: none;
+                      "
+                    />
+                    <i
+                      class="bx bx-hide show_hide"
+                      style="
+                        position: absolute;
+                        right: 15px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        cursor: pointer;
+                      "
+                    ></i>
+                  </label>
+                  <button
+                    id="update-password-btn"
+                    style="
+                      background-color: #9191bd;
+                      color: white;
+                      border: none;
+                      padding: 10px 20px;
+                      border-radius: 20px;
+                      cursor: pointer;
+                    "
+                    type="button"
+                  >
+                    Actualizar contraseña
+                  </button>
+                </div>
+
+                <div
+                  id="recovery-message"
+                  style="margin-top: 15px; color: #ff6333; display: none"
+                ></div>
+              </div>
+            </div>
             <input type="submit" value="Iniciar Sesión" />
           </form>
         </div>
       </div>
     </div>
     <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+    <script>
+      const mensaje = localStorage.getItem("logoutMessage");
+      if (mensaje) {
+        alert(mensaje); // o muestra en un div personalizado
+        localStorage.removeItem("logoutMessage");
+      }
+    </script>
   </body>
 </html>

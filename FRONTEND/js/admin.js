@@ -591,28 +591,61 @@ async function cachedFetch(url) {
 //* Funciones Inicializadoras
 
 function mostrarSeccionLibros(seccion) {
-  // Ocultar todas las secciones
-  document.querySelectorAll('#seccion-listar-libros, #seccion-agregar-libro, #seccion-editar-libro').forEach(div => {
+  // Ocultar todas las secciones de libros y autores
+  document.querySelectorAll('#seccion-listar-libros, #seccion-agregar-libro, #seccion-editar-libro, #seccion-listar-autores, #seccion-agregar-autor').forEach(div => {
     div.classList.add('hidden-section');
   });
-  
+
   // Resetear todas las pestañas
   document.querySelectorAll('#gestion-libros .user-tab').forEach(btn => {
     btn.classList.remove('active');
-    if (btn.id === 'tabEditarLibro' && seccion !== 'editar') {
-      btn.style.display = 'none';
-    }
   });
 
-  if (seccion === 'listar') {
-    document.querySelector('#gestion-libros .user-tab:nth-child(1)').classList.add('active');
-    document.getElementById('seccion-listar-libros').classList.remove('hidden-section');
-  } else if (seccion === 'agregar') {
-    document.querySelector('#gestion-libros .user-tab:nth-child(2)').classList.add('active');
-    document.getElementById('seccion-agregar-libro').classList.remove('hidden-section');
-  } else if (seccion === 'editar') {
+  // Mostrar la pestaña de edición solo cuando sea necesario
+  if (seccion === 'editar') {
+    document.getElementById('tabEditarLibro').style.display = 'block';
     document.getElementById('tabEditarLibro').classList.add('active');
     document.getElementById('seccion-editar-libro').classList.remove('hidden-section');
+    return;
+  } else {
+    document.getElementById('tabEditarLibro').style.display = 'none';
+  }
+
+  // Activar la pestaña correspondiente y mostrar la sección
+  switch (seccion) {
+    case 'listar':
+      document.querySelector('#gestion-libros .user-tab:nth-child(1)').classList.add('active');
+      document.getElementById('seccion-listar-libros').classList.remove('hidden-section');
+      renderBooksAdmin();
+      break;
+
+    case 'agregar':
+      document.querySelector('#gestion-libros .user-tab:nth-child(2)').classList.add('active');
+      document.getElementById('seccion-agregar-libro').classList.remove('hidden-section');
+      document.getElementById('formLibro').reset();
+      document.getElementById("previewPortada").style.display = "none";
+      document.getElementById('mensajeLibro').style.display = 'none';
+      document.getElementById('mensajeErrorLibro').style.display = 'none';
+      break;
+
+    case 'listar_autores':
+      document.querySelector('#gestion-libros .user-tab:nth-child(4)').classList.add('active');
+      document.getElementById('seccion-listar-autores').classList.remove('hidden-section');
+      listarAutores();
+      break;
+
+    case 'agregar_autor':
+      document.querySelector('#gestion-libros .user-tab:nth-child(5)').classList.add('active');
+      document.getElementById('seccion-agregar-autor').classList.remove('hidden-section');
+      document.getElementById('formAutor').reset();
+      document.getElementById('mensajeAutor').style.display = 'none';
+      document.getElementById('mensajeErrorAutor').style.display = 'none';
+      
+      const form = document.getElementById("formAutor");
+      form.dataset.editando = "false";
+      form.dataset.idAutor = "";
+      form.querySelector('button[type="submit"]').textContent = "Registrar autor";
+      break;
   }
 }
 
@@ -1088,6 +1121,112 @@ function prevPageAdmin() {
 //?---- GESTIONAR AUTORES -----/
 //?----------------------------/
 
+async function listarAutores() {
+  try {
+    const response = await fetch("/api/libros/autores");
+    const autores = await response.json();
+
+    const contenedor = document.getElementById("listaAutores");
+    contenedor.innerHTML = "";
+
+    if (!autores.length) {
+      contenedor.innerHTML = "<p>No hay autores registrados.</p>";
+      return;
+    }
+
+    autores.forEach(autor => {
+      const div = document.createElement("div");
+      div.className = "row";
+
+      const libros = autor.libros?.length
+        ? autor.libros.map(titulo => `<div>${titulo}</div>`).join("")
+        : "<div>N/A</div>";
+
+
+      div.innerHTML = `
+        <div>${autor.nombre}</div>
+        <div>${autor.nacionalidad || "No especificada"}</div>
+        <div>${autor.biografia || "Sin biografía"}</div>
+        <div>${libros}</div>
+        <div class="acciones">
+          <button class="edit" title="Editar" onclick="editarAutor('${autor.id_autor}')">
+            <i class='bx bx-edit'></i>
+          </button>
+          <button class="delete" title="Eliminar" onclick="eliminarAutor('${autor.id_autor}')">
+            <i class='bx bx-trash'></i>
+          </button>
+        </div>
+      `;
+
+      contenedor.appendChild(div);
+    });
+  } catch (err) {
+    document.getElementById("listaAutores").innerHTML = "<p>Error al cargar autores.</p>";
+  }
+}
+
+async function editarAutor(id) {
+  try {
+    const response = await fetch(`/api/libros/autores/${id}`);
+    if (!response.ok) throw new Error('Error al obtener el autor');
+
+    const autor = await response.json();
+
+    // Mostrar sección de formulario
+    mostrarSeccionLibros('agregar_autor');
+
+    // Rellenar campos
+    document.getElementById('nombreAutor').value = autor.nombre;
+    document.getElementById('nacionalidadAutor').value = autor.nacionalidad || '';
+    document.getElementById('biografiaAutor').value = autor.biografia || '';
+
+    // Marcar modo edición
+    document.getElementById('formAutor').dataset.editando = "true";
+    document.getElementById('formAutor').dataset.idAutor = id;
+
+    // Cambiar texto del botón si quieres
+    document.querySelector('#formAutor button[type="submit"]').textContent = "Actualizar autor";
+
+  } catch (err) {
+    alert("No se pudo cargar el autor.");
+    console.error(err);
+  }
+}
+
+
+function eliminarAutor(id) {
+  if (confirm("¿Estás seguro de eliminar este autor?")) {
+    fetch(`/api/libros/autores/${id}`, {
+      method: "DELETE"
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log("Respuesta:", data);
+      alert(data.mensaje || data.error);
+      listarAutores(); // refrescar autores
+    })
+    .catch(err => {
+      console.error("Error al eliminar autor:", err);
+      alert("Error al eliminar autor");
+    });
+  }
+}
+
+function nextPageAdmin() {
+  const totalPages = Math.ceil(books.length / booksPerPage);
+  if (currentPage < totalPages) {
+    currentPage++;
+    renderBooksAdmin();
+  }
+}
+
+function prevPageAdmin() {
+  if (currentPage > 1) {
+    currentPage--;
+    renderBooksAdmin();
+  }
+}
+
 //?----------------------------/
 //?---- GESTIONAR INFORMES ----/
 //?----------------------------/
@@ -1319,12 +1458,21 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// Configurar eventos para las pestañas de libros
+document.querySelectorAll('#gestion-libros .user-tab').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const target = this.getAttribute('onclick').match(/mostrarSeccionLibros\('([^']+)'/)[1];
+    mostrarSeccionLibros(target);
+  });
+});
+
 
 window.addEventListener('DOMContentLoaded', () => {
   renderUsuarios();
   setupAdminFilterEvents();
   setupUserFilterEvents(); 
   renderBooksAdmin();
+  mostrarSeccionLibros('listar'); 
   
   // También necesitamos inicializar los eventos para los usuarios
   renderUsuariosDesdeBackend();

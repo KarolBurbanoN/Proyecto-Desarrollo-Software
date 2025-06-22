@@ -218,7 +218,20 @@
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
     <script>
       function logout() {
-        window.location.href = "{{ url_for('login.logout') }}";
+        if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
+          fetch("/logout", {
+            method: "GET"
+          })
+          .then(() => {
+            // Guardamos mensaje para mostrar después
+            localStorage.setItem("logoutMessage", "✅ Sesión cerrada correctamente");
+            window.location.href = "/login"; // o la ruta de tu login
+          })
+          .catch(err => {
+            alert("❌ Ocurrió un error al cerrar sesión");
+            console.error(err);
+          });
+        }
       }
     </script>
   </body>
