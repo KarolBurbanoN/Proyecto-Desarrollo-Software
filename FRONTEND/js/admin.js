@@ -269,6 +269,12 @@ const books = [
 
 let filteredBooks = null;
 
+//?----------------------------/
+//?---- GESTIONAR USUARIOS ----/
+//?----------------------------/
+
+//* Funciones Inicializadoras
+
 function mostrarSeccionUsuarios(seccion) {
   document.querySelectorAll('.user-tab').forEach(btn => btn.classList.remove('active'));
   document.querySelectorAll('#seccion-listar-usuarios, #seccion-agregar-usuario').forEach(div => div.classList.add('hidden-section'));
@@ -289,6 +295,104 @@ function mostrarSeccionUsuarios(seccion) {
   document.querySelector('.form').reset();
   }
 
+}
+
+function renderUsuarios() {
+  const contenedor = document.getElementById('listaUsuarios');
+  contenedor.innerHTML = '';
+
+  const searchInput = document.getElementById('search-usuarios');
+  const busqueda = searchInput ? searchInput.value.toLowerCase() : '';  
+  const filtroRol = document.getElementById('filter-rol-usuario').value;
+  const filtroEstado = document.getElementById('filter-estado-usuario').value;
+  const ordenFecha = document.getElementById('filter-fecha-usuario').value;
+
+  // 1. Filtro base
+  usuariosFiltrados = usuarios.filter(usuario => {
+    const coincideBusqueda =
+      usuario.nombres.toLowerCase().includes(busqueda) ||
+      usuario.apellidos.toLowerCase().includes(busqueda) ||
+      usuario.numero_documento.includes(busqueda);
+
+    const coincideRol = filtroRol === 'todos' || usuario.rol === filtroRol;
+    const coincideEstado = filtroEstado === 'todos' || usuario.estado === filtroEstado;
+
+    return coincideBusqueda && coincideRol && coincideEstado;
+  });
+
+  // 2. Orden por fecha
+  usuariosFiltrados.sort((a, b) => {
+    const fechaA = new Date(a.fecha_registro || '2000-01-01');
+    const fechaB = new Date(b.fecha_registro || '2000-01-01');
+    return ordenFecha === 'reciente' ? fechaB - fechaA : fechaA - fechaB;
+  });
+
+  // 3. Paginación
+  const totalPaginas = Math.ceil(usuariosFiltrados.length / usuariosPorPagina);
+  const inicio = (paginaActualUsuarios - 1) * usuariosPorPagina;
+  const pagina = usuariosFiltrados.slice(inicio, inicio + usuariosPorPagina);
+
+  // 4. Render tabla
+  if (pagina.length === 0) {
+    contenedor.innerHTML = '<p>No hay usuarios registrados.</p>';
+    document.getElementById('paginadorUsuarios').textContent = '';
+    return;
+  }
+
+  pagina.forEach(usuario => {
+    const div = document.createElement('div');
+    div.className = 'card';
+
+    div.innerHTML = `
+      <div><strong>${usuario.nombres} ${usuario.apellidos}</strong><br><small>${usuario.numero_documento}</small></div>
+      <div>${usuario.correo}</div>
+      <div>${usuario.rol.charAt(0).toUpperCase() + usuario.rol.slice(1)}</div>
+      <div>
+        <span class="estado-${usuario.estado}">${usuario.estado}</span>
+      </div>
+      <div class="acciones">
+        <button class="edit" title="Editar" onclick="editarUsuario('${usuario.numero_documento}')">✏️</button>
+        <button class="delete" title="Eliminar" onclick="eliminarUsuario('${usuario.numero_documento}')">🗑️</button>
+        <button class="block" title="${usuario.estado === 'activo' ? 'Bloquear' : 'Desbloquear'}" onclick="toggleEstadoUsuario('${usuario.numero_documento}')">🚫</button>
+      </div>
+    `;
+
+    contenedor.appendChild(div);
+  });
+
+  document.getElementById('paginadorUsuarios').textContent = `Página ${paginaActualUsuarios} de ${totalPaginas}`;
+}
+
+//* Base de Datos
+
+async function renderUsuariosDesdeBackend() {
+  try {
+    const response = await fetch("/api/usuarios/");
+    const data = await response.json();
+    usuarios = data;
+    renderUsuarios(); // ya tienes esta función implementada
+  } catch (error) {
+    console.error("Error al cargar usuarios:", error);
+  }
+}
+
+//* Funciones de Interacción
+
+function filtrarUsuarios() {
+  const doc = document.getElementById('filtroDocumento').value.trim();
+  const rol = document.getElementById('filtroRol').value;
+
+  let filtrados = usuarios;
+
+  if (doc !== '') {
+    filtrados = filtrados.filter(u => u.numero_documento.includes(doc));
+  }
+
+  if (rol !== 'todos') {
+    filtrados = filtrados.filter(u => u.rol === rol);
+  }
+
+  renderUsuarios(filtrados);
 }
 
 async function registrarUsuario(event) {
@@ -358,115 +462,6 @@ async function registrarUsuario(event) {
   
 }
 
-function renderUsuarios() {
-  const contenedor = document.getElementById('listaUsuarios');
-  contenedor.innerHTML = '';
-
-  const searchInput = document.getElementById('search-usuarios');
-  const busqueda = searchInput ? searchInput.value.toLowerCase() : '';  
-  const filtroRol = document.getElementById('filter-rol-usuario').value;
-  const filtroEstado = document.getElementById('filter-estado-usuario').value;
-  const ordenFecha = document.getElementById('filter-fecha-usuario').value;
-
-  // 1. Filtro base
-  usuariosFiltrados = usuarios.filter(usuario => {
-    const coincideBusqueda =
-      usuario.nombres.toLowerCase().includes(busqueda) ||
-      usuario.apellidos.toLowerCase().includes(busqueda) ||
-      usuario.numero_documento.includes(busqueda);
-
-    const coincideRol = filtroRol === 'todos' || usuario.rol === filtroRol;
-    const coincideEstado = filtroEstado === 'todos' || usuario.estado === filtroEstado;
-
-    return coincideBusqueda && coincideRol && coincideEstado;
-  });
-
-  // 2. Orden por fecha
-  usuariosFiltrados.sort((a, b) => {
-    const fechaA = new Date(a.fecha_registro || '2000-01-01');
-    const fechaB = new Date(b.fecha_registro || '2000-01-01');
-    return ordenFecha === 'reciente' ? fechaB - fechaA : fechaA - fechaB;
-  });
-
-  // 3. Paginación
-  const totalPaginas = Math.ceil(usuariosFiltrados.length / usuariosPorPagina);
-  const inicio = (paginaActualUsuarios - 1) * usuariosPorPagina;
-  const pagina = usuariosFiltrados.slice(inicio, inicio + usuariosPorPagina);
-
-  // 4. Render tabla
-  if (pagina.length === 0) {
-    contenedor.innerHTML = '<p>No hay usuarios registrados.</p>';
-    document.getElementById('paginadorUsuarios').textContent = '';
-    return;
-  }
-
-  pagina.forEach(usuario => {
-    const div = document.createElement('div');
-    div.className = 'card';
-
-    div.innerHTML = `
-      <div><strong>${usuario.nombres} ${usuario.apellidos}</strong><br><small>${usuario.numero_documento}</small></div>
-      <div>${usuario.correo}</div>
-      <div>${usuario.rol.charAt(0).toUpperCase() + usuario.rol.slice(1)}</div>
-      <div>
-        <span class="estado-${usuario.estado}">${usuario.estado}</span>
-      </div>
-      <div class="acciones">
-        <button class="edit" title="Editar" onclick="editarUsuario('${usuario.numero_documento}')">✏️</button>
-        <button class="delete" title="Eliminar" onclick="eliminarUsuario('${usuario.numero_documento}')">🗑️</button>
-        <button class="block" title="${usuario.estado === 'activo' ? 'Bloquear' : 'Desbloquear'}" onclick="toggleEstadoUsuario('${usuario.numero_documento}')">🚫</button>
-      </div>
-    `;
-
-    contenedor.appendChild(div);
-  });
-
-  document.getElementById('paginadorUsuarios').textContent = `Página ${paginaActualUsuarios} de ${totalPaginas}`;
-}
-
-function paginaSiguienteUsuarios() {
-  const total = Math.ceil(usuariosFiltrados.length / usuariosPorPagina);
-  if (paginaActualUsuarios < total) {
-    paginaActualUsuarios++;
-    renderUsuarios();
-  }
-}
-
-function paginaAnteriorUsuarios() {
-  if (paginaActualUsuarios > 1) {
-    paginaActualUsuarios--;
-    renderUsuarios();
-  }
-}
-
-function filtrarUsuarios() {
-  const doc = document.getElementById('filtroDocumento').value.trim();
-  const rol = document.getElementById('filtroRol').value;
-
-  let filtrados = usuarios;
-
-  if (doc !== '') {
-    filtrados = filtrados.filter(u => u.numero_documento.includes(doc));
-  }
-
-  if (rol !== 'todos') {
-    filtrados = filtrados.filter(u => u.rol === rol);
-  }
-
-  renderUsuarios(filtrados);
-}
-
-async function renderUsuariosDesdeBackend() {
-  try {
-    const response = await fetch("/api/usuarios/");
-    const data = await response.json();
-    usuarios = data;
-    renderUsuarios(); // ya tienes esta función implementada
-  } catch (error) {
-    console.error("Error al cargar usuarios:", error);
-  }
-}
-
 function editarUsuario(doc) {
   const usuario = usuarios.find(u => u.numero_documento === doc);
   if (!usuario) return;
@@ -510,6 +505,24 @@ function toggleEstadoUsuario(doc) {
   }
 }
 
+//* Funciones de paginación para usuarios
+
+function paginaSiguienteUsuarios() {
+  const total = Math.ceil(usuariosFiltrados.length / usuariosPorPagina);
+  if (paginaActualUsuarios < total) {
+    paginaActualUsuarios++;
+    renderUsuarios();
+  }
+}
+
+function paginaAnteriorUsuarios() {
+  if (paginaActualUsuarios > 1) {
+    paginaActualUsuarios--;
+    renderUsuarios();
+  }
+}
+
+//* Filtrar usuarios
 
 // Implementar un throttling para las peticiones
 const requestQueue = [];
@@ -569,6 +582,43 @@ async function cachedFetch(url) {
     setTimeout(() => apiCache.delete(url), 30000);
     
     return data;
+}
+
+//?----------------------------/
+//?----- GESTIONAR LIBROS -----/
+//?----------------------------/
+
+//* Funciones Inicializadoras
+
+function mostrarSeccionLibros(seccion) {
+  // Ocultar todas las secciones
+  document.querySelectorAll('#seccion-listar-libros, #seccion-agregar-libro, #seccion-editar-libro').forEach(div => {
+    div.classList.add('hidden-section');
+  });
+  
+  // Resetear todas las pestañas
+  document.querySelectorAll('#gestion-libros .user-tab').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.id === 'tabEditarLibro' && seccion !== 'editar') {
+      btn.style.display = 'none';
+    }
+  });
+
+  if (seccion === 'listar') {
+    document.querySelector('#gestion-libros .user-tab:nth-child(1)').classList.add('active');
+    document.getElementById('seccion-listar-libros').classList.remove('hidden-section');
+  } else if (seccion === 'agregar') {
+    document.querySelector('#gestion-libros .user-tab:nth-child(2)').classList.add('active');
+    document.getElementById('seccion-agregar-libro').classList.remove('hidden-section');
+  } else if (seccion === 'editar') {
+    document.getElementById('tabEditarLibro').classList.add('active');
+    document.getElementById('seccion-editar-libro').classList.remove('hidden-section');
+  }
+}
+
+function mostrarFormularioLibro() {
+  const formSection = document.getElementById('formularioLibro');
+  formSection.classList.toggle('hidden-section');
 }
 
 async function renderBooksAdmin() {
@@ -662,7 +712,46 @@ async function renderBooksAdmin() {
   }
 }
 
+async function showAdminBookDetails(isbn) {
+  try {
+    const response = await fetch(`/api/libros/${isbn}`);
+    if (!response.ok) {
+      throw new Error('Libro no encontrado');
+    }
+    const book = await response.json();
+    
+    const autores = Array.isArray(book.autores) ? 
+                  book.autores.map(a => a.nombre).join(', ') : 'Autor desconocido';
 
+    // Mostrar detalles en el panel
+    document.getElementById('detailCover').src = book.portada || 'https://via.placeholder.com/150';
+    document.getElementById('detailTitle').textContent = book.titulo;
+    document.getElementById('detailAuthor').textContent = autores;
+    document.getElementById('detailStatus').textContent = 'Disponible'; // Puedes agregar este campo a tu modelo
+    document.getElementById('detailRating').textContent = book.promedio_calificacion ? 
+      '⭐'.repeat(Math.round(book.promedio_calificacion)) + ` (${book.promedio_calificacion.toFixed(1)})` : 'Sin calificaciones';
+    document.getElementById('detailDescription').textContent = book.descripcion_libro || 'No hay descripción disponible.';
+    
+    // Botones de administración
+    document.getElementById('detailButton').innerHTML = `
+      <div class="admin-buttons">
+        <button onclick="editarLibro('${book.ISBN}')">Editar</button>
+        <button onclick="eliminarLibro('${book.ISBN}')" class="delete-btn">Eliminar</button>
+      </div>
+    `;
+    
+    //-->#Se modificó
+    const panel = document.getElementById('bookDetailPanel');
+    panel.classList.add('active');
+    panel.classList.remove('hidden-section');
+    
+  } catch (error) {
+    console.error('Error al cargar detalles:', error);
+    alert('No se pudieron cargar los detalles del libro');
+  }
+}
+
+//* Funciones de Interacción
 
 // Configurar eventos de los filtros para admin
 function setupAdminFilterEvents() {
@@ -716,7 +805,6 @@ function setupAdminFilterEvents() {
   });
 }
 
-
 // Configurar eventos de los filtros para usuarios
 function setupUserFilterEvents() {
   const filterToggle = document.getElementById('filterToggleBtn-usuarios');
@@ -756,78 +844,10 @@ function setupUserFilterEvents() {
 
 }
 
-// Nueva función específica para el panel de administrador
-async function showAdminBookDetails(isbn) {
-  try {
-    const response = await fetch(`/api/libros/${isbn}`);
-    if (!response.ok) {
-      throw new Error('Libro no encontrado');
-    }
-    const book = await response.json();
-    
-    const autores = Array.isArray(book.autores) ? 
-                  book.autores.map(a => a.nombre).join(', ') : 'Autor desconocido';
-
-    // Mostrar detalles en el panel
-    document.getElementById('detailCover').src = book.portada || 'https://via.placeholder.com/150';
-    document.getElementById('detailTitle').textContent = book.titulo;
-    document.getElementById('detailAuthor').textContent = autores;
-    document.getElementById('detailStatus').textContent = 'Disponible'; // Puedes agregar este campo a tu modelo
-    document.getElementById('detailRating').textContent = book.promedio_calificacion ? 
-      '⭐'.repeat(Math.round(book.promedio_calificacion)) + ` (${book.promedio_calificacion.toFixed(1)})` : 'Sin calificaciones';
-    document.getElementById('detailDescription').textContent = book.descripcion_libro || 'No hay descripción disponible.';
-    
-    // Botones de administración
-    document.getElementById('detailButton').innerHTML = `
-      <div class="admin-buttons">
-        <button onclick="editarLibro('${book.ISBN}')">Editar</button>
-        <button onclick="eliminarLibro('${book.ISBN}')" class="delete-btn">Eliminar</button>
-      </div>
-    `;
-    
-    //-->#Se modificó
-    const panel = document.getElementById('bookDetailPanel');
-    panel.classList.add('active');
-    panel.classList.remove('hidden-section');
-    
-  } catch (error) {
-    console.error('Error al cargar detalles:', error);
-    alert('No se pudieron cargar los detalles del libro');
-  }
-}
-
 function closeDetailPanel() {
   const panel = document.getElementById('bookDetailPanel');
   panel.classList.remove('active');
   panel.classList.add('hidden-section');
-}
-
-
-// Función para mostrar/ocultar secciones
-function mostrarSeccionLibros(seccion) {
-  // Ocultar todas las secciones
-  document.querySelectorAll('#seccion-listar-libros, #seccion-agregar-libro, #seccion-editar-libro').forEach(div => {
-    div.classList.add('hidden-section');
-  });
-  
-  // Resetear todas las pestañas
-  document.querySelectorAll('#gestion-libros .user-tab').forEach(btn => {
-    btn.classList.remove('active');
-    if (btn.id === 'tabEditarLibro' && seccion !== 'editar') {
-      btn.style.display = 'none';
-    }
-  });
-
-  if (seccion === 'listar') {
-    document.querySelector('#gestion-libros .user-tab:nth-child(1)').classList.add('active');
-    document.getElementById('seccion-listar-libros').classList.remove('hidden-section');
-  } else if (seccion === 'agregar') {
-    document.querySelector('#gestion-libros .user-tab:nth-child(2)').classList.add('active');
-    document.getElementById('seccion-agregar-libro').classList.remove('hidden-section');
-  } else if (seccion === 'editar') {
-    document.getElementById('tabEditarLibro').classList.add('active');
-    document.getElementById('seccion-editar-libro').classList.remove('hidden-section');
-  }
 }
 
 async function registrarLibro(event) {
@@ -1047,6 +1067,8 @@ async function eliminarLibro(isbn) {
   }
 }
 
+//* Funciones de paginación
+
 function nextPageAdmin() {
   const totalPages = Math.ceil(books.length / booksPerPage);
   if (currentPage < totalPages) {
@@ -1062,10 +1084,19 @@ function prevPageAdmin() {
   }
 }
 
-function mostrarFormularioLibro() {
-  const formSection = document.getElementById('formularioLibro');
-  formSection.classList.toggle('hidden-section');
-}
+//?----------------------------/
+//?---- GESTIONAR AUTORES -----/
+//?----------------------------/
+
+//?----------------------------/
+//?---- GESTIONAR INFORMES ----/
+//?----------------------------/
+
+//?----------------------------/
+//?----- GESTIONAR PERFIL -----/
+//?----------------------------/
+
+//* Funciones Inicializadoras
 
 function mostrarFormularioPerfil() {
   document.getElementById('perfilResumen').classList.add('hidden-section');
@@ -1084,6 +1115,8 @@ function mostrarFormularioPerfil() {
     radio.checked = radio.value === genero.charAt(0);
   });
 }
+
+//* Funciones de Interacción
 
 function cancelarEdicionPerfil() {
   document.getElementById('edit-profile-form').classList.add('hidden-section');
@@ -1149,6 +1182,10 @@ async function editProfile(event) {
     alert('Error al actualizar el perfil: ' + error.message);
   }
 }
+
+//?----------------------------/
+//?---------- LOGOUT ----------/
+//?----------------------------/
 
 function logout() {
   alert('Sesión cerrada.');
@@ -1295,4 +1332,3 @@ window.addEventListener('DOMContentLoaded', () => {
   // Mostrar la pestaña de edición solo cuando sea necesario
   document.getElementById('tabEditarLibro').classList.add('hidden');
 });
-
