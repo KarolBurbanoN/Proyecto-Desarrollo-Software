@@ -1242,6 +1242,92 @@ body.lector-panel .book-prestamo-info button:hover {
   background-color: #3a5a8f;
 }
 
+.form-edit-container {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.preview-container {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-container label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.portada-preview {
+  max-width: 180px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  padding: 4px;
+  border-radius: 4px;
+  display: none;
+}
+
+.fields-container {
+  flex: 3 1 400px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+.fields-container label {
+  display: flex;
+  flex-direction: column;
+}
+
+.fields-container span {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.descripcion-field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-buttons {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .form-edit-container {
+    flex-direction: column;
+  }
+}
+
+.form-grid-2cols {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 30px;
+  margin-bottom: 20px;
+}
+
+.col-portada,
+.col-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.col-portada label,
+.col-datos label {
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.descripcion-field label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
 
 /**---------------------*/
 /**------ Usuario ------*/

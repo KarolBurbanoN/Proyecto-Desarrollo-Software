@@ -91,10 +91,11 @@ def actualizar_libro(isbn):
     # Actualizar campos permitidos
     if 'titulo' in data: libro.titulo = data['titulo']
     if 'editorial' in data: libro.editorial = data['editorial']
-    if 'year' in data: libro.año_publicacion = data['year']
+    if 'año_publicacion' in data: libro.año_publicacion = data['año_publicacion']
     if 'genero' in data: libro.genero = data['genero']
     if 'portada' in data: libro.portada = data['portada']
-    
+    if 'descripcion_libro' in data: libro.descripcion_libro = data['descripcion_libro']  # ✅
+
     # Manejar autores (simplificado)
     if 'autores' in data:
         libro.autores = []
@@ -107,6 +108,7 @@ def actualizar_libro(isbn):
     
     db.commit()
     return jsonify({"mensaje": "Libro actualizado correctamente"})
+
 
 @libros_bp.route("/<isbn>", methods=["DELETE"])
 def eliminar_libro(isbn):

@@ -842,22 +842,25 @@ async function editarLibro(isbn) {
 
 async function actualizarLibro(event) {
   event.preventDefault();
-  
+
   // Ocultar mensajes anteriores
   document.getElementById('mensajeEdicionLibro').style.display = 'none';
   document.getElementById('mensajeErrorEdicionLibro').style.display = 'none';
-  
+
   const isbn = document.getElementById('edit-isbnLibro').value;
-  
-  const libroActualizado = {
-    titulo: document.getElementById('edit-tituloLibro').value.trim(),
-    autores: [document.getElementById('edit-autorLibro').value.trim()],
-    editorial: document.getElementById('edit-editorialLibro').value.trim(),
-    year: parseInt(document.getElementById('edit-anioLibro').value) || null,
-    genero: document.getElementById('edit-generoLibro').value.trim(),
-    portada: document.getElementById('edit-urlPortadaLibro').value.trim(),
-    descripcion_libro: document.getElementById('edit-descripcionLibro').value.trim()
-  };
+
+const libroActualizado = {
+  titulo: document.getElementById('edit-tituloLibro').value.trim(),
+  autores: document.getElementById('edit-autorLibro').value
+            .split(',')
+            .map(nombre => nombre.trim()),
+  editorial: document.getElementById('edit-editorialLibro').value.trim(),
+  año_publicacion: parseInt(document.getElementById('edit-anioLibro').value) || null,
+  genero: document.getElementById('edit-generoLibro').value.trim(),
+  portada: document.getElementById('edit-urlPortadaLibro').value.trim(),
+  descripcion_libro: document.getElementById('edit-descripcionLibro').value.trim()
+};
+
 
   try {
     const response = await fetch(`/api/libros/${isbn}`, {
@@ -874,19 +877,19 @@ async function actualizarLibro(event) {
     // Mostrar mensaje de éxito
     document.getElementById('mensajeEdicionLibro').textContent = "✅ Libro actualizado correctamente";
     document.getElementById('mensajeEdicionLibro').style.display = 'block';
-    
+
     // Actualizar la lista de libros
     await renderBooksAdmin();
-    
+
     // Ocultar pestaña de edición
     document.getElementById('tabEditarLibro').style.display = 'none';
-    
+
     // Volver a la lista después de 2 segundos
     setTimeout(() => {
       document.getElementById('mensajeEdicionLibro').style.display = 'none';
       mostrarSeccionLibros('listar');
     }, 2000);
-    
+
   } catch (error) {
     console.error('Error:', error);
     document.getElementById('mensajeErrorEdicionLibro').textContent = `❌ ${error.message}`;
