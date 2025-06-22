@@ -179,6 +179,19 @@ def actualizar_perfil_usuario():
     for campo in campos_permitidos:
         if campo in data:
             setattr(usuario, campo, data[campo])
+            
+    # Manejo especial para el estado
+    if "estado" in data:
+        estado_recibido = data["estado"].lower()
+        if estado_recibido in ['activo', 'activa']:
+            usuario.estado_cuenta = 'activa'
+        elif estado_recibido == 'bloqueada':
+            usuario.estado_cuenta = 'bloqueada'
+        else:
+            return jsonify({
+                "error": "Estado no válido",
+                "detalle": "Debe ser 'activa'/'activo' o 'bloqueada'"
+            }), 400
     
     # Actualizar contraseña si se proporciona
     if "contraseña" in data and data["contraseña"]:

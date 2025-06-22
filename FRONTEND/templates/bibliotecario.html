@@ -29,16 +29,11 @@
         </h1>
         <nav>
           <ul>
-            <li><button class="menu-btn active"
-                data-target="gestion-usuarios">Usuarios</button></li>
-            <li><button class="menu-btn"
-                data-target="gestion-libros">Libros</button></li>
-            <li><button class="menu-btn"
-                data-target="historial">Historial</button></li>
-            <li><button class="menu-btn"
-                data-target="perfil">Perfil</button></li>
-            <li><button onclick="logout()" class="menu-btn">Cerrar
-                sesión</button></li>
+            <li><button class="menu-btn active" data-target="gestion-usuarios">Usuarios</button></li>
+            <li><button class="menu-btn" data-target="gestion-libros">Libros</button></li>
+            <li><button class="menu-btn" data-target="historial">Historial</button></li>
+            <li><button class="menu-btn" data-target="perfil">Perfil</button></li>
+            <li><button onclick="logout()" class="menu-btn">Cerrar sesión</button></li>
           </ul>
         </nav>
       </aside>
@@ -50,12 +45,8 @@
           <h2>Gestión de Usuarios</h2>
           <!-- Menú superior de pestañas -->
           <div class="user-tabs">
-            <button class="user-tab active"
-              onclick="mostrarSeccionUsuarios('listar')">Listar
-              usuarios</button>
-            <button class="user-tab"
-              onclick="mostrarSeccionUsuarios('agregar')">Agregar
-              usuario</button>
+            <button class="user-tab active" onclick="mostrarSeccionUsuarios('listar')">Listar usuarios</button>
+            <button class="user-tab" onclick="mostrarSeccionUsuarios('agregar')">Agregar usuario</button>
           </div>
 
           <!-- Contenedor de contenido -->
@@ -66,8 +57,8 @@
               <div class="search-container">
                 <input
                   type="text"
-                  id="search-admin"
-                  placeholder="Buscar por título, autor..." />
+                  id="search-usuarios"
+                  placeholder="Buscar por nombre, documento..." />
 
                 <div class="filter-container">
                   <button id="filterToggleBtn-usuarios">Filtros ▼</button>
@@ -77,7 +68,7 @@
                       <select id="filter-rol-usuario">
                         <option value="todos">Todos</option>
                         <option value="bibliotecario">Bibliotecario</option>
-                        <option value="regular">Lector</option>
+                        <option value="lector">Lector</option>
                       </select>
                     </div>
 
@@ -85,15 +76,14 @@
                       <h4>Estado</h4>
                       <select id="filter-estado-usuario">
                         <option value="todos">Todos</option>
-                        <option value="activo">Activo</option>
-                        <option value="bloqueado">Bloqueado</option>
+                        <option value="activo">Activa</option>
+                        <option value="bloqueado">Bloqueada</option>
                       </select>
                     </div>
 
                     <div class="filter-group">
                       <h4>Ordenar por</h4>
                       <select id="filter-fecha-usuario">
-                        <option value="todos">Todos</option>
                         <option value="reciente">Más reciente</option>
                         <option value="antiguo">Más antiguo</option>
                       </select>
@@ -121,7 +111,7 @@
               <h3>Registrar nuevo usuario</h3>
               <form class="form" onsubmit="registrarUsuario(event)">
                 <input type="hidden" id="modo-edicion" value="false" />
-                <input type="hidden" id="usuario-editando-doc" />
+                <input type="hidden" id="usuario-editando-doc"/>
 
                 <div class="form-grid">
                   <label>
@@ -136,18 +126,15 @@
                   </label>
                   <label>
                     <i class="bx bx-hash"></i>
-                    <input type="text" placeholder="Número de documento"
-                      id="numDoc" required />
+                    <input type="text" placeholder="Número de documento" id="numDoc" required />
                   </label>
                   <label>
                     <i class="bx bx-user"></i>
-                    <input type="text" placeholder="Nombres" id="nombres"
-                      required />
+                    <input type="text" placeholder="Nombres" id="nombres" required />
                   </label>
                   <label>
                     <i class="bx bx-user"></i>
-                    <input type="text" placeholder="Apellidos" id="apellidos"
-                      required />
+                    <input type="text" placeholder="Apellidos" id="apellidos" required />
                   </label>
                   <label>
                     <i class="bx bx-calendar"></i>
@@ -176,27 +163,23 @@
                   </label>
                   <label>
                     <i class="bx bx-envelope"></i>
-                    <input type="email" placeholder="Correo electrónico"
-                      id="correo" required />
+                    <input type="email" placeholder="Correo electrónico" id="correo" required />
                   </label>
                   <label>
                     <i class="bx bx-lock"></i>
-                    <input type="password" name="contraseña"
-                      placeholder="Contraseña" required />
+                    <input type="password" name="contraseña" placeholder="Contraseña" required />
                   </label>
                   <label>
                     <select id="rol" required>
                       <option value>Seleccionar rol</option>
                       <option value="lector">Lector</option>
                       <option value="bibliotecario">Bibliotecario</option>
-                      <option value="administrador">Administrador</option>
                     </select>
                   </label>
                 </div>
                 <input type="submit" value="Registrar usuario" />
               </form>
-              <div id="mensajeRegistro" class="mensaje-exito"
-                style="display: none;">
+              <div id="mensajeRegistro" class="mensaje-exito" style="display: none;">
                 ✅ Usuario registrado correctamente
               </div>
             </div>
@@ -205,127 +188,208 @@
 
         <!-- Libros -->
         <section id="gestion-libros" class="hidden-section">
-          <h2>Libros registrados</h2>
+          <h2>Gestión de Libros</h2>
 
-          <div class="search-filter-row">
-            <div class="search-container">
-              <input
-                type="text"
-                id="search-Bibliotecario"
-                placeholder="Buscar por título, autor..." />
+          <!-- Menú superior de pestañas -->
+          <div class="user-tabs">
+            <button class="user-tab active" onclick="mostrarSeccionLibros('listar')">Listar libros</button>
+            <button class="user-tab" onclick="mostrarSeccionLibros('agregar')">Agregar libro</button>
+            <button class="user-tab" onclick="mostrarSeccionLibros('listar_autores')">Listar autores</button>
+            <button class="user-tab" onclick="mostrarSeccionLibros('agregar_autor')">Agregar autor</button>
+          </div>
 
-              <!-- Filtros desplegables -->
-              <div class="filter-container">
-                <button id="filterToggleBtn-Bibliotecario">Filtros ▼</button>
-                <div id="filtersMenu-Bibliotecario" class="filters-menu hidden">
-                  <div class="filter-group">
-                    <h4>Categorías</h4>
-                    <select id="filter-category-Bibliotecario">
-                      <option value="all">Todas</option>
-                      <option value="Ciencia Ficción">Ciencia Ficción</option>
-                      <option value="Comics">Comics</option>
-                      <option value="Fantasía">Fantasía</option>
-                      <option value="Infantil">Infantil</option>
-                      <option value="Poesía">Poesía</option>
-                      <option value="Romance">Romance</option>
-                      <option value="Terror">Terror</option>
-                    </select>
+          <!-- Contenedor de contenido para listar libros -->
+          <div id="seccion-listar-libros">
+            <div class="search-filter-row">
+              <div class="search-container">
+                <input
+                  type="text"
+                  id="search-Bibliotecario"
+                  placeholder="Buscar por título, autor..." />
+
+                <div class="filter-container">
+                  <button id="filterToggleBtn-Bibliotecario">Filtros ▼</button>
+                  <div id="filtersMenu-Bibliotecario" class="filters-menu hidden">
+                    <div class="filter-group">
+                      <h4>Categorías</h4>
+                      <select id="filter-category-Bibliotecario">
+                        <option value="all">Todas</option>
+                        <option value="Ciencia Ficción">Ciencia Ficción</option>
+                        <option value="Comics">Comics</option>
+                        <option value="Fantasía">Fantasía</option>
+                        <option value="Infantil">Infantil</option>
+                        <option value="Poesía">Poesía</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Terror">Terror</option>
+                      </select>
+                    </div>
+
+                    <div class="filter-group">
+                      <h4>Calificación mínima</h4>
+                      <select id="filter-rating-Bibliotecario">
+                        <option value="0">Todas</option>
+                        <option value="3">3+</option>
+                        <option value="4">4+</option>
+                        <option value="4.5">4.5+</option>
+                      </select>
+                    </div>
+
+                    <div class="filter-group">
+                      <h4>Ordenar por</h4>
+                      <select id="filter-order-Bibliotecario">
+                        <option value="recent">Más recientes</option>
+                        <option value="oldest">Más antiguos</option>
+                        <option value="rating">Mejor calificados</option>
+                      </select>
+                    </div>
+
+                    <button id="applyFiltersBtn-Bibliotecario">Aplicar filtros</button>
                   </div>
-
-                  <div class="filter-group">
-                    <h4>Calificación mínima</h4>
-                    <select id="filter-rating-admin">
-                      <option value="0">Todas</option>
-                      <option value="3">3+</option>
-                      <option value="4">4+</option>
-                      <option value="4.5">4.5+</option>
-                    </select>
-                  </div>
-
-                  <div class="filter-group">
-                    <h4>Ordenar por</h4>
-                    <select id="filter-order-admin">
-                      <option value="recent">Más recientes</option>
-                      <option value="oldest">Más antiguos</option>
-                      <option value="rating">Mejor calificados</option>
-                    </select>
-                  </div>
-
-                  <button id="applyFiltersBtn-Bibliotecario">Aplicar
-                    filtros</button>
                 </div>
+              </div>
+            </div>
+
+            <div class="book-list" id="BibliotecarioBookList"></div>
+
+            <div class="pagination">
+              <button onclick="prevPageBibliotecario()">Anterior</button>
+              <span id="pageIndicator"></span>
+              <button onclick="nextPageBibliotecario()">Siguiente</button>
+            </div>
+          </div>
+
+          <!-- Contenedor de contenido para agregar libros -->
+          <div id="seccion-agregar-libro" class="hidden-section">
+            <div id="formularioLibro" class="card">
+              <h3>Registrar nuevo libro</h3>
+              <form id="formLibro" class="form" onsubmit="registrarLibro(event)">
+                <div class="form-grid">
+                  <label>
+                    <i class='bx bx-image'></i>
+                    <input type="url" id="urlPortadaLibro" name="Portada" placeholder="Url Portada" required>
+                  </label>
+                  <!-- Vista previa -->
+                  <div style="margin-top: 10px;">
+                    <img id="previewPortada" src alt="Vista previa" style="max-width: 200px; display: none; border: 1px solid #ccc; padding: 4px;">
+                  </div>
+                  <label>
+                    <i class='bx bx-pencil'></i>
+                    <input type="text" id="tituloLibro" placeholder="Título" required />
+                  </label>
+                  <label>
+                    <i class="bx bx-user"></i>
+                    <input type="text" id="autorLibro" placeholder="Autor" required />
+                  </label>
+                  <label>
+                    <i class='bx bx-home-alt-2'></i>
+                    <input type="text" id="editorialLibro" placeholder="Editorial" required />
+                  </label>
+                  <label>
+                    <i class="bx bx-calendar"></i>
+                    <input type="number" id="anioLibro" placeholder="Año de publicación" min="1000" max="2100" required />
+                  </label>
+                  <label>
+                    <i class="bx bx-hash"></i>
+                    <input type="text" id="isbnLibro" placeholder="ISBN" required />
+                  </label>
+                  <label>
+                    <i class="bx bx-book-bookmark"></i>
+                    <input type="text" id="generoLibro" placeholder="Género" required />
+                  </label>
+                  <label>
+                    <i class="bx bx-checkbox-checked"></i>
+                    <select id="estadoLibro" required>
+                      <option value>Estado</option>
+                      <option value="disponible">Disponible</option>
+                      <option value="no disponible">No disponible</option>
+                    </select>
+                  </label>
+                  <label>
+                    <i class='bx bx-directions'></i>
+                    <input type="text" id="ubicacionLibro" placeholder="Ej: Estante A3" required>
+                  </label>
+                </div>
+                <div class="form-field descripcion-field">
+                  <span>Descripción del libro:</span>
+                  <textarea id="descripcionLibro" placeholder="Escribe una descripción (máx. 200 caracteres)" maxlength="200" rows="5"></textarea>
+                </div>
+                <div style="text-align: center; margin-top: 1rem;">
+                  <button type="submit">Registrar libro</button>
+                </div>
+              </form>
+            </div>
+
+            <div id="mensajeLibro" class="mensaje-exito" style="display: none;">
+              ✅ Libro registrado correctamente
+            </div>
+            <div id="mensajeErrorLibro" class="mensaje-error" style="display: none;">
+              ❌ Error al registrar el libro. Por favor, verifica los datos.
+            </div>
+          </div>
+
+          <!-- Listar autores -->
+          <div id="seccion-listar-autores" class="hidden-section">
+            <div class="search-filter-row">
+              <div class="search-container">
+                <input type="text" id="search-autores" placeholder="Buscar" />
+                <button onclick="toggleOrdenAutores()">
+                  <i id="ordenAutoresIcono" class="bx bx-sort-up"></i> Ordenar
+                </button>
+              </div>
+            </div>
+
+            <div class="user-table autores-table">
+              <!-- Encabezado -->
+              <div class="row header">
+                <div>Nombre</div>
+                <div>Nacionalidad</div>
+                <div>Biografía</div>
+                <div>Libros</div>
+                <div>Acciones</div>
+              </div>
+              <div id="listaAutores" class="lista-autores">
+                <p>Cargando autores...</p>
+              </div>
+              <div class="pagination">
+                <button onclick="prevPageBibliotecario()">Anterior</button>
+                <span id="pageIndicatorAutores"></span>
+                <button onclick="nextPageBibliotecario()">Siguiente</button>
               </div>
             </div>
           </div>
 
-          <div class="book-list" id="BibliotecarioBookList"></div>
+          <!-- Agregar autor -->
+          <div id="seccion-agregar-autor" class="hidden-section">
+            <div id="formularioAutor" class="card">
+              <h3>Registrar nuevo autor</h3>
+              <form id="formAutor" class="form" onsubmit="registrarAutor(event)">
+                <div class="form-grid">
+                  <label>
+                    <i class="bx bx-user"></i>
+                    <input type="text" id="nombreAutor" placeholder="Nombre del autor" required />
+                  </label>
+                  <label>
+                    <i class="bx bx-globe"></i>
+                    <input type="text" id="nacionalidadAutor" placeholder="Nacionalidad" />
+                  </label>
+                </div>
+                <div class="form-field descripcion-field">
+                  <span>Biografía del Autor:</span>
+                  <textarea id="biografiaAutor" placeholder="Biografía (máx. 150 caracteres)" maxlength="150" rows="5"></textarea>
+                </div>
+                <div style="text-align: center; margin-top: 1rem;">
+                  <button type="submit">Registrar autor</button>
+                </div>
+              </form>
+            </div>
 
-          <div class="pagination">
-            <button onclick="prevPageBibliotecario()">Anterior</button>
-            <span id="pageIndicator"></span>
-            <button onclick="nextPageBibliotecario()">Siguiente</button>
+            <div id="mensajeAutor" class="mensaje-exito" style="display: none;">
+              ✅ Autor registrado correctamente
+            </div>
+            <div id="mensajeErrorAutor" class="mensaje-error" style="display: none;">
+              ❌ Error al registrar el autor. Por favor, verifica los datos.
+            </div>
           </div>
-
-          <h2>Gestión de Libros</h2>
-          <button onclick="mostrarFormularioLibro()">Agregar libro</button>
-          <div id="formularioLibro" class="hidden-section card">
-            <h3>Registrar nuevo libro</h3>
-            <form id="formLibro" class="form" onsubmit="registrarLibro(event)">
-              <div class="form-grid">
-                <label>
-                  <i class="bx bx-captions"></i>
-                  <input type="text" id="tituloLibro" placeholder="Título"
-                    required />
-                </label>
-                <label>
-                  <i class="bx bx-user"></i>
-                  <input type="text" id="autorLibro" placeholder="Autor"
-                    required />
-                </label>
-                <label>
-                  <i class="bx bx-department-store"></i>
-                  <input type="text" id="editorialLibro" placeholder="Editorial"
-                    required />
-                </label>
-                <label>
-                  <i class="bx bx-calendar"></i>
-                  <input type="number" id="anioLibro"
-                    placeholder="Año de publicación" min="1000" max="2100"
-                    required />
-                </label>
-                <label>
-                  <i class="bx bx-hash"></i>
-                  <input type="text" id="isbnLibro" placeholder="ISBN"
-                    required />
-                </label>
-                <label>
-                  <i class="bx bx-book-bookmark"></i>
-                  <input type="text" id="generoLibro" placeholder="Género"
-                    required />
-                </label>
-                <label>
-                  <i class="bx bx-checkbox-checked"></i>
-                  <select id="estadoLibro" required>
-                    <option value>Estado</option>
-                    <option value="disponible">Disponible</option>
-                    <option value="no disponible">No disponible</option>
-                  </select>
-                </label>
-              </div>
-              <input type="submit" value="Registrar libro" />
-            </form>
-          </div>
-
-          <div id="listaLibros"></div>
-
-          <div id="mensajeLibro" class="mensaje-exito" style="display: none;">
-            ✅ Libro registrado correctamente
-          </div>
-          <div id="mensajeErrorLibro" class="mensaje-error"
-            style="display: none;">
-            ❌ Error al registrar el libro. Por favor, verifica los datos.
-          </div>
-
         </section>
 
         <!-- Historial -->
@@ -350,76 +414,56 @@
             <div class="perfil-info">
               <h2>Información Personal</h2>
               <div id="perfilResumen">
-                <p><strong>Nombre:</strong> <span id="resumen-nombre">{{
-                    usuario.nombres }}</span></p>
-                <p><strong>Apellidos:</strong> <span id="resumen-apellidos">{{
-                    usuario.apellidos }}</span></p>
-                <p><strong>Email:</strong> <span id="resumen-email">{{
-                    usuario.correo }}</span></p>
-                <p><strong>Dirección:</strong> <span id="resumen-direccion">{{
-                    usuario.direccion }}</span></p>
-                <p><strong>Teléfono:</strong> <span id="resumen-telefono">{{
-                    usuario.telefono }}</span></p>
-                <p><strong>Ciudad:</strong> <span id="resumen-ciudad">{{
-                    usuario.ciudad }}</span></p>
-                <p><strong>Género:</strong> <span id="resumen-genero">{{
-                    usuario.genero }}</span></p>
+                <p><strong>Nombre:</strong> <span id="resumen-nombre">{{ usuario.nombres }}</span></p>
+                <p><strong>Apellidos:</strong> <span id="resumen-apellidos">{{ usuario.apellidos }}</span></p>
+                <p><strong>Email:</strong> <span id="resumen-email">{{ usuario.correo }}</span></p>
+                <p><strong>Dirección:</strong> <span id="resumen-direccion">{{ usuario.direccion }}</span></p>
+                <p><strong>Teléfono:</strong> <span id="resumen-telefono">{{ usuario.telefono }}</span></p>
+                <p><strong>Ciudad:</strong> <span id="resumen-ciudad">{{ usuario.ciudad }}</span></p>
+                <p><strong>Género:</strong> <span id="resumen-genero">{{ usuario.genero }}</span></p>
 
-                <button onclick="mostrarFormularioPerfil()">Editar
-                  perfil</button>
+                <button onclick="mostrarFormularioPerfil()">Editar perfil</button>
               </div>
-              <form id="edit-profile-form" onsubmit="editProfile(event)"
-                class="hidden-section">
+              <form id="edit-profile-form" onsubmit="editProfile(event)" class="hidden-section">
                 <div class="gender-selector">
                   <span>Género:</span>
-                  <label><input type="radio" name="genero" value="M" />
-                    Masculino</label>
-                  <label><input type="radio" name="genero" value="F" />
-                    Femenino</label>
-                  <label><input type="radio" name="genero" value="O" />
-                    Otro</label>
+                  <label><input type="radio" name="genero" value="M" /> Masculino</label>
+                  <label><input type="radio" name="genero" value="F" /> Femenino</label>
+                  <label><input type="radio" name="genero" value="O" /> Otro</label>
                 </div>
                 <div class="form-grid">
                   <div class="form-field">
                     <span>Nombre</span>
-                    <input type="text" id="edit-nombre"
-                      value="{{ usuario.nombres }}" />
+                    <input type="text" id="edit-nombre" value="{{ usuario.nombres }}" />
                   </div>
                   <div class="form-field">
                     <span>Apellidos</span>
-                    <input type="text" id="edit-apellidos"
-                      value="{{ usuario.apellidos }}" />
+                    <input type="text" id="edit-apellidos" value="{{ usuario.apellidos }}" />
                   </div>
                   <div class="form-field">
                     <span>Email</span>
-                    <input type="email" id="edit-email"
-                      value="{{ usuario.correo }}" />
+                    <input type="email" id="edit-email" value="{{ usuario.correo }}" />
                   </div>
                   <div class="form-field">
                     <span>Contraseña</span>
-                    <input type="password" id="edit-pass"
-                      placeholder="Nueva contraseña" />
+                    <input type="password" id="edit-pass" placeholder="Nueva contraseña" />
                   </div>
                   <div class="form-field">
                     <span>Dirección</span>
-                    <input type="text" id="edit-address"
-                      placeholder="{{ usuario.direccion }}" />
+                    <input type="text" id="edit-address" placeholder="{{ usuario.direccion }}" />
                   </div>
                   <div class="form-field">
                     <span>Teléfono</span>
-                    <input type="tel" id="edit-phone"
-                      placeholder="{{ usuario.telefono }}" />
+                    <input type="tel" id="edit-phone" placeholder="{{ usuario.telefono }}" />
                   </div>
                   <div class="form-field">
                     <span>Ciudad</span>
-                    <input type="text" id="edit-city"
-                      placeholder="{{ usuario.ciudad }}" />
+                    <input type="text" id="edit-city" placeholder="{{ usuario.ciudad }}" />
                   </div>
                 </div>
 
                 <div class="botones-perfil">
-                  <button type="button" onclick="cancelarEdicionPerfil()"
-                    class="cancelar-btn">Cancelar</button>
+                  <button type="button" onclick="cancelarEdicionPerfil()" class="cancelar-btn">Cancelar</button>
                   <button type="submit">Guardar Cambios</button>
                 </div>
               </form>
@@ -436,22 +480,38 @@
             <h3 id="detailTitle"></h3>
             <p><strong>Autor:</strong> <span id="detailAuthor"></span></p>
             <p><strong>Estado:</strong> <span id="detailStatus"></span></p>
-            <p><strong>Calificación:</strong> <span
-                id="detailRating"></span></p>
-            <h5>Reseñas:</h5>
-            <ul id="detailReviews"></ul>
+            <p><strong>Calificación:</strong> <span id="detailRating"></span></p>
+            <p><strong>Descripción:</strong> <span id="detailDescription"></span></p>
             <div id="detailButton"></div>
           </div>
         </div>
         <button onclick="closeDetailPanel()">Cerrar</button>
       </div>
 
-      <script
-        src="{{ url_for('static', filename='js/bibliotecario.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/bibliotecario.js') }}"></script>
       <script>
-      function logout() {
-        window.location.href = "{{ url_for('login.logout') }}";
-      }
-    </script>
+        function logout() {
+          if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
+            fetch("/logout", {
+              method: "GET"
+            })
+            .then(() => {
+              localStorage.setItem("logoutMessage", "✅ Sesión cerrada correctamente");
+              window.location.href = "/login";
+            })
+            .catch(err => {
+              alert("❌ Ocurrió un error al cerrar sesión");
+              console.error(err);
+            });
+          }
+        }
+
+        // Inicialización al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+          renderUsuariosDesdeBackend();
+          renderBooksBibliotecario();
+          listarAutores();
+        });
+      </script>
     </body>
-  </html>
+</html>
