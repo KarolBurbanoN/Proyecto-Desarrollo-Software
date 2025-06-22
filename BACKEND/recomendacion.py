@@ -7,7 +7,7 @@ from sqlalchemy import desc
 
 recomendacion_bp = Blueprint("recomendacion", __name__, url_prefix="/api")
 
-# ✅ Decorador para verificar autenticación directamente aquí
+
 def requiere_autenticacion(f):
     from functools import wraps
     @wraps(f)
@@ -32,6 +32,10 @@ def recomendacion_lector(usuario_id):
             .distinct().all()
 
         isbn_excluidos = [isbn[0] for isbn in libros_leidos]
+
+        # ❌ Si no ha prestado ningún libro, no mostrar recomendación
+        if not isbn_excluidos:
+            return jsonify({"mensaje": "Aún no has hecho préstamos"}), 204  # Código 204 = sin contenido
 
         # 2. Obtener el género favorito del usuario
         genero_favorito = None
