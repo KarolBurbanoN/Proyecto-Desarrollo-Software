@@ -105,6 +105,7 @@ function renderUsuarios() {
   header.className = 'row header';
   header.innerHTML = `
     <div>Nombre</div>
+    <div>Documento</div>
     <div>Correo</div>
     <div>Tipo de Usuario</div>
     <div>Estado</div>
@@ -128,7 +129,8 @@ function renderUsuarios() {
       const estadoText = usuario.estado === 'activa' ? 'Activa' : 'Bloqueada';
 
       row.innerHTML = `
-        <div>${usuario.nombres} ${usuario.apellidos}</div>
+        <div>${usuario.nombres} ${usuario.apellidos}</div>}
+        <div>${usuario.numero_documento}</div>
         <div>${usuario.correo}</div>
         <div>${usuario.rol.charAt(0).toUpperCase() + usuario.rol.slice(1)}</div>
         <div><span class="${estadoClass}">${estadoText}</span></div>

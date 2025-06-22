@@ -1050,7 +1050,199 @@ body.admin-panel.book-info button {
 /*?---- BIBLIOTECARIO ----*/
 /*?-----------------------*/
 
+/* Tabla autores con diseño horizontal */
+.autores-table {
+  width: 100%;
+  margin-top: 1rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  font-size: 0.95rem;
+  color: #3a3a3a;
+}
 
+/* Fila general (cabecera o autor) */
+.autores-table .row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr 2fr;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  background-color: #ffffff;
+  align-items: center;
+}
+
+/* Cabecera con color y negrita */
+.autores-table .row.header {
+  background-color: #f2e8ff;
+  font-weight: 600;
+  color: #5e3d27;
+  border-bottom: 2px solid #B08968;
+}
+
+/* Biografía y libros con corte si es muy largo */
+.autores-table .row div:nth-child(3),
+.autores-table .row div:nth-child(4) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Tabla autores con diseño horizontal */
+.autores-table {
+  width: 100%;
+  margin-top: 1rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  font-size: 0.95rem;
+  color: #3a3a3a;
+}
+
+/* Fila general (cabecera o autor) */
+.autores-table .row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr 2fr auto;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  background-color: #ffffff;
+  align-items: center;
+}
+
+/* Cabecera con color y negrita */
+.autores-table .row.header {
+  background-color: #f2e8ff;
+  font-weight: 600;
+  color: #5e3d27;
+  border-bottom: 2px solid #B08968;
+}
+
+/* Biografía y libros con corte si es muy largo */
+.autores-table .row div:nth-child(3),
+.autores-table .row div:nth-child(4) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Acciones estilo íconos */
+.autores-table .acciones {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.autores-table .acciones button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.autores-table .acciones button.edit {
+  color: #2980b9;
+}
+
+.autores-table .acciones button.delete {
+  color: #e74c3c;
+}
+
+.autores-table .acciones button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Tabla usuarios con diseño horizontal */
+.usuarios-table {
+  width: 100%;
+  margin-top: 1rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  font-size: 0.95rem;
+  color: #3a3a3a;
+}
+
+/* Fila general (cabecera o usuario) */
+.usuarios-table .row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr auto;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  background-color: #ffffff;
+  align-items: center;
+}
+
+/* Cabecera con color y negrita */
+.usuarios-table .row.header {
+  background-color: #f2e8ff;
+  font-weight: 600;
+  color: #5e3d27;
+  border-bottom: 2px solid #B08968;
+}
+
+/* Estado con colores */
+.usuarios-table .estado-activo {
+  color: #27ae60;
+  background-color: #e8f5e9;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+}
+
+.usuarios-table .estado-bloqueado {
+  color: #e74c3c;
+  background-color: #ffebee;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+}
+
+/* Acciones estilo íconos */
+.usuarios-table .acciones {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.usuarios-table .acciones button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.usuarios-table .acciones button.edit {
+  color: #2980b9;
+}
+
+.usuarios-table .acciones button.block {
+  color: #f39c12;
+}
+
+.usuarios-table .acciones button.delete {
+  color: #e74c3c;
+}
+
+.usuarios-table .acciones button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Mensaje cuando no hay usuarios */
+.usuarios-table .row.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  color: #7f8c8d;
+}
 
 /**-----------------------*/
 /**----- Responsive ------*/
