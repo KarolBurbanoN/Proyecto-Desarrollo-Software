@@ -594,23 +594,26 @@ async function renderBooksAdmin() {
     let filtered = booksFromDB.filter(book => {
       const title = book.titulo?.toLowerCase() || '';
       const authors = Array.isArray(book.autores) ? book.autores.map(a => a.nombre.toLowerCase()).join(' ') : '';
-      const genero = book.genero || '';
+      const genero = (book.genero || '').toLowerCase();//--> #se cambio
       const rating = book.promedio_calificacion || 0;
 
       const matchesSearch = title.includes(search) || authors.includes(search);
-      const matchesCategory = category === 'all' || genero === category;
+      const matchesCategory = category === 'all' || genero === category.toLowerCase(); //--> #se cambio
       const matchesRating = rating >= minRating;
 
       return matchesSearch && matchesCategory && matchesRating;
     });
 
+    // Función para parsear fecha de libro --> #se añadio
+    function parseFechaLibro(libro) {
+      return new Date(libro.fecha_agregado || libro.año_publicacion || '2000-01-01');
+    }
+
     // Aplicar orden
     if (order === 'recent') {
-      filtered.sort((a, b) => new Date(b.fecha_agregado || b.año_publicacion || '2000-01-01') -
-                               new Date(a.fecha_agregado || a.año_publicacion || '2000-01-01'));
+      filtered.sort((a, b) => parseFechaLibro(b) - parseFechaLibro(a)); // --> #se cambio
     } else if (order === 'oldest') {
-      filtered.sort((a, b) => new Date(a.fecha_agregado || a.año_publicacion || '2000-01-01') -
-                               new Date(b.fecha_agregado || b.año_publicacion || '2000-01-01'));
+      filtered.sort((a, b) => parseFechaLibro(a) - parseFechaLibro(b)); // --> #se cambio
     } else if (order === 'rating') {
       filtered.sort((a, b) => (b.promedio_calificacion || 0) - (a.promedio_calificacion || 0));
     }
@@ -667,9 +670,10 @@ function setupAdminFilterEvents() {
   const filterToggle = document.getElementById('filterToggleBtn-admin');
   const filtersMenu = document.getElementById('filtersMenu-admin');
   
+  // Mostrar/Ocultar el menú de filtros
   if (filterToggle && filtersMenu) {
     filterToggle.addEventListener('click', (e) => {
-      e.stopPropagation(); // Evita que el clic se propague
+      e.stopPropagation(); // Evita que el clic se propague -Evita que se cierre por clics internos
       filtersMenu.classList.toggle('hidden');
     });
     
@@ -730,13 +734,26 @@ function setupUserFilterEvents() {
       }
     });
   }
-  
+
+  // Botón "Aplicar filtros"
   document.getElementById('aplicarFiltrosUsuarios').addEventListener('click', (e) => {
     e.preventDefault();
     paginaActualUsuarios = 1;
     renderUsuarios();
     document.getElementById('filtersMenu-usuarios').classList.add('hidden');
   });
+
+  // Listeners directos en los select para aplicar los filtros automáticamente
+  ['filter-rol-usuario', 'filter-estado-usuario', 'filter-fecha-usuario'].forEach(id => {
+    const elemento = document.getElementById(id);
+    if (elemento) {
+      elemento.addEventListener('change', () => {
+        paginaActualUsuarios = 1;
+        renderUsuarios();
+      });
+    }
+  });
+
 }
 
 // Nueva función específica para el panel de administrador
@@ -768,7 +785,10 @@ async function showAdminBookDetails(isbn) {
       </div>
     `;
     
-    document.getElementById('bookDetailPanel').classList.add('active');
+    //-->#Se modificó
+    const panel = document.getElementById('bookDetailPanel');
+    panel.classList.add('active');
+    panel.classList.remove('hidden-section');
     
   } catch (error) {
     console.error('Error al cargar detalles:', error);
@@ -777,8 +797,11 @@ async function showAdminBookDetails(isbn) {
 }
 
 function closeDetailPanel() {
-  document.getElementById('bookDetailPanel').classList.remove('active');
+  const panel = document.getElementById('bookDetailPanel');
+  panel.classList.remove('active');
+  panel.classList.add('hidden-section');
 }
+
 
 // Función para mostrar/ocultar secciones
 function mostrarSeccionLibros(seccion) {
@@ -1132,17 +1155,6 @@ function logout() {
   // Puedes usar location.reload() si quieres refrescar la página
 }
 
-//* Filtros desplegables para admin
-document.getElementById('filterToggleBtn-admin').addEventListener('click', () => {
-  const menu = document.getElementById('filtersMenu-admin');
-  menu.classList.toggle('hidden');
-});
-
-//* Filtros desplegables para usuarios
-
-document.getElementById('filterToggleBtn-usuarios').addEventListener('click', () => {
-  document.getElementById('filtersMenu-usuarios').classList.toggle('hidden');
-});
 
 document.getElementById('aplicarFiltrosUsuarios').addEventListener('click', () => {
   paginaActualUsuarios = 1;
@@ -1259,16 +1271,17 @@ function setupPasswordStrengthChecker() {
   });
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  renderUsuarios();
-  setupAdminFilterEvents();
-  setupUserFilterEvents(); 
-  renderBooksAdmin();
-  renderUsuariosDesdeBackend();
-  
-  // Mostrar la pestaña de edición solo cuando sea necesario
-  document.getElementById('tabEditarLibro').classList.add('hidden');
+// Cierre automático del panel de detalles al hacer clic fuera
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('bookDetailPanel');
+  const isActive = panel.classList.contains('active');
+
+  // Si está visible y el clic fue fuera del panel, lo cerramos
+  if (isActive && !panel.contains(e.target)) {
+    panel.classList.remove('active');
+  }
 });
+
 
 window.addEventListener('DOMContentLoaded', () => {
   renderUsuarios();
@@ -1278,5 +1291,8 @@ window.addEventListener('DOMContentLoaded', () => {
   
   // También necesitamos inicializar los eventos para los usuarios
   renderUsuariosDesdeBackend();
+
+  // Mostrar la pestaña de edición solo cuando sea necesario
+  document.getElementById('tabEditarLibro').classList.add('hidden');
 });
 

@@ -34,28 +34,27 @@ def base():
 
 @api_bp.route('/libros')
 def get_libros():
-    db = next(get_db())
-    libros = db.query(models.Libro).all()
-    return jsonify([{
-        'ISBN': libro.ISBN,
-        'titulo': libro.titulo,
-        'autores': [{'nombre': autor.nombre} for autor in libro.autores],
-        'portada': libro.portada,
-        'promedio_calificacion': float(libro.promedio_calificacion) if libro.promedio_calificacion else 0.0,
-        'genero': libro.genero,
-        'editorial': libro.editorial,
-    } for libro in libros])
+    with next(get_db()) as db:
+        libros = db.query(models.Libro).all()
+        return jsonify([{
+            'ISBN': libro.ISBN,
+            'titulo': libro.titulo,
+            'autores': [{'nombre': autor.nombre} for autor in libro.autores],
+            'portada': libro.portada,
+            'promedio_calificacion': float(libro.promedio_calificacion) if libro.promedio_calificacion else 0.0,
+            'genero': libro.genero,
+            'editorial': libro.editorial,
+        } for libro in libros])
 
 @api_bp.route('/actualizar-perfil', methods=['POST'])
 def actualizar_perfil():
     if 'usuario' not in session:
         return jsonify({'error': 'No autorizado'}), 401
     
-    db = next(get_db())
-    usuario = db.query(Usuario).filter(Usuario.id_usuario == session['usuario_id']).first()
-    
-    if not usuario:
-        return jsonify({'error': 'Usuario no encontrado'}), 404
+    with next(get_db()) as db:
+        usuario = db.query(Usuario).filter(Usuario.id_usuario == session['usuario_id']).first()
+        if not usuario:
+            return jsonify({'error': 'Usuario no encontrado'}), 404
     
     data = request.get_json()
     
@@ -94,39 +93,42 @@ def login_page():
 
 @app.route("/dashboard")
 def dashboard():
-    db = next(get_db())
+   
     if "usuario" not in session:
         return redirect("/login")
     
-    usuario = db.query(Usuario).filter_by(numero_documento=session["usuario"]).first()
-    if not usuario:
-        return redirect("/login")
-    
-    return render_template("dashboard.html", usuario=usuario)
+    with next(get_db()) as db:
+        usuario = db.query(Usuario).filter_by(numero_documento=session["usuario"]).first()
+        if not usuario:
+            return redirect("/login")
+        
+        return render_template("dashboard.html", usuario=usuario)
 
 @app.route("/bibliotecario")
 def bibliotecario():
-    db = next(get_db())
+    
     if "usuario" not in session:
         return redirect("/login")
     
-    usuario = db.query(Usuario).filter_by(numero_documento=session["usuario"]).first()
-    if not usuario:
-        return redirect("/login")
-    
-    return render_template("bibliotecario.html", usuario=usuario)
+    with next(get_db()) as db:
+        usuario = db.query(Usuario).filter_by(numero_documento=session["usuario"]).first()
+        if not usuario:
+            return redirect("/login")
+        
+        return render_template("bibliotecario.html", usuario=usuario)
 
 @app.route("/admin")
 def admin():
-    db = next(get_db())
+   
     if "usuario" not in session:
         return redirect("/login")
     
-    usuario = db.query(Usuario).filter_by(numero_documento=session["usuario"]).first()
-    if not usuario:
-        return redirect("/login")
-    
-    return render_template("admin.html", usuario=usuario)
+    with next(get_db()) as db:
+        usuario = db.query(Usuario).filter_by(numero_documento=session["usuario"]).first()
+        if not usuario:
+            return redirect("/login")
+        
+        return render_template("admin.html", usuario=usuario)
 
 if __name__ == "__main__":
     app.run(debug=True)
