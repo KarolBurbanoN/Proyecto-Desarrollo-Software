@@ -732,8 +732,13 @@ section h2::after {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 200px;     /* <- Ancho fijo */
-  height: 500px;    /* <- Altura igual que el formulario */
+  width: 100%; /* Ocupa todo el ancho disponible */
+  max-width: 300px; /* Máximo ancho para las tarjetas */
+}
+
+.info-card {
+  width: 100%; /* Ocupa todo el ancho del contenedor */
+  min-width: 200px; /* Ancho mínimo */
 }
 
 .contact-info {
@@ -744,12 +749,25 @@ section h2::after {
   min-width: 100px;
 }
 
+/* En la sección de Contact Info */
 .info-card {
   background-color: #fff;
   color: #000;
   padding: 20px;
   text-align: center;
   border-radius: 8px;
+  word-break: break-word; /* Esto hará que el texto se rompa si es muy largo */
+}
+
+.info-card a {
+  color: #7F5539; /* Color que combine con tu diseño */
+  text-decoration: none;
+  font-size: 14px; /* Tamaño un poco más pequeño */
+  word-break: break-all; /* Rompe palabras muy largas */
+}
+
+.info-card a:hover {
+  text-decoration: underline;
 }
 
 .info-card i {
@@ -767,6 +785,12 @@ section h2::after {
   max-width: 600px;
   height: auto;
   margin-left: auto;
+}
+
+#contact-message {
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 
@@ -1003,7 +1027,8 @@ section h2::after {
   .contact-form {
     width: 100%;
     max-width: 100%;          /* El formulario usa todo el ancho */
-    height: auto;             /* Altura automática para adaptarse al contenido */
+    height: auto;  
+    margin-top: 20px;           /* Altura automática para adaptarse al contenido */
   }
 
   .contact-info-wrapper {
@@ -1020,7 +1045,12 @@ section h2::after {
   }
 
   .info-card {
-    width: 90%;               /* Las tarjetas ocupan casi todo el ancho */
+    width: 90%; /* Ocupa casi todo el ancho en móviles */
+    padding: 15px; /* Un poco menos de padding */
+  }
+  
+  .info-card a {
+    font-size: 13px; /* Tamaño más pequeño en móviles */
   }
 
   .contact-container img {

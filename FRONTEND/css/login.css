@@ -353,10 +353,59 @@ body {
   position: relative;
 }
 
+/* Estilo para el botón de volver al dashboard */
+.back-to-dashboard {
+  display: inline-flex;
+  align-items: center;
+  background-color: transparent;
+  color: #EDE0D4;
+  border: solid 2px #EDE0D4;
+  border-radius: 20px;
+  padding: 8px 15px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  margin-bottom: 20px; /* Espacio debajo del botón */
+  position: absolute;
+  top: 40px; /* Distancia desde la parte superior */
+  left: 15%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.back-to-dashboard:hover {
+  background-color: #EDE0D4;
+  color: #555;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+}
+
+.back-to-dashboard i {
+  margin-right: 5px;
+  font-size: 1rem;
+}
+
+/* Ajuste para el contenedor info-childs */
+.info-childs {
+  width: 100%;
+  padding: 0 30px;
+  position: relative; /* Necesario para el posicionamiento absoluto del botón */
+  padding-top: 60px; /* Espacio para el botón */
+}
+
 @media screen and (max-width: 580px) {
     html {
         font-size: 10px;
     }
+
+    .back-to-dashboard {
+    top: 10px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  
+  .info-childs {
+    padding-top: 50px;
+  }
 
     .container-form {
         height: 100vh;

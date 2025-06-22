@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify, session, Response
 from BASE_DE_DATOS.db import get_db
 from BASE_DE_DATOS.models import Usuario
 from sqlalchemy.orm import Session
@@ -17,7 +17,7 @@ recovery_data = {}
 # --- Función simple para enviar correos ---
 def enviar_correo(destinatario, asunto, mensaje):
     remitente = "alexandriabiblioteca611@gmail.com"
-    contraseña = "hfdswqpkfvbkfudm"  # sin espacios
+    contraseña = "hfdswqpkfvbkfudm"
 
     msg = MIMEMultipart()
     msg['From'] = remitente
@@ -36,6 +36,7 @@ def enviar_correo(destinatario, asunto, mensaje):
     except Exception as e:
         print("Error al enviar correo:", e)
         return False
+
 
 # --- Función para limpiar códigos expirados ---
 def limpiar_codigos_expirados():
@@ -292,3 +293,39 @@ def update_password():
     except Exception as e:
         db.rollback()
         return jsonify({"error": "Error al actualizar contraseña", "details": str(e)}), 500
+
+@usuarios_bp.route("/enviar-mensaje-contacto", methods=["POST"])
+def enviar_mensaje_contacto():
+    data = request.form
+
+    campos_requeridos = ["nombre", "correo", "mensaje"]
+    for campo in campos_requeridos:
+        if campo not in data or not data[campo].strip():
+            return jsonify({"error": f"Campo requerido faltante: {campo}"}), 400  # SIEMPRE JSON
+
+    nombre = data["nombre"].strip()
+    correo = data["correo"].strip()
+    mensaje = data["mensaje"].strip()
+
+    if len(mensaje) < 10:
+        return jsonify({"error": "El mensaje es demasiado corto (mínimo 10 caracteres)"}), 400  # JSON también
+
+    asunto = f"Nuevo mensaje de contacto de {nombre}"
+    cuerpo = f"""
+Has recibido un nuevo mensaje de contacto desde el sitio web:
+
+Nombre: {nombre}
+Correo: {correo}
+Mensaje:
+{mensaje}
+
+---
+Este mensaje fue enviado desde el formulario de contacto de la Biblioteca Alexandria.
+"""
+
+    exito = enviar_correo("alexandriabiblioteca611@gmail.com", asunto, cuerpo)
+
+    if exito:
+        return jsonify({"success": True, "message": "Mensaje enviado correctamente"})  # JSON para JS
+    else:
+        return jsonify({"error": "Error al enviar el mensaje"}), 500  # JSON para JS
