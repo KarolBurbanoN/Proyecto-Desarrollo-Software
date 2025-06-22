@@ -560,6 +560,37 @@ body.lector-panel.book-info button {
 /*?------------------------*/
 /*?-------- LECTOR --------*/
 /*?------------------------*/
+
+/* PANEL DE SANCIONES */
+.sanciones-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+.sancion-item {
+  background-color: #ffe6e6;
+  border-left: 5px solid #c62828;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.sancion-item h4 {
+  margin: 0 0 0.5rem 0;
+  color: #b71c1c;
+}
+
+.sancion-item p {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+
+
+
 /* PANEL DE RECOMENDACIÓN */
 .recomendacion-panel {
   position: fixed;

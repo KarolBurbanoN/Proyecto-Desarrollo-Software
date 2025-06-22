@@ -776,13 +776,54 @@ function cerrarRecomendacion() {
   if (panel) panel.classList.add("hidden-section");
 }
 
+async function renderSanciones() {
+  const container = document.getElementById("sancionesList");
+  container.innerHTML = "<p>Cargando sanciones...</p>";
+
+  try {
+    const response = await fetch("/api/sanciones/usuario", {
+      credentials: "include"
+    });
+    if (!response.ok) throw new Error("Error al obtener sanciones");
+
+    const sanciones = await response.json();
+
+    if (!Array.isArray(sanciones) || sanciones.length === 0) {
+      container.innerHTML = `<p>No tienes sanciones activas. 🎉</p>`;
+      return;
+    }
+
+    container.innerHTML = '';
+    sanciones.forEach(s => {
+      const div = document.createElement("div");
+      div.className = "sancion-item";
+      div.innerHTML = `
+        <h4>🔒 Sanción activa</h4>
+        <p><strong>Libro:</strong> ${s.titulo_libro}</p>
+        <p><strong>Motivo:</strong> ${s.motivo}</p>
+        <p><strong>Inicio:</strong> ${s.fecha_inicio}</p>
+        <p><strong>Fin:</strong> ${s.fecha_fin}</p>
+      `;
+      container.appendChild(div);
+    });
+
+  } catch (e) {
+    container.innerHTML = `<p>Error al cargar sanciones.</p>`;
+    console.error(e);
+  }
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
   setupFilterEvents();
 
   setTimeout(() => {
     mostrarRecomendacion();
-  }, 300); // Espera 300ms a que todo el DOM esté bien montado
+  }, 300);
+  
+  renderSanciones();
 });
 
-
 initDashboard();
+
+

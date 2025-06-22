@@ -27,6 +27,7 @@
             <li><button class="menu-btn active" data-target="catalogo">Catálogo</button></li>
             <li><button class="menu-btn" data-target="prestamos">Mis Préstamos</button></li>
             <li><button class="menu-btn" data-target="reservas">Reservas</button></li>
+            <li><button class="menu-btn" data-target="sanciones">Sanciones</button></li>
             <li><button class="menu-btn" data-target="perfil">Perfil</button></li>
             <li><button onclick="logout()" class="menu-btn">Cerrar Sesión</button></li>
           </ul>
@@ -102,6 +103,14 @@
           <h2>Reservas Activas</h2>
           <ul id="reservasList"></ul>
         </section>
+
+        <section id="sanciones" class="hidden-section">
+          <h2>Mis Sanciones</h2>
+          <div id="sancionesList" class="sanciones-container">
+            <p>Cargando sanciones...</p>
+          </div>
+        </section>
+
 
         <section id="perfil" class="hidden-section">
           <div class="perfil-container">
