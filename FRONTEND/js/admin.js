@@ -106,30 +106,74 @@ function renderUsuarios() {
     document.getElementById('paginadorUsuarios').textContent = '';
     return;
   }
+  
+  contenedor.innerHTML = `
+    <div style="width: 100%; overflow-x: auto; margin-top: 1rem; box-sizing: border-box;">
+      <table style="
+        width: 100%;
+        min-width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: white;
+      ">
+        <thead style="background-color: #f3e8ff; color: #5e3a18;">
+          <tr>
+            <th style="padding: 12px; text-align: left;">Nombre</th>
+            <th style="padding: 12px; text-align: left;">Documento</th>
+            <th style="padding: 12px; text-align: left;">Correo</th>
+            <th style="padding: 12px; text-align: left;">Tipo de Usuario</th>
+            <th style="padding: 12px; text-align: left;">Estado</th>
+            <th style="padding: 12px; text-align: center;">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="usuarios-table-body"></tbody>
+      </table>
+    </div>
+  `;
+
+  const tbody = document.getElementById('usuarios-table-body');
 
   pagina.forEach(usuario => {
-    const div = document.createElement('div');
-    div.className = 'card';
+    const estadoNormalizado = (usuario.estado || '').toLowerCase();
+    const esActivo = estadoNormalizado === 'activa';
 
-    div.innerHTML = `
-      <div><strong>${usuario.nombres} ${usuario.apellidos}</strong><br><small>${usuario.numero_documento}</small></div>
-      <div>${usuario.correo}</div>
-      <div>${usuario.rol.charAt(0).toUpperCase() + usuario.rol.slice(1)}</div>
-      <div>
-        <span class="estado-${usuario.estado}">${usuario.estado}</span>
-      </div>
-      <div class="acciones">
-        <button class="edit" title="Editar" onclick="editarUsuario('${usuario.numero_documento}')">✏️</button>
-        <button class="delete" title="Eliminar" onclick="eliminarUsuario('${usuario.numero_documento}')">🗑️</button>
-        <button class="block" title="${usuario.estado === 'activo' ? 'Bloquear' : 'Desbloquear'}" onclick="toggleEstadoUsuario('${usuario.numero_documento}')">🚫</button>
-      </div>
-    `;
+    const estadoChip = esActivo
+      ? `<span style="background-color: #d1fae5; color: #047857; font-size: 0.75rem; padding: 4px 10px; border-radius: 9999px; font-weight: 600;">Activa</span>`
+      : `<span style="background-color: #fde2e2; color: #b91c1c; font-size: 0.75rem; padding: 4px 10px; border-radius: 9999px; font-weight: 600;">Bloqueada</span>`;
 
-    contenedor.appendChild(div);
+    const btn = (icono, titulo, accion) => `
+      <button title="${titulo}" onclick="${accion}" style="
+        background-color: #915c2b;
+        border: none;
+        color: white;
+        font-size: 0.85rem;
+        padding: 6px 8px;
+        margin: 0 2px;
+        border-radius: 6px;
+        cursor: pointer;
+      ">${icono}</button>`;
+
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td style="padding: 10px; border-top: 1px solid #eee;">${usuario.nombres} ${usuario.apellidos}</td>
+    <td style="padding: 10px; border-top: 1px solid #eee;">${usuario.numero_documento}</td>
+    <td style="padding: 10px; border-top: 1px solid #eee;">${usuario.correo}</td>
+    <td style="padding: 10px; border-top: 1px solid #eee;">${usuario.rol.charAt(0).toUpperCase() + usuario.rol.slice(1)}</td>
+    <td style="padding: 10px; border-top: 1px solid #eee;">${estadoChip}</td>
+    <td style="padding: 10px; border-top: 1px solid #eee; text-align: center; white-space: nowrap;">
+      ${btn('✏️', 'Editar', `editarUsuario('${usuario.numero_documento}')`)}
+      ${btn('🚫', esActivo ? 'Bloquear' : 'Desbloquear', `toggleEstadoUsuario('${usuario.numero_documento}')`)}
+      ${btn('🗑️', 'Eliminar', `eliminarUsuario('${usuario.numero_documento}')`)}
+    </td>
+  `;
+
+    tbody.appendChild(tr);
   });
-
   document.getElementById('paginadorUsuarios').textContent = `Página ${paginaActualUsuarios} de ${totalPaginas}`;
 }
+
 
 //* Base de Datos
 
@@ -265,12 +309,17 @@ function eliminarUsuario(doc) {
   }
 }
 
-function toggleEstadoUsuario(doc) {
-  const usuario = usuarios.find(u => u.numero_documento === doc);
-  if (usuario) {
-    usuario.estado = usuario.estado === 'activo' ? 'bloqueado' : 'activo';
-    renderUsuarios();
-  }
+function toggleEstadoUsuario(numeroDocumento) {
+  // 1. Buscar el usuario en el arreglo original
+  const usuario = usuarios.find(u => u.numero_documento === numeroDocumento);
+  if (!usuario) return;
+
+  // 2. Normalizar y alternar el estado
+  const estadoActual = (usuario.estado || '').toLowerCase();
+  usuario.estado = estadoActual === 'activa' ? 'bloqueada' : 'activa';
+
+  // 3. Volver a renderizar la tabla actualizada
+  renderUsuarios();
 }
 
 //* Funciones de paginación para usuarios
