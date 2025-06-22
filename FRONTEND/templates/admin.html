@@ -8,6 +8,7 @@
   <link rel="icon" href="{{ url_for('static', filename='images/Iconos/Logo.ico') }}" type="image/x-icon" />
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="admin-panel">
@@ -469,16 +470,69 @@
       </section>
 
       <!-- Informes -->
-      <section id="informes" class="hidden-section">
-        <h2>Informes y estadísticas</h2>
-        <p>[Aquí podrás generar reportes y ver estadísticas visuales]</p>
-      </section>
+        <!-- Informes -->
+        <section id="informes" class="hidden-section">
+          <h2>Informes y Estadísticas</h2>
+          <div class="reports-container">
+            <!-- Estadísticas generales -->
+            <div class="report-card">
+              <h3>Préstamos y Devoluciones</h3>
+              <div class="stats-grid">
+              <div class="stat-box" data-loan-type="active">
+                <span class="stat-value" id="active-loans">0</span>
+                <span class="stat-label">Préstamos activos</span>
+              </div>
 
-      <!-- Historial -->
-      <section id="historial" class="hidden-section">
-        <h2>Historial de préstamos y devoluciones</h2>
-        <p>[Aquí se listará el historial de movimientos de libros]</p>
-      </section>
+              <div class="stat-box" data-loan-type="returns">
+                <span class="stat-value" id="total-returns">0</span>
+                <span class="stat-label">Devoluciones totales</span>
+              </div>
+
+              <div class="stat-box" data-loan-type="reservas">
+                <span class="stat-value" id="total-reservas">0</span>
+                <span class="stat-label">Reservas activas</span>
+              </div>
+
+              </div>
+              
+              <!-- Detalles que aparecerán al hacer clic -->
+              <div id="loan-details-container" class="loan-details-container" style="display: none;">
+                <div class="loan-details-header">
+                  <h4 id="details-title">Detalles</h4>
+                  <button class="close-details" onclick="closeDetails()">&times;</button>
+                </div>
+                <div id="loan-details-content" class="loan-details-content" style="max-height: 70vh; overflow-y: auto;">
+                  <!-- Aquí se cargará el contenido dinámico -->
+                </div>
+              </div>
+            </div>
+          </div>
+              <div class="reports-container">
+                <!-- Gráfica de libros más prestados -->
+                <div class="report-card">
+                  <h3>Libros más prestados</h3>
+                  <div class="chart-container">
+                    <canvas id="mostBorrowedBooksChart"></canvas>
+                  </div>
+                </div>
+
+                <!-- Nueva gráfica de libros mejor valorados -->
+                <div class="report-card">
+                  <h3>Libros mejor valorados</h3>
+                  <div class="chart-container">
+                    <canvas id="topRatedBooksChart"></canvas>
+                  </div>
+                </div>
+
+                <!-- Gráfica de géneros más prestados -->
+                <div class="report-card">
+                  <h3>Géneros más prestados</h3>
+                  <div class="chart-container">
+                    <canvas id="popularGenresChart"></canvas>
+                  </div>
+                </div>
+              </div>
+        </section>
 
       <section id="perfil" class="hidden-section">
         <div class="perfil-container">

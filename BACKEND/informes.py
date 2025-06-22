@@ -10,27 +10,26 @@ informes_bp = Blueprint('informes', __name__, url_prefix='/api/informes')
 def reporte_prestamos_usuario():
     db = next(get_db())
     try:
-        hoy = datetime.now().date()
-        # Préstamos activos (no devueltos y no vencidos)
         activos = db.query(models.Prestamo).filter(
-            models.Prestamo.estado == 'activo',
-            models.Prestamo.fecha_vencimiento >= hoy
+            models.Prestamo.estado == 'activo'
         ).count()
-        # Préstamos vencidos (estado activo pero fecha_vencimiento < hoy)
-        vencidos = db.query(models.Prestamo).filter(
-            models.Prestamo.estado == 'activo',
-            models.Prestamo.fecha_vencimiento < hoy
+
+        devueltos = db.query(models.Prestamo).filter(
+            models.Prestamo.estado == 'devuelto'
         ).count()
-        # Total de devoluciones registradas
-        devueltos = db.query(models.Devolucion).count()
+
+        reservas = db.query(models.Reserva).count()
 
         return jsonify({
             'prestamos_activos': activos,
-            'prestamos_vencidos': vencidos,
-            'devoluciones': devueltos
+            'prestamos_devueltos': devueltos,
+            'reservas': reservas
         })
     except Exception as e:
+        print("Error en /prestamos-usuario:", e) 
         return jsonify({'error': str(e)}), 500
+
+    
 
 @informes_bp.route("/prestamos-activos")
 def prestamos_activos():
@@ -68,41 +67,39 @@ def prestamos_activos():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@informes_bp.route("/prestamos-vencidos")
-def prestamos_vencidos():
+@informes_bp.route("/reservas-pendientes")
+def reservas_pendientes():
     db = next(get_db())
     try:
-        hoy = datetime.now().date()
-        prestamos = db.query(models.Prestamo).join(models.Ejemplar).join(models.Libro).join(models.Usuario).filter(
-            models.Prestamo.estado == 'activo',
-            models.Prestamo.fecha_vencimiento < hoy
-        ).all()
+        # Obtener todas las reservas pendientes con JOIN a usuario y libro
+        reservas = db.query(models.Reserva).join(models.Usuario).join(models.Libro).filter(
+            models.Reserva.estado == 'pendiente'
+        ).order_by(models.Reserva.fecha_reserva.asc()).all()
 
-        resultado = []
-        for p in prestamos:
-            nombre_usuario = p.usuario.nombres if hasattr(p.usuario, 'nombres') else ''
-            apellido_usuario = p.usuario.apellidos if hasattr(p.usuario, 'apellidos') else ''
-            titulo_libro = p.ejemplar.libro.titulo if p.ejemplar and p.ejemplar.libro else ''
-            isbn_libro = p.ejemplar.libro.ISBN if p.ejemplar and p.ejemplar.libro else ''
-            portada_libro = p.ejemplar.libro.portada if p.ejemplar and p.ejemplar.libro and hasattr(p.ejemplar.libro, 'portada') else None
-
-            resultado.append({
-                'id_prestamo': p.id_prestamo,
-                'fecha_prestamo': p.fecha_prestamo.strftime('%Y-%m-%d'),
-                'fecha_vencimiento': p.fecha_vencimiento.strftime('%Y-%m-%d'),
-                'libro': {
-                    'titulo': titulo_libro,
-                    'ISBN': isbn_libro,
-                    'portada': portada_libro
-                },
-                'usuario': {
-                    'nombre': nombre_usuario,
-                    'apellido': apellido_usuario
+        # Construir la respuesta usando los datos relacionados
+        resultado = {
+            'total': len(reservas),
+            'reservas': [
+                {
+                    'id': r.id_reserva,
+                    'fecha': r.fecha_reserva.strftime('%Y-%m-%d'),
+                    'usuario': f"{r.usuario.nombres} {r.usuario.apellidos}",
+                    'libro': {
+                        'titulo': r.libro.titulo,
+                        'portada': r.libro.portada or '/static/default-book.png',
+                        'ISBN': r.libro.ISBN
+                    }
                 }
-            })
+                for r in reservas
+            ]
+        }
+
         return jsonify(resultado)
+
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        print(f"Error en reservas-pendientes: {str(e)}")
+        return jsonify({'error': 'Error al obtener reservas', 'detalle': str(e)}), 500
+
 
 @informes_bp.route("/devoluciones-recientes")
 def devoluciones_recientes():
@@ -166,32 +163,31 @@ def libros_populares():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@informes_bp.route("/libros-mejor-valorados")
-def libros_mejor_valorados():
+@informes_bp.route("/usuarios-mas-prestamos")
+def usuarios_mas_prestamos():
     db = next(get_db())
     try:
         limite = request.args.get('limite', default=5, type=int)
-        
-        libros = db.query(
-            models.Libro.ISBN,
-            models.Libro.titulo,
-            func.avg(models.Calificacion.estrellas).label('promedio_calificacion'),
-            func.count(models.Calificacion.id_calificacion).label('total_resenas')
-        ).join(models.Calificacion) \
-         .group_by(models.Libro.ISBN) \
-         .having(func.avg(models.Calificacion.estrellas) > 0) \
-         .order_by(desc('promedio_calificacion')) \
+
+        usuarios = db.query(
+            models.Usuario.id_usuario,
+            models.Usuario.nombres,
+            models.Usuario.apellidos,
+            func.count(models.Prestamo.id_prestamo).label('total_prestamos')
+        ).join(models.Prestamo) \
+         .group_by(models.Usuario.id_usuario) \
+         .order_by(desc('total_prestamos')) \
          .limit(limite) \
          .all()
 
         return jsonify([{
-            'ISBN': libro.ISBN,
-            'titulo': libro.titulo,
-            'promedio_calificacion': float(libro.promedio_calificacion) if libro.promedio_calificacion else 0,
-            'total_resenas': libro.total_resenas
-        } for libro in libros])
+            "id_usuario": u.id_usuario,
+            "nombre_completo": f"{u.nombres} {u.apellidos}",
+            "total_prestamos": u.total_prestamos
+        } for u in usuarios])
+
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 
 @informes_bp.route("/generos-populares")
 def generos_populares():

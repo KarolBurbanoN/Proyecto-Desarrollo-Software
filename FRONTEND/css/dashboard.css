@@ -639,6 +639,422 @@ body.lector-panel .book-prestamo-info button:hover {
 /*?-----------------------*/
 /*?---- ADMINISTRADOR ----*/
 /*?-----------------------*/
+
+/* ------------------------- */
+/* ---- ESTILOS INFORMES ---- */
+/* ------------------------- */
+
+#informes {
+  padding: 2rem;
+  background-color: #f9f5f1;
+  min-height: 100vh;
+}
+
+#informes h2 {
+  color: #5E3023;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  border-bottom: 2px solid #DDB892;
+  padding-bottom: 0.5rem;
+}
+
+.reports-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.report-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.report-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.report-card h3 {
+  margin-top: 0;
+  color: #7F5539;
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #EDE0D4;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+
+.stat-box {
+  background-color: #f8f4f0;
+  border-radius: 10px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1px solid #EDE0D4;
+}
+
+.stat-box:hover {
+  transform: translateY(-5px);
+  background-color: #EDE0D4;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #9C6644;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.95rem;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Contenedor de detalles */
+.loan-details-container {
+  margin-top: 1.5rem;
+  background-color: #f9f5f1;
+  border-radius: 10px;
+  padding: 1.5rem;
+  border-left: 4px solid #9C6644;
+  animation: fadeIn 0.3s ease-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.loan-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #EDE0D4;
+}
+
+.loan-details-header h4 {
+  margin: 0;
+  color: #7F5539;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.close-details {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.2s;
+  padding: 0.5rem;
+  line-height: 1;
+}
+
+.close-details:hover {
+  color: #333;
+}
+
+.loan-details-content {
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+/* Items de préstamo */
+.loan-item {
+  display: flex;
+  gap: 1.2rem;
+  padding: 1.2rem;
+  background-color: white;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+
+.loan-item:hover {
+  transform: translateY(-2px);
+}
+
+.loan-book-cover {
+  width: 70px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.loan-item-details {
+  flex: 1;
+}
+
+.loan-item-details h5 {
+  margin: 0 0 0.5rem 0;
+  color: #5d3a00;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.loan-item-details p {
+  margin: 0.3rem 0;
+  color: #555;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.loan-item-details i {
+  color: #9C6644;
+  width: 1rem;
+}
+
+/* Gráficas */
+.chart-container {
+  position: relative;
+  height: 300px;
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+/* Mensajes */
+.no-data {
+  color: #666;
+  text-align: center;
+  font-style: italic;
+  padding: 2rem;
+  font-size: 1.1rem;
+}
+
+.error {
+  color: #c62828;
+  text-align: center;
+  padding: 2rem;
+  font-weight: 500;
+}
+
+.loading-message {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.loading-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #9C6644;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+.btn-retry {
+  background-color: #9C6644;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-retry:hover {
+  background-color: #7F5539;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Scrollbar */
+.loan-details-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.loan-details-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.loan-details-content::-webkit-scrollbar-thumb {
+  background: #DDB892;
+  border-radius: 4px;
+}
+
+.loan-details-content::-webkit-scrollbar-thumb:hover {
+  background: #9C6644;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .reports-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .chart-container {
+    height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .loan-item {
+    flex-direction: column;
+  }
+  
+  .loan-book-cover {
+    width: 100%;
+    height: auto;
+    max-height: 150px;
+  }
+}
+
+/* Agrega esto a tu CSS */
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  border-left: 4px solid #c62828;
+}
+
+.chart-error {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.chart-error .error-text {
+  color: #c62828;
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+.chart-error small {
+  display: block;
+  font-size: 0.8rem;
+  color: #999;
+}
+
+.stat-value.error {
+  color: #c62828 !important;
+}
+
+
+/* Estilos para reservas */
+.reserva-item {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.reserva-header {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.reserva-portada {
+  width: 70px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.reserva-info {
+  flex: 1;
+}
+
+.reserva-info h5 {
+  margin: 0 0 0.3rem 0;
+  color: #5E3023;
+}
+
+.reserva-autores {
+  margin: 0 0 0.5rem 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.reserva-usuario {
+  margin: 0;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.reserva-estado {
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.reserva-estado.pendiente {
+  background-color: #FFF3E0;
+  color: #E65100;
+}
+
+.reserva-estado.notificado {
+  background-color: #E3F2FD;
+  color: #0D47A1;
+}
+
+.reserva-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5rem;
+  border-top: 1px solid #EDE0D4;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.reserva-footer .notificado {
+  color: #2E7D32;
+  font-weight: 500;
+}
+
+.no-reservas {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.no-reservas i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #BDBDBD;
+}
+
+
 /* Estilo para la pestaña de edición (inicialmente oculta) */
 /* Estilos para el formulario de edición (iguales al de registro) */
 #formularioEditarLibro.card {

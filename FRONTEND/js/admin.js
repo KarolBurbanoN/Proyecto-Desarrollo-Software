@@ -1466,6 +1466,461 @@ document.querySelectorAll('#gestion-libros .user-tab').forEach(btn => {
   });
 });
 
+// Formatea fecha ISO "YYYY-MM-DD" a formato legible en español
+function formatDate(s) {
+  if (!s) return '';
+  const d = new Date(s);
+  if (isNaN(d)) return s;
+  return d.toLocaleDateString('es-ES', { day:'2-digit', month:'short', year:'numeric' });
+}
+
+// Función para cerrar el panel de detalles
+function closeDetails() {
+  const container = document.getElementById('loan-details-container');
+  if (container) {
+    container.style.display = 'none';
+  }
+}
+
+// Renderiza lista de préstamos/devoluciones (actualizada)
+function renderLoanList(items, containerId, type) {
+  const container = document.getElementById(containerId);
+  if (!container) {
+    console.warn(`renderLoanList: no existe contenedor #${containerId}`);
+    return;
+  }
+  
+  container.innerHTML = '';
+  
+  if (!Array.isArray(items) || items.length === 0) {
+    let texto = '';
+    if (type === 'active') texto = 'No hay préstamos activos';
+    else if (type === 'overdue') texto = 'No hay préstamos vencidos';
+    else if (type === 'returns') texto = 'No hay devoluciones recientes';
+    else texto = 'No hay datos';
+    
+    container.innerHTML = `
+      <div class="no-loans">
+        <i class="fas fa-book-open"></i>
+        <p>${texto}</p>
+      </div>
+    `;
+    return;
+  }
+  
+  items.forEach(item => {
+    const libro = item.libro || {};
+    const usuario = item.usuario || {};
+    const titulo = libro.titulo || 'Sin título';
+    const portada = libro.portada || 'https://via.placeholder.com/60x90/EDE0D4/9C6644?text=Libro';
+    const nombreUsuario = `${usuario.nombre || usuario.nombres || ''} ${usuario.apellido || usuario.apellidos || ''}`.trim() || 'Usuario';
+    const fechaPrestamo = item.fecha_prestamo || '';
+    let fechaInfo = '';
+    
+    if (type === 'returns') {
+      fechaInfo = item.fecha_devolucion || '';
+    } else {
+      fechaInfo = item.fecha_vencimiento || '';
+    }
+    
+    const div = document.createElement('div');
+    div.className = 'loan-item';
+    div.innerHTML = `
+      <img src="${portada}" alt="${titulo}" class="loan-book-cover" />
+      <div class="loan-item-details">
+        <h5>${titulo}</h5>
+        <p><i class="fas fa-calendar-alt"></i> Prestado: ${formatDate(fechaPrestamo)}</p>
+        ${type === 'returns' 
+          ? `<p><i class="fas fa-undo"></i> Devuelto: ${formatDate(fechaInfo)}</p>`
+          : `<p><i class="fas fa-clock"></i> Vence: ${formatDate(fechaInfo)}</p>`}
+        <p><i class="fas fa-user"></i> Usuario: ${nombreUsuario}</p>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+// Hace fetch al endpoint y llama a renderLoanList
+async function fetchAndRenderLoans(endpoint, containerId, type) {
+  try {
+    console.log(`fetchAndRenderLoans: cargando ${endpoint}`);
+    const resp = await fetch(endpoint);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    console.log(`fetchAndRenderLoans: datos recibidos de ${endpoint}:`, data);
+    renderLoanList(data, containerId, type);
+  } catch (e) {
+    console.error(`Error en fetchAndRenderLoans (${endpoint}):`, e);
+    const container = document.getElementById(containerId);
+    if (container) {
+      container.innerHTML = `
+        <div class="error-message">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>Error al cargar datos</p>
+          <button onclick="showLoanDetails('${type}')" class="btn-retry">Reintentar</button>
+        </div>
+      `;
+    }
+  }
+}
+
+async function fetchAndRenderReservas(endpoint, containerId) {
+  try {
+    const resp = await fetch(endpoint);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (!data.reservas || data.reservas.length === 0) {
+      container.innerHTML = `
+        <div class="no-loans">
+          <i class="fas fa-calendar-times"></i>
+          <p>No hay reservas pendientes</p>
+        </div>
+      `;
+      return;
+    }
+
+    data.reservas.forEach(reserva => {
+      const libro = reserva.libro || {};
+      const portada = libro.portada || 'https://via.placeholder.com/60x90/EDE0D4/9C6644?text=Libro';
+      const usuario = reserva.usuario || 'Usuario';
+      const fecha = reserva.fecha || reserva.fecha_reserva || '';
+
+      const div = document.createElement('div');
+      div.className = 'loan-item';
+      div.innerHTML = `
+        <img src="${portada}" alt="${libro.titulo}" class="loan-book-cover" />
+        <div class="loan-item-details">
+          <h5>${libro.titulo || 'Libro'}</h5>
+          <p><i class="fas fa-calendar-day"></i> Reservado: ${formatDate(fecha)}</p>
+          <p><i class="fas fa-user"></i> Usuario: ${usuario}</p>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+
+  } catch (e) {
+    console.error(`Error en fetchAndRenderReservas (${endpoint}):`, e);
+    const container = document.getElementById(containerId);
+    if (container) {
+      container.innerHTML = `
+        <div class="error-message">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>Error al cargar reservas</p>
+        </div>
+      `;
+    }
+  }
+}
+
+
+// Muestra detalles según tipo: active, overdue, returns
+async function showLoanDetails(type) {
+  const container = document.getElementById('loan-details-container');
+  const contentId = 'loan-details-content';
+  const titleEl = document.getElementById('details-title');
+  
+  if (!container || !titleEl) {
+    console.warn("showLoanDetails: contenedor o título no encontrado");
+    return;
+  }
+
+  container.style.display = 'block';
+
+  const titles = {
+    'active': 'Préstamos Activos',
+    'returns': 'Devoluciones Recientes',
+    'reservas': 'Reservas Pendientes'
+  };
+
+  const endpoints = {
+    'active': '/api/informes/prestamos-activos',
+    'returns': '/api/informes/devoluciones-recientes',
+    'reservas': '/api/informes/reservas-pendientes'
+  };
+
+  titleEl.textContent = titles[type] || 'Detalles';
+  const endpoint = endpoints[type];
+
+  const contentEl = document.getElementById(contentId);
+  if (!endpoint || !contentEl) {
+    if (contentEl) contentEl.innerHTML = '<p>Tipo inválido</p>';
+    return;
+  }
+
+  contentEl.innerHTML = `
+    <div class="loading-message">
+      <div class="loading-spinner"></div>
+      <p>Cargando detalles...</p>
+    </div>
+  `;
+
+  if (type === 'reservas') {
+    await fetchAndRenderReservas(endpoint, contentId);
+  } else {
+    await fetchAndRenderLoans(endpoint, contentId, type);
+  }
+}
+
+
+// Carga conteos de préstamos
+async function loadLoanReports() {
+  console.log("loadLoanReports: iniciando");
+  try {
+    const elActive   = document.getElementById('active-loans');
+    const elReturns  = document.getElementById('total-returns');
+    const elReservas = document.getElementById('total-reservas');
+
+    if (elActive)   elActive.textContent = '...';
+    if (elReturns)  elReturns.textContent = '...';
+    if (elReservas) elReservas.textContent = '...';
+
+    const resp = await fetch('/api/informes/prestamos-usuario');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    console.log("loadLoanReports: datos:", data);
+
+    if (elActive)   elActive.textContent = data.prestamos_activos ?? '0';
+    if (elReturns)  elReturns.textContent = data.prestamos_devueltos ?? '0';
+    if (elReservas) elReservas.textContent = data.reservas ?? '0';
+  } catch (e) {
+    console.error("loadLoanReports error:", e);
+    ['active-loans','total-returns','total-reservas'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = 'Err';
+    });
+  }
+}
+
+
+// Asociar listeners cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+  // Cargar reportes cuando se haga clic en el menú de Informes
+  document.querySelectorAll('.menu-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const target = this.getAttribute('data-target');
+      if (target === 'informes') {
+        loadLoanReports();
+        loadReservasCount(); // También carga reservas
+        loadCharts(); // Carga gráficas
+      }
+    });
+  });
+
+  // Manejar clic en las estadísticas (incluye reservas correctamente)
+  document.querySelectorAll('.stat-box[data-loan-type]').forEach(box => {
+    box.addEventListener('click', function () {
+      const tipo = this.getAttribute('data-loan-type');
+      showLoanDetails(tipo); // ✅ ahora maneja también "reservas"
+    });
+  });
+
+
+  // Manejar clic en el botón de cerrar
+  const closeBtn = document.querySelector('.close-details');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeDetails);
+  }
+});
+
+// Función para cargar todas las gráficas
+async function loadCharts() {
+  try {
+    const baseUrl = 'http://127.0.0.1:5000';
+
+    // 1. Libros más prestados
+    const booksResponse = await fetch(`${baseUrl}/api/informes/libros-populares?limite=5`);
+    const booksData = await booksResponse.json();
+    renderBooksChart(booksData);
+
+    // 2. Usuarios con más préstamos
+    const topUsersResponse = await fetch(`${baseUrl}/api/informes/usuarios-mas-prestamos?limite=5`);
+    const topUsersData = await topUsersResponse.json();
+    renderTopUsersChart(topUsersData);
+
+    // 3. Géneros más prestados
+    const genresResponse = await fetch(`${baseUrl}/api/informes/generos-populares?limite=5`);
+    const genresData = await genresResponse.json();
+    renderGenresChart(genresData);
+
+  } catch (error) {
+    console.error("Error cargando gráficas:", error);
+    showErrorMessages();
+  }
+}
+
+// Función para renderizar gráfica de libros más prestados
+function renderBooksChart(data) {
+  const ctx = document.getElementById('mostBorrowedBooksChart');
+  if (!ctx) return;
+
+  if (window.booksChart) window.booksChart.destroy();
+
+  if (!data || data.length === 0) {
+    ctx.parentElement.innerHTML = '<p class="no-data">No hay datos de libros populares</p>';
+    return;
+  }
+
+  const labels = data.map(item => item.titulo || 'Sin título');
+  const chartData = data.map(item => item.total_prestamos || 0);
+
+  const colors = ['#FF6384', '#36A2EB', '#4BC0C0', '#FFCD56', '#9966FF']; // Rosa, azul, turquesa, amarillo, morado
+
+  window.booksChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Préstamos',
+        data: chartData,
+        backgroundColor: colors.slice(0, data.length),
+        borderColor: '#333',
+        borderWidth: 1
+      }]
+    },
+    options: getBarChartOptions('Préstamos')
+  });
+}
+
+
+// Función para renderizar gráfica de usuarios con más préstamos
+function renderTopUsersChart(data) {
+  const ctx = document.getElementById('topRatedBooksChart'); // Usamos el mismo canvas
+  if (!ctx) return;
+
+  if (window.topRatedChart) window.topRatedChart.destroy();
+
+  if (!data || data.length === 0) {
+    ctx.parentElement.innerHTML = '<p class="no-data">No hay datos de usuarios</p>';
+    return;
+  }
+
+  const labels = data.map(item => item.nombre_completo || 'Usuario');
+  const chartData = data.map(item => item.total_prestamos || 0);
+
+  const colors = ['#FF9AA2', '#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7']; // Rosado, melón, durazno, verde claro, agua
+
+  window.topRatedChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Préstamos',
+        data: chartData,
+        backgroundColor: colors.slice(0, data.length),
+        borderColor: '#444',
+        borderWidth: 1
+      }]
+    },
+    options: getBarChartOptions('Préstamos')
+  });
+}
+
+// Función para renderizar gráfica de géneros más prestados
+function renderGenresChart(data) {
+  const ctx = document.getElementById('popularGenresChart');
+  if (!ctx) return;
+
+  if (window.genresChart) window.genresChart.destroy();
+
+  if (!data || data.length === 0) {
+    ctx.parentElement.innerHTML = '<p class="no-data">No hay datos de géneros</p>';
+    return;
+  }
+
+  const labels = data.map(item => item.genero || 'Sin género');
+  const chartData = data.map(item => item.total_prestamos || 0);
+
+  const backgroundColors = [
+    '#F67280', // rosa fuerte
+    '#C06C84', // rosado oscuro
+    '#6C5B7B', // púrpura
+    '#355C7D', // azul profundo
+    '#99B898'  // verde seco
+  ];
+
+  window.genresChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: chartData,
+        backgroundColor: backgroundColors.slice(0, data.length),
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'right',
+        },
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              return `${context.label}: ${context.raw} préstamos`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+
+// Opciones comunes para gráficas de barras
+function getBarChartOptions(yLabel) {
+  return {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return `${context.raw} ${yLabel.toLowerCase()}`;
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1
+        },
+        title: {
+          display: true,
+          text: yLabel
+        }
+      }
+    }
+  };
+}
+
+// Función para mostrar mensajes de error
+function showErrorMessages() {
+  const containers = [
+    'mostBorrowedBooksChart',
+    'topRatedBooksChart',
+    'popularGenresChart'
+  ];
+  
+  containers.forEach(id => {
+    const element = document.getElementById(id);
+    if (element && element.parentElement) {
+      element.parentElement.innerHTML = '<p class="error">Error al cargar datos</p>';
+    }
+  });
+}
 
 window.addEventListener('DOMContentLoaded', () => {
   renderUsuarios();
@@ -1473,6 +1928,7 @@ window.addEventListener('DOMContentLoaded', () => {
   setupUserFilterEvents(); 
   renderBooksAdmin();
   mostrarSeccionLibros('listar'); 
+  loadCharts();
   
   // También necesitamos inicializar los eventos para los usuarios
   renderUsuariosDesdeBackend();

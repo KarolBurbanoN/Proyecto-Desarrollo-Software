@@ -13,7 +13,7 @@ from BACKEND.usuarios import usuarios_bp
 from BACKEND.libros import libros_bp
 from BACKEND.prestamos import prestamos_bp
 from BACKEND.reservas import reservas_bp
-
+from BACKEND.informes import informes_bp
 
 app = Flask(
     __name__,
@@ -81,6 +81,7 @@ app.register_blueprint(usuarios_bp)
 app.register_blueprint(libros_bp)
 app.register_blueprint(prestamos_bp)  # Nuevo
 app.register_blueprint(reservas_bp)   # Nuevo
+app.register_blueprint(informes_bp)
 
 # ========== Rutas principales de la app ==========
 @app.route("/")
