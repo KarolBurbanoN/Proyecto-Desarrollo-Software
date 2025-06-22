@@ -1169,7 +1169,7 @@ body.admin-panel.book-info button {
 /* Fila general (cabecera o usuario) */
 .usuarios-table .row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr auto;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr auto;
   gap: 1rem;
   padding: 1rem;
   border-bottom: 1px solid #eee;
