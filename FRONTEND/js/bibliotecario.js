@@ -129,7 +129,7 @@ function renderUsuarios() {
       const estadoText = usuario.estado === 'activa' ? 'Activa' : 'Bloqueada';
 
       row.innerHTML = `
-        <div>${usuario.nombres} ${usuario.apellidos}</div>}
+        <div>${usuario.nombres} ${usuario.apellidos}</div>
         <div>${usuario.numero_documento}</div>
         <div>${usuario.correo}</div>
         <div>${usuario.rol.charAt(0).toUpperCase() + usuario.rol.slice(1)}</div>
