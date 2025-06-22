@@ -22,6 +22,12 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/login.css') }}"
     />
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
 
     <title>Inicio de Sesión</title>
   </head>
@@ -185,6 +191,15 @@
           </div>
           <p>o iniciar Sesión con una cuenta</p>
           <form class="form" method="POST" action="/login">
+            <div
+              id="login-error-message"
+              style="
+                display: none;
+                color: #ff6333;
+                margin-bottom: 10px;
+                text-align: center;
+              "
+            ></div>
             <label>
               <i class="bx bx-envelope"></i>
               <input
@@ -199,9 +214,9 @@
               <input
                 type="password"
                 id="login-password"
-                name="password" 
-                placeholder="Contraseña" 
-                required 
+                name="password"
+                placeholder="Contraseña"
+                required
               />
               <i
                 class="bx bx-hide show_hide"
@@ -262,8 +277,24 @@
                     Ingresa tu correo electrónico para recibir un código de
                     verificación
                   </p>
-                  <label style="display: block; margin-bottom: 15px">
-                    <i class="bx bx-envelope"></i>
+                  <label
+                    style="
+                      display: block;
+                      margin-bottom: 15px;
+                      position: relative;
+                    "
+                  >
+                    <i
+                      class="bx bx-envelope"
+                      style="
+                        position: absolute;
+                        left: 15px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        color: #555;
+                        font-size: 1.2rem;
+                      "
+                    ></i>
                     <input
                       type="email"
                       id="recovery-email"
@@ -271,9 +302,10 @@
                       placeholder="Correo electrónico"
                       style="
                         width: 100%;
-                        padding: 10px 30px;
+                        padding: 10px 15px 10px 45px;
                         border-radius: 20px;
                         border: none;
+                        box-sizing: border-box;
                       "
                     />
                   </label>
@@ -286,6 +318,8 @@
                       padding: 10px 20px;
                       border-radius: 20px;
                       cursor: pointer;
+                      width: 100%;
+                      margin-top: 10px;
                     "
                     type="button"
                   >
@@ -300,38 +334,66 @@
                     Hemos enviado un código a tu correo electrónico. Por favor
                     ingrésalo a continuación.
                   </p>
-                  <label style="display: block; margin-bottom: 15px">
-                    <i class="bx bx-key"></i>
+                  <label
+                    style="
+                      display: block;
+                      margin-bottom: 15px;
+                      position: relative;
+                    "
+                  >
+                    <i
+                      class="bx bx-key"
+                      style="
+                        position: absolute;
+                        left: 15px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        color: #555;
+                        font-size: 1.2rem;
+                      "
+                    ></i>
                     <input
                       type="text"
                       id="verification-code"
                       placeholder="Código de verificación"
                       style="
                         width: 100%;
-                        padding: 10px;
+                        padding: 10px 15px 10px 45px;
                         border-radius: 20px;
                         border: none;
+                        box-sizing: border-box;
                       "
                     />
                   </label>
-                  <button
-                    id="verify-code-btn"
+                  <div
                     style="
-                      background-color: #9191bd;
-                      color: white;
-                      border: none;
-                      padding: 10px 20px;
-                      border-radius: 20px;
-                      cursor: pointer;
-                      margin-right: 10px;
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
                     "
-                    type="button"
                   >
-                    Verificar código
-                  </button>
-                  <a href="#" id="resend-code" style="font-size: 0.8rem"
-                    >Reenviar código</a
-                  >
+                    <button
+                      id="verify-code-btn"
+                      style="
+                        background-color: #9191bd;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 20px;
+                        cursor: pointer;
+                      "
+                      type="button"
+                    >
+                      Verificar código
+                    </button>
+                    <a
+                      href="#"
+                      id="resend-code"
+                      style="font-size: 0.8rem; color: #555"
+                    >
+                      Reenviar código
+                    </a>
+                  </div>
                 </div>
 
                 <!-- Paso 3: Nueva contraseña -->
@@ -344,16 +406,27 @@
                       position: relative;
                     "
                   >
-                    <i class="bx bx-lock-alt"></i>
+                    <i
+                      class="bx bx-lock-alt"
+                      style="
+                        position: absolute;
+                        left: 15px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        color: #555;
+                        font-size: 1.2rem;
+                      "
+                    ></i>
                     <input
                       type="password"
                       id="new-password"
                       placeholder="Nueva contraseña"
                       style="
                         width: 100%;
-                        padding: 10px;
+                        padding: 10px 15px 10px 45px;
                         border-radius: 20px;
                         border: none;
+                        box-sizing: border-box;
                       "
                     />
                     <i
@@ -364,9 +437,11 @@
                         top: 50%;
                         transform: translateY(-50%);
                         cursor: pointer;
+                        color: #555;
                       "
                     ></i>
                   </label>
+
                   <div class="password-strength-container">
                     <div class="indicator">
                       <div class="icon-text">
@@ -375,6 +450,7 @@
                       </div>
                     </div>
                   </div>
+
                   <label
                     style="
                       display: block;
@@ -382,16 +458,27 @@
                       position: relative;
                     "
                   >
-                    <i class="bx bx-lock-alt"></i>
+                    <i
+                      class="bx bx-lock-alt"
+                      style="
+                        position: absolute;
+                        left: 15px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        color: #555;
+                        font-size: 1.2rem;
+                      "
+                    ></i>
                     <input
                       type="password"
                       id="confirm-password"
                       placeholder="Confirmar contraseña"
                       style="
                         width: 100%;
-                        padding: 10px;
+                        padding: 10px 15px 10px 45px;
                         border-radius: 20px;
                         border: none;
+                        box-sizing: border-box;
                       "
                     />
                     <i
@@ -402,9 +489,11 @@
                         top: 50%;
                         transform: translateY(-50%);
                         cursor: pointer;
+                        color: #555;
                       "
                     ></i>
                   </label>
+
                   <button
                     id="update-password-btn"
                     style="
@@ -414,6 +503,7 @@
                       padding: 10px 20px;
                       border-radius: 20px;
                       cursor: pointer;
+                      width: 100%;
                     "
                     type="button"
                   >
@@ -432,13 +522,42 @@
         </div>
       </div>
     </div>
-    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
     <script>
-      const mensaje = localStorage.getItem("logoutMessage");
-      if (mensaje) {
-        alert(mensaje); // o muestra en un div personalizado
+      // Mostrar mensaje de logout
+      const logoutMsg = localStorage.getItem("logoutMessage");
+      if (logoutMsg) {
+        Swal.fire({
+          icon: "success",
+          title: logoutMsg,
+          showConfirmButton: false,
+          timer: 2000,
+          position: "top-end", // Evita que baje el scroll
+          toast: true
+        });
         localStorage.removeItem("logoutMessage");
       }
+
+      // Transferir error de login del backend (si existe)
+      {% if session['login_error'] %}
+        sessionStorage.setItem("loginError", "{{ session['login_error'] }}");
+        {% set _ = session.pop('login_error') %}
+      {% endif %}
+
+      // Mostrar error de login si está en sessionStorage
+      const loginError = sessionStorage.getItem("loginError");
+      if (loginError) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: loginError,
+          confirmButtonText: "Aceptar",
+          position: "top-end", // También aquí
+          toast: true
+        });
+        sessionStorage.removeItem("loginError");
+      }
     </script>
+    <!-- Script principal -->
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
   </body>
 </html>

@@ -28,7 +28,9 @@ def login():
         else:  # lector
             return redirect("/dashboard")
     else:
-        return "Correo o contraseña incorrectos", 401
+        if not (user and bcrypt.checkpw(password.encode("utf-8"), user.contraseña.encode("utf-8"))):
+            session["login_error"] = "Correo o contraseña incorrectos"
+            return redirect("/login")
 
 @login_bp.route("/registro", methods=["POST"])
 def registro():

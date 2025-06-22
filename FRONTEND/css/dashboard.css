@@ -1735,6 +1735,24 @@ body.admin-panel.book-info button {
   color: #7f8c8d;
 }
 
+/* Agrega esto a tu archivo CSS */
+.swal2-popup {
+  font-family: 'Montserrat', sans-serif;
+  border-radius: 10px !important;
+}
+
+.swal2-toast {
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+}
+
+.swal2-success {
+  color: #28a745 !important;
+}
+
+.swal2-error {
+  color: #dc3545 !important;
+}
+
 /**-----------------------*/
 /**----- Responsive ------*/
 /**-----------------------*/

@@ -8,6 +8,34 @@ let currentUser = {
 
 const reservas = {}; // { 'Título del libro': [lista de usuarios] }
 
+// ==================== FUNCIONES DE NOTIFICACIÓN ====================
+// Función para mostrar notificaciones de éxito
+function showSuccessNotification(title, message) {
+  Swal.fire({
+    icon: 'success',
+    title: title,
+    text: message,
+    showConfirmButton: false,
+    timer: 2000,
+    toast: true,
+    position: 'top-end',
+    background: '#f8f9fa',
+    backdrop: false
+  });
+}
+
+// Función para mostrar notificaciones de error
+function showErrorNotification(title, message) {
+  Swal.fire({
+    icon: 'error',
+    title: title,
+    text: message,
+    confirmButtonText: 'Entendido',
+    position: 'center',
+    backdrop: true
+  });
+}
+
 // Función para cargar los préstamos del usuario desde la base de datos
 async function loadPrestamos() {
   try {
@@ -168,7 +196,7 @@ async function showBookDetails(isbn) {
     
   } catch (error) {
     console.error('Error al cargar detalles:', error);
-    alert('No se pudieron cargar los detalles del libro');
+    showErrorNotification('Error', 'No se pudieron cargar los detalles del libro: ' + error.message)
   }
 }
 
@@ -209,14 +237,14 @@ async function prestarLibro(isbn) {
       throw new Error(errorData.error || 'No se pudo realizar el préstamo');
     }
     
-    alert('Libro prestado correctamente');
+    showSuccessNotification('Éxito', 'Libro prestado correctamente');
     renderBooks();
     renderPrestamos();
     closeDetailPanel();
     
   } catch (error) {
     console.error('Error al prestar libro:', error);
-    alert('Error al prestar libro: ' + error.message);
+    showErrorNotification('Error', 'Error al prestar libro: ' + error.message);
   }
 }
 
@@ -237,14 +265,14 @@ async function reservarLibro(isbn) {
       throw new Error(errorData.error || 'No se pudo realizar la reserva');
     }
     
-    alert('Libro reservado correctamente. Te notificaremos cuando esté disponible.');
+    showSuccessNotification('Reserva exitosa', 'Libro reservado correctamente. Te notificaremos cuando esté disponible.');
     renderBooks();
     renderReservas();
     closeDetailPanel();
     
   } catch (error) {
     console.error('Error al reservar libro:', error);
-    alert('Error al reservar libro: ' + error.message);
+    showErrorNotification('Error', 'Error al reservar libro: ' + error.message);
   }
 }
 
@@ -264,14 +292,14 @@ async function devolverLibro(idPrestamo) {
       throw new Error(errorData.error || 'No se pudo realizar la devolución');
     }
     
-    alert('Libro devuelto correctamente');
+    showSuccessNotification('Devolución exitosa', 'Libro devuelto correctamente');
     renderPrestamos();
     renderBooks();
     renderReservas(); // Asegurar que se actualicen las reservas
     
   } catch (error) {
     console.error('Error al devolver libro:', error);
-    alert('Error al devolver libro: ' + error.message);
+    showErrorNotification('Error', 'Error al devolver libro: ' + error.message);
   }
 }
 
@@ -359,13 +387,13 @@ async function convertirReservaEnPrestamo(idReserva, isbn) {
       throw new Error('No se pudo marcar la reserva como completada');
     }
 
-    alert('Libro prestado correctamente');
+    showSuccessNotification('Libro Prestado', 'Libro prestado correctamente');
     renderBooks();
     renderReservas(); // Actualizar lista de reservas
     renderPrestamos(); // Actualizar lista de préstamos
   } catch (error) {
     console.error('Error:', error);
-    alert('Error al prestar libro: ' + error.message);
+    showErrorNotification('Error', 'Error al prestar libro: ' + error.message);
   }
 }
 
@@ -385,12 +413,12 @@ async function cancelarReserva(idReserva) {
       throw new Error(errorData.error || 'No se pudo cancelar la reserva');
     }
     
-    alert('Reserva cancelada correctamente');
+    showSuccessNotification('Reserva cancelada', 'La reserva fue cancelada correctamente');
     renderReservas();
     
   } catch (error) {
     console.error('Error al cancelar reserva:', error);
-    alert('Error al cancelar reserva: ' + error.message);
+    showErrorNotification('Error', 'Error al cancelar reserva: ' + error.message);
   }
 }
 
@@ -420,13 +448,12 @@ async function submitReview(e, idPrestamo) {
       throw new Error(errorData.error || 'No se pudo guardar la reseña');
     }
 
-
-    alert('Reseña enviada correctamente');
+    showSuccessNotification('Reseña enviada', 'Tu reseña fue enviada correctamente');
     renderPrestamos();
 
   } catch (error) {
     console.error('Error al enviar reseña:', error);
-    alert('Error al enviar reseña: ' + error.message);
+    showErrorNotification('Error', 'Error al enviar reseña: ' + error.message);
   }
 }
 
@@ -576,14 +603,14 @@ async function editProfile(event) {
       data.usuario.genero === 'F' ? 'Femenino' : 'Otro';
     
     // Mostrar mensaje de éxito
-    alert('Perfil actualizado correctamente');
+    showSuccessNotification('Perfil Actualizado', 'Perfil actualizado correctamente');
     
     // Volver a la vista de resumen
     cancelarEdicionPerfil();
     
   } catch (error) {
     console.error('Error:', error);
-    alert('Error al actualizar el perfil: ' + error.message);
+    showErrorNotification('Error', 'Error al actualizar el perfil: ' + error.message);
   }
 }
 
@@ -663,7 +690,7 @@ async function cargarPerfilUsuario() {
         
     } catch (error) {
         console.error('Error:', error);
-        alert('Error al cargar los datos del perfil');
+        showErrorNotification('Error', 'Error al cargar los datos del perfil: ' + error.message);
     }
 }
 
@@ -698,15 +725,14 @@ async function actualizarPerfil(event) {
         }
         
         const data = await response.json();
-        alert(data.mensaje);
+        showSuccessNotification('Perfil actualizado', data.mensaje);
         
-        // Recargar los datos del perfil
         await cargarPerfilUsuario();
         cancelarEdicionPerfil();
         
     } catch (error) {
         console.error('Error:', error);
-        alert('Error al actualizar el perfil: ' + error.message);
+        showErrorNotification('Error', 'Error al actualizar el perfil: ' + error.message);
     }
 }
 
@@ -747,7 +773,7 @@ async function initDashboard() {
     
   } catch (error) {
     console.error('Error al inicializar dashboard:', error);
-    alert('Error al cargar datos del usuario');
+    showErrorNotification('Error', 'Error al cargar datos del usuario: ' + error.message);
   }
 }
 

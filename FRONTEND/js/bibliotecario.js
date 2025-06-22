@@ -4,6 +4,7 @@ let usuarios = [];
 let usuariosFiltrados = [];
 let paginaActualUsuarios = 1;
 const usuariosPorPagina = 5;
+let books = [];
 
 let filteredBooks = null;
 
@@ -242,7 +243,7 @@ async function eliminarUsuario(doc) {
 
   } catch (error) {
     console.error("Error al eliminar usuario:", error);
-    alert(error.message || "Ocurrió un error al eliminar el usuario.");
+    showErrorNotification('Error', 'Ocurrió un error al eliminar el usuario: ' + error.message);
   }
 }
 
@@ -306,7 +307,7 @@ async function registrarUsuario(event) {
       mostrarSeccionUsuarios("listar");
     }, 2000);
   } catch (error) {
-    alert(error.message || "Ocurrió un error al guardar el usuario.");
+    showErrorNotification('Error', 'Ocurrió un error al guardar el usuario: ' + error.message);
     console.error(error);
   }
 }
@@ -370,7 +371,7 @@ async function toggleEstadoUsuario(doc) {
 
   } catch (error) {
     console.error("Error al cambiar estado:", error);
-    alert(error.message || "Ocurrió un error al cambiar el estado del usuario.");
+    showErrorNotification('Error', 'Ocurrió un error al cambiar el estado del usuario: ' + error.message);
   }
 }
 
@@ -428,7 +429,8 @@ async function renderBooksBibliotecario() {
   try {
     const response = await fetch('/api/libros');
     if (!response.ok) throw new Error('Error al obtener los libros');
-    const booksFromDB = await response.json();
+
+    books = await response.json();
 
     const bookList = document.getElementById('BibliotecarioBookList');
     bookList.innerHTML = '';
@@ -440,35 +442,39 @@ async function renderBooksBibliotecario() {
     const order = document.getElementById('filter-order-Bibliotecario').value;
 
     // Aplicar filtros
-    let filtered = booksFromDB.filter(book => {
+    let filtered = books.filter(book => {
       const title = book.titulo?.toLowerCase() || '';
-      const authors = Array.isArray(book.autores) ? 
-        book.autores.map(a => a.nombre?.toLowerCase()).join(' ') : '';
-      const genero = book.genero || '';
+      const authors = Array.isArray(book.autores) ? book.autores.map(a => a.nombre.toLowerCase()).join(' ') : '';
+      const genero = (book.genero || '').toLowerCase();
       const rating = book.promedio_calificacion || 0;
 
-      const matchesSearch = search === '' || 
-        title.includes(search) || 
-        authors.includes(search);
-      const matchesCategory = category === 'all' || genero === category;
+      const matchesSearch = title.includes(search) || authors.includes(search);
+      const matchesCategory = category === 'all' || genero === category.toLowerCase();
       const matchesRating = rating >= minRating;
 
       return matchesSearch && matchesCategory && matchesRating;
     });
 
+    // Función para parsear fecha de libro
+    function parseFechaLibro(libro) {
+      return new Date(libro.fecha_agregado || libro.año_publicacion || '2000-01-01');
+    }
+
     // Aplicar orden
     if (order === 'recent') {
-      filtered.sort((a, b) => new Date(b.fecha_agregado || b.año_publicacion || '2000-01-01') -
-        new Date(a.fecha_agregado || a.año_publicacion || '2000-01-01'));
+      filtered.sort((a, b) => parseFechaLibro(b) - parseFechaLibro(a));
     } else if (order === 'oldest') {
-      filtered.sort((a, b) => new Date(a.fecha_agregado || a.año_publicacion || '2000-01-01') -
-        new Date(b.fecha_agregado || b.año_publicacion || '2000-01-01'));
+      filtered.sort((a, b) => parseFechaLibro(a) - parseFechaLibro(b));
     } else if (order === 'rating') {
       filtered.sort((a, b) => (b.promedio_calificacion || 0) - (a.promedio_calificacion || 0));
     }
 
     // Paginación
     const totalPages = Math.ceil(filtered.length / booksPerPage);
+    if (currentPage > totalPages) {
+      currentPage = Math.max(1, totalPages);
+    }
+
     const start = (currentPage - 1) * booksPerPage;
     const end = start + booksPerPage;
     const paginated = filtered.slice(start, end);
@@ -539,7 +545,7 @@ async function showBibliotecarioBookDetails(isbn) {
 
   } catch (error) {
     console.error('Error al cargar detalles:', error);
-    alert('No se pudieron cargar los detalles del libro');
+    showErrorNotification('Error', 'No se pudieron cargar los detalles del libro: ' + error.message);
   }
 }
 
@@ -765,7 +771,7 @@ async function editarLibro(isbn) {
 
   } catch (error) {
     console.error('Error al editar libro:', error);
-    alert('No se pudo cargar el libro para edición');
+    showErrorNotification('Error', 'No se pudo cargar el libro para edición: ' + error.message);
   }
 }
 
@@ -790,13 +796,13 @@ async function actualizarLibro(isbn) {
       throw new Error('Error al actualizar el libro');
     }
 
-    alert('Libro actualizado correctamente');
+    showSuccessNotification('Libro actualizado', 'Libro actualizado correctamente');
     renderBooksBibliotecario();
     document.getElementById('formularioLibro').classList.add('hidden-section');
 
   } catch (error) {
     console.error('Error:', error);
-    alert('Error al actualizar el libro: ' + error.message);
+    showErrorNotification('Error', 'Error al actualizar el libro: ' + error.message);
   }
 }
 
@@ -812,13 +818,25 @@ async function eliminarLibro(isbn) {
       throw new Error('Error al eliminar el libro');
     }
 
-    alert('Libro eliminado correctamente');
+    showSuccessNotification('Libro eliminado', 'Libro eliminado correctamente');
     renderBooksBibliotecario();
     closeDetailPanel();
 
   } catch (error) {
     console.error('Error:', error);
-    alert('Error al eliminar el libro: ' + error.message);
+    showErrorNotification('Error', 'Error al eliminar el libro: ' + error.message);
+  }
+}
+
+function nextPageBibliotecario() {
+  currentPage++;
+  renderBooksBibliotecario();
+}
+
+function prevPageBibliotecario() {
+  if (currentPage > 1) {
+    currentPage--;
+    renderBooksBibliotecario();
   }
 }
 
@@ -942,7 +960,7 @@ async function editarAutor(id) {
     document.querySelector('#formAutor button[type="submit"]').textContent = "Actualizar autor";
 
   } catch (err) {
-    alert("No se pudo cargar el autor.");
+    showErrorNotification('Error', 'No se pudo cargar el autor: ' + error.message);
     console.error(err);
   }
 }
@@ -955,12 +973,12 @@ function eliminarAutor(id) {
     .then(res => res.json())
     .then(data => {
       console.log("Respuesta:", data);
-      alert(data.mensaje || data.error);
+      showErrorNotification(data.error , data.mensaje);
       listarAutores(); // refrescar autores
     })
     .catch(err => {
       console.error("Error al eliminar autor:", err);
-      alert("Error al eliminar autor");
+      showErrorNotification('Error', 'Error al eliminar autor: ' + error.message);
     });
   }
 }
@@ -1041,14 +1059,14 @@ async function editProfile(event) {
         data.usuario.genero === 'F' ? 'Femenino' : 'Otro';
 
     // Mostrar mensaje de éxito
-    alert('Perfil actualizado correctamente');
+    showSuccessNotification('Perfil actualizado', 'Perfil actualizado correctamente');
 
     // Volver a la vista de resumen
     cancelarEdicionPerfil();
 
   } catch (error) {
     console.error('Error:', error);
-    alert('Error al actualizar el perfil: ' + error.message);
+    showErrorNotification('Error', 'Error al actualizar el perfil: ' + error.message);
   }
 }
 

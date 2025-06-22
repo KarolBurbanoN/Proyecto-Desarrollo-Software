@@ -267,4 +267,14 @@ document.addEventListener('DOMContentLoaded', () => {
     formRegister.classList.add("hide");
     formLogin.classList.remove("hide");
   }
+
+  // Mostrar mensaje de error si está presente
+  const loginError = sessionStorage.getItem("loginError");
+  if (loginError) {
+    const errorDiv = document.getElementById("login-error-message");
+    errorDiv.textContent = loginError;
+    errorDiv.style.display = "block";
+    sessionStorage.removeItem("loginError");
+  }
+
 });

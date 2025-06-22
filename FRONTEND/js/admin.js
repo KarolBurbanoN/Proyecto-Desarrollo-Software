@@ -4,270 +4,38 @@ let usuarios = [];
 let usuariosFiltrados = [];
 let paginaActualUsuarios = 1;
 const usuariosPorPagina = 5;
+let books = [];
 
-const books = [
-  // Romance
-  {
-    title: 'Cien años de soledad',
-    author: 'Gabriel García Márquez',
-    available: true,
-    rating: 4.8,
-    category: 'Romance',
-    addedDate: '2022-12-01',
-    reviews: ["Una obra maestra."],
-    cover: 'https://covers.openlibrary.org/b/id/9886522-M.jpg'
-  },
-  {
-    title: 'El amor en los tiempos del cólera',
-    author: 'Gabriel García Márquez',
-    available: false,
-    rating: 4.5,
-    category: 'Romance',
-    addedDate: '2021-08-15',
-    reviews: ["Historia de amor a través del tiempo."],
-    cover: 'https://covers.openlibrary.org/b/id/14839677-M.jpg'
-  },
-  {
-    title: 'Orgullo y prejuicio',
-    author: 'Jane Austen',
-    available: true,
-    rating: 4.7,
-    category: 'Romance',
-    addedDate: '2023-01-10',
-    reviews: ["Clásico romántico imperdible."],
-    cover: 'https://covers.openlibrary.org/b/id/7712438-M.jpg'
-  },
-  {
-    title: 'Jane Eyre',
-    author: 'Charlotte Brontë',
-    available: true,
-    rating: 4.6,
-    category: 'Romance',
-    addedDate: '2023-02-25',
-    reviews: ["Una historia profunda y emotiva."],
-    cover: 'https://covers.openlibrary.org/b/id/13900709-M.jpg'
-  },
-  {
-    title: 'Bajo la misma estrella',
-    author: 'John Green',
-    available: true,
-    rating: 4.4,
-    category: 'Romance',
-    addedDate: '2023-03-18',
-    reviews: ["Una historia moderna y conmovedora."],
-    cover: 'https://covers.openlibrary.org/b/id/12333346-M.jpg'
-  },
-
-  // Terror
-  {
-    title: 'La ciudad y los perros',
-    author: 'Mario Vargas Llosa',
-    available: true,
-    rating: 4.3,
-    category: 'Terror',
-    addedDate: '2023-02-10',
-    reviews: ["Retrato crítico de la sociedad."],
-    cover: 'https://covers.openlibrary.org/b/id/13952189-M.jpg'
-  },
-  {
-    title: 'It',
-    author: 'Stephen King',
-    available: true,
-    rating: 4.7,
-    category: 'Terror',
-    addedDate: '2023-04-01',
-    reviews: ["Terror psicológico magistral."],
-    cover: 'https://covers.openlibrary.org/b/id/14655624-M.jpg'
-  },
-  {
-    title: 'El resplandor',
-    author: 'Stephen King',
-    available: false,
-    rating: 4.6,
-    category: 'Terror',
-    addedDate: '2023-01-15',
-    reviews: ["Suspenso y horror inolvidable."],
-    cover: 'https://covers.openlibrary.org/b/id/14655766-M.jpg'
-  },
-  {
-    title: 'Drácula',
-    author: 'Bram Stoker',
-    available: true,
-    rating: 4.5,
-    category: 'Terror',
-    addedDate: '2022-11-20',
-    reviews: ["Clásico del horror gótico."],
-    cover: 'https://covers.openlibrary.org/b/id/10114404-M.jpg'
-  },
-  {
-    title: 'Frankenstein',
-    author: 'Mary Shelley',
-    available: true,
-    rating: 4.4,
-    category: 'Terror',
-    addedDate: '2023-03-10',
-    reviews: ["Inmortal historia de la ciencia y horror."],
-    cover: 'https://covers.openlibrary.org/b/id/10756700-M.jpg'
-  },
-
-  // Ciencia Ficción
-  {
-    title: 'Ficciones',
-    author: 'Jorge Luis Borges',
-    available: false,
-    rating: 4.9,
-    category: 'Ciencia Ficción',
-    addedDate: '2023-07-20',
-    reviews: ["Obra maestra filosófica."],
-    cover: 'https://covers.openlibrary.org/b/id/7888787-L.jpg'
-  },
-  {
-    title: 'Dune',
-    author: 'Frank Herbert',
-    available: true,
-    rating: 4.8,
-    category: 'Ciencia Ficción',
-    addedDate: '2023-04-05',
-    reviews: ["Clásico de la ciencia ficción épica."],
-    cover: 'https://covers.openlibrary.org/b/id/8231850-L.jpg'
-  },
-  {
-    title: 'Neuromante',
-    author: 'William Gibson',
-    available: true,
-    rating: 4.5,
-    category: 'Ciencia Ficción',
-    addedDate: '2023-06-10',
-    reviews: ["Pionero del cyberpunk."],
-    cover: 'https://covers.openlibrary.org/b/id/8231874-L.jpg'
-  },
-  {
-    title: 'El fin de la eternidad',
-    author: 'Isaac Asimov',
-    available: true,
-    rating: 4.6,
-    category: 'Ciencia Ficción',
-    addedDate: '2023-05-12',
-    reviews: ["Un viaje en el tiempo fascinante."],
-    cover: 'https://covers.openlibrary.org/b/id/8231877-L.jpg'
-  },
-  {
-    title: 'La guerra de los mundos',
-    author: 'H. G. Wells',
-    available: false,
-    rating: 4.3,
-    category: 'Ciencia Ficción',
-    addedDate: '2023-02-22',
-    reviews: ["Invasión extraterrestre clásica."],
-    cover: 'https://covers.openlibrary.org/b/id/8231899-L.jpg'
-  },
-
-  // Fantasía
-  {
-    title: 'Rayuela',
-    author: 'Julio Cortázar',
-    available: true,
-    rating: 4.7,
-    category: 'Fantasía',
-    addedDate: '2023-05-05',
-    reviews: ["Innovador y desafiante."],
-    cover: 'https://covers.openlibrary.org/b/id/8228691-L.jpg'
-  },
-  {
-    title: 'El Hobbit',
-    author: 'J.R.R. Tolkien',
-    available: true,
-    rating: 4.8,
-    category: 'Fantasía',
-    addedDate: '2023-01-20',
-    reviews: ["Clásico de la fantasía épica."],
-    cover: 'https://covers.openlibrary.org/b/id/8231880-L.jpg'
-  },
-  {
-    title: 'Harry Potter y la piedra filosofal',
-    author: 'J.K. Rowling',
-    available: true,
-    rating: 4.7,
-    category: 'Fantasía',
-    addedDate: '2023-06-15',
-    reviews: ["Mágico y envolvente."],
-    cover: 'https://covers.openlibrary.org/b/id/14925450-M.jpg'
-  },
-  {
-    title: 'El nombre del viento',
-    author: 'Patrick Rothfuss',
-    available: false,
-    rating: 4.6,
-    category: 'Fantasía',
-    addedDate: '2023-04-20',
-    reviews: ["Narrativa excepcional."],
-    cover: 'https://covers.openlibrary.org/b/id/8231896-L.jpg'
-  },
-  {
-    title: 'La princesa prometida',
-    author: 'William Goldman',
-    available: true,
-    rating: 4.5,
-    category: 'Fantasía',
-    addedDate: '2023-03-11',
-    reviews: ["Aventura y romance clásico."],
-    cover: 'https://covers.openlibrary.org/b/id/8231901-L.jpg'
-  },
-
-  // Comics
-  {
-    title: 'Watchmen',
-    author: 'Alan Moore',
-    available: true,
-    rating: 4.9,
-    category: 'Comics',
-    addedDate: '2023-07-01',
-    reviews: ["Revolucionario y oscuro."],
-    cover: 'https://covers.openlibrary.org/b/id/8030406-M.jpg'
-  },
-  {
-    title: 'Maus',
-    author: 'Art Spiegelman',
-    available: true,
-    rating: 4.8,
-    category: 'Comics',
-    addedDate: '2023-05-15',
-    reviews: ["Profundo y conmovedor."],
-    cover: 'https://covers.openlibrary.org/b/id/14383494-M.jpg'
-  },
-  {
-    title: 'Sandman',
-    author: 'Neil Gaiman',
-    available: true,
-    rating: 4.7,
-    category: 'Comics',
-    addedDate: '2023-04-01',
-    reviews: ["Místico y literario."],
-    cover: 'https://covers.openlibrary.org/b/id/11222507-M.jpg'
-  },
-  {
-    title: 'Batman: El regreso del Caballero Oscuro',
-    author: 'Frank Miller',
-    available: true,
-    rating: 4.6,
-    category: 'Comics',
-    addedDate: '2023-03-18',
-    reviews: ["Oscuro y épico."],
-    cover: 'https://covers.openlibrary.org/b/id/14636539-M.jpg'
-  },
-  {
-    title: 'Persepolis',
-    author: 'Marjane Satrapi',
-    available: false,
-    rating: 4.5,
-    category: 'Comics',
-    addedDate: '2023-02-10',
-    reviews: ["Biografía gráfica emotiva."],
-    cover: 'https://covers.openlibrary.org/b/id/12909206-M.jpg'
-  }
-];
 
 let filteredBooks = null;
+
+// ==================== FUNCIONES DE NOTIFICACIÓN ====================
+// Función para mostrar notificaciones de éxito
+function showSuccessNotification(title, message) {
+  Swal.fire({
+    icon: 'success',
+    title: title,
+    text: message,
+    showConfirmButton: false,
+    timer: 2000,
+    toast: true,
+    position: 'top-end',
+    background: '#f8f9fa',
+    backdrop: false
+  });
+}
+
+// Función para mostrar notificaciones de error
+function showErrorNotification(title, message) {
+  Swal.fire({
+    icon: 'error',
+    title: title,
+    text: message,
+    confirmButtonText: 'Entendido',
+    position: 'center',
+    backdrop: true
+  });
+}
 
 //?----------------------------/
 //?---- GESTIONAR USUARIOS ----/
@@ -455,7 +223,7 @@ async function registrarUsuario(event) {
       mostrarSeccionUsuarios("listar");
     }, 2000);
   } catch (error) {
-    alert(error.message || "Ocurrió un error al guardar el usuario.");
+    showErrorNotification('Error', 'Ocurrió un error al guardar el usuario. ' + error.message);
     console.error(error);
   }
 
@@ -661,53 +429,55 @@ async function renderBooksAdmin() {
     if (!response.ok) {
       throw new Error('Error al obtener los libros');
     }
-    const booksFromDB = await response.json();
+
+    books = await response.json(); // Guardamos los libros globalmente
 
     const bookList = document.getElementById('adminBookList');
     bookList.innerHTML = '';
     
-     // Obtener valores de los filtros
+    // Obtener valores de los filtros
     const search = document.getElementById('search-admin').value.toLowerCase();
     const category = document.getElementById('filter-category-admin').value;
     const minRating = parseFloat(document.getElementById('filter-rating-admin').value);
     const order = document.getElementById('filter-order-admin').value;
 
-
     // Aplicar filtros
-    let filtered = booksFromDB.filter(book => {
+    let filtered = books.filter(book => {
       const title = book.titulo?.toLowerCase() || '';
       const authors = Array.isArray(book.autores) ? book.autores.map(a => a.nombre.toLowerCase()).join(' ') : '';
-      const genero = (book.genero || '').toLowerCase();//--> #se cambio
+      const genero = (book.genero || '').toLowerCase();
       const rating = book.promedio_calificacion || 0;
 
       const matchesSearch = title.includes(search) || authors.includes(search);
-      const matchesCategory = category === 'all' || genero === category.toLowerCase(); //--> #se cambio
+      const matchesCategory = category === 'all' || genero === category.toLowerCase();
       const matchesRating = rating >= minRating;
 
       return matchesSearch && matchesCategory && matchesRating;
     });
 
-    // Función para parsear fecha de libro --> #se añadio
+    // Función para parsear fecha de libro
     function parseFechaLibro(libro) {
       return new Date(libro.fecha_agregado || libro.año_publicacion || '2000-01-01');
     }
 
     // Aplicar orden
     if (order === 'recent') {
-      filtered.sort((a, b) => parseFechaLibro(b) - parseFechaLibro(a)); // --> #se cambio
+      filtered.sort((a, b) => parseFechaLibro(b) - parseFechaLibro(a));
     } else if (order === 'oldest') {
-      filtered.sort((a, b) => parseFechaLibro(a) - parseFechaLibro(b)); // --> #se cambio
+      filtered.sort((a, b) => parseFechaLibro(a) - parseFechaLibro(b));
     } else if (order === 'rating') {
       filtered.sort((a, b) => (b.promedio_calificacion || 0) - (a.promedio_calificacion || 0));
     }
 
     // Paginación
     const totalPages = Math.ceil(filtered.length / booksPerPage);
+    if (currentPage > totalPages) {
+      currentPage = Math.max(1, totalPages);
+    }
+
     const start = (currentPage - 1) * booksPerPage;
     const end = start + booksPerPage;
     const paginated = filtered.slice(start, end);
-    
-    console.log("Libros obtenidos del backend:", booksFromDB); //---> validr la estructura de los libros
 
     // Renderizar libros
     if (paginated.length === 0) {
@@ -721,17 +491,14 @@ async function renderBooksAdmin() {
         const portada = book.portada || 'https://via.placeholder.com/150';
 
         const autores = Array.isArray(book.autores) ? 
-                      book.autores.map(a => a.nombre).join(', ') : 'Autor desconocido';
+                        book.autores.map(a => a.nombre).join(', ') : 'Autor desconocido';
 
         div.innerHTML = `
           <img src="${portada}" alt="${book.titulo}" 
-              onclick="showAdminBookDetails('${book.ISBN}')"
-              style="cursor:pointer; width: 120px; height: auto; display: block; margin: 0 auto;">
-        
+               onclick="showAdminBookDetails('${book.ISBN}')"
+               style="cursor:pointer; width: 120px; height: auto; display: block; margin: 0 auto;">
         `;
 
-
-        
         bookList.appendChild(div);
       });
     }
@@ -780,7 +547,7 @@ async function showAdminBookDetails(isbn) {
     
   } catch (error) {
     console.error('Error al cargar detalles:', error);
-    alert('No se pudieron cargar los detalles del libro');
+    showErrorNotification('Error', 'No se pudieron cargar los detalles del libro: ' + error.message);
   }
 }
 
@@ -1090,24 +857,21 @@ async function eliminarLibro(isbn) {
       throw new Error('Error al eliminar el libro');
     }
 
-    alert('Libro eliminado correctamente');
+    showSuccessNotification('Libro eliminado', 'Libro eliminado correctamente');
     renderBooksAdmin();
     closeDetailPanel();
     
   } catch (error) {
     console.error('Error:', error);
-    alert('Error al eliminar el libro: ' + error.message);
+    showErrorNotification('Error', 'Error al eliminar el libro: ' + error.message);
   }
 }
 
 //* Funciones de paginación
 
 function nextPageAdmin() {
-  const totalPages = Math.ceil(books.length / booksPerPage);
-  if (currentPage < totalPages) {
     currentPage++;
     renderBooksAdmin();
-  }
 }
 
 function prevPageAdmin() {
@@ -1188,7 +952,7 @@ async function editarAutor(id) {
     document.querySelector('#formAutor button[type="submit"]').textContent = "Actualizar autor";
 
   } catch (err) {
-    alert("No se pudo cargar el autor.");
+    showErrorNotification('Error', 'No se pudo cargar el autor: ' + error.message);
     console.error(err);
   }
 }
@@ -1202,12 +966,12 @@ function eliminarAutor(id) {
     .then(res => res.json())
     .then(data => {
       console.log("Respuesta:", data);
-      alert(data.mensaje || data.error);
+      showErrorNotification(data.error, data.mensaje);
       listarAutores(); // refrescar autores
     })
     .catch(err => {
       console.error("Error al eliminar autor:", err);
-      alert("Error al eliminar autor");
+      showErrorNotification('Error', 'Error al eliminar autor: ' + error.message);
     });
   }
 }
@@ -1311,14 +1075,14 @@ async function editProfile(event) {
       data.usuario.genero === 'F' ? 'Femenino' : 'Otro';
     
     // Mostrar mensaje de éxito
-    alert('Perfil actualizado correctamente');
+    showSuccessNotification('Perfil actualizado', 'Perfil actualizado correctamente');
     
     // Volver a la vista de resumen
     cancelarEdicionPerfil();
     
   } catch (error) {
     console.error('Error:', error);
-    alert('Error al actualizar el perfil: ' + error.message);
+    showErrorNotification('Error', 'Error al actualizar el perfil: ' + error.message);
   }
 }
 
