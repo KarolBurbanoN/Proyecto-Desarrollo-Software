@@ -195,6 +195,18 @@
           </div>
         </section>
       </main>
+
+      <!-- Panel emergente de recomendación -->
+      <div id="recomendacionPanel" class="recomendacion-panel hidden-section">
+        <button class="cerrar-recomendacion" onclick="cerrarRecomendacion()">×</button>
+        <div class="recomendacion-contenido">
+          <h4>📚 Recomendación para ti</h4>
+          <img id="recoPortada" src="" alt="Portada libro recomendado" />
+          <h5 id="recoTitulo">Título del libro</h5>
+          <p><strong>Género:</strong> <span id="recoGenero"></span></p>
+        </div>
+      </div>
+
       <!-- Panel emergente de detalles -->
       <div id="bookDetailPanel" class="book-detail-panel hidden-section">
         <div class="book-detail-content">
@@ -236,3 +248,4 @@
     </script>
   </body>
 </html>
+

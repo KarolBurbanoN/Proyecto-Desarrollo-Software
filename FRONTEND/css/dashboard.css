@@ -560,6 +560,81 @@ body.lector-panel.book-info button {
 /*?------------------------*/
 /*?-------- LECTOR --------*/
 /*?------------------------*/
+/* PANEL DE RECOMENDACIÓN */
+.recomendacion-panel {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 260px;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  z-index: 9999;
+  transition: all 0.3s ease;
+}
+
+.recomendacion-contenido {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.recomendacion-contenido img {
+  width: 100px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.recomendacion-contenido h4 {
+  font-size: 1.1rem;
+  color: #5e3023;
+  margin: 0.5rem 0;
+}
+
+.recomendacion-contenido h5 {
+  font-size: 1rem;
+  color: #333;
+  margin: 0.5rem 0 0.3rem 0;
+}
+
+.recomendacion-contenido p {
+  font-size: 0.9rem;
+  margin: 0.2rem 0;
+}
+
+.recomendacion-contenido button {
+  background-color: #895737;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+  cursor: pointer;
+}
+
+.cerrar-recomendacion {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  color: #999;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .recomendacion-panel {
+    width: 90%;
+    right: 5%;
+    top: 80px;
+  }
+}
 
 /**-----------------------*/
 /**------ Prestamos ------*/

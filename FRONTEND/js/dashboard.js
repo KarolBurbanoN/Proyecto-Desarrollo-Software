@@ -751,8 +751,38 @@ async function initDashboard() {
   }
 }
 
+// Mostrar recomendación al usuario lector
+async function mostrarRecomendacion() {
+  try {
+    const response = await fetch("/api/recomendacion");
+    if (!response.ok) throw new Error("No se pudo obtener recomendación");
+    const libro = await response.json();
+
+    const panel = document.getElementById("recomendacionPanel");
+    if (!panel) return;
+
+    document.getElementById("recoPortada").src = libro.portada || "/static/default-book.png";
+    document.getElementById("recoTitulo").textContent = libro.titulo || "Título no disponible";
+    document.getElementById("recoGenero").textContent = libro.genero || "Sin género";
+
+    panel.classList.remove("hidden-section");
+  } catch (error) {
+    console.warn("Error cargando recomendación:", error);
+  }
+}
+
+function cerrarRecomendacion() {
+  const panel = document.getElementById("recomendacionPanel");
+  if (panel) panel.classList.add("hidden-section");
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  setupFilterEvents(); // 🔄 Asegura que se ejecute cuando el DOM esté listo
+  setupFilterEvents();
+
+  setTimeout(() => {
+    mostrarRecomendacion();
+  }, 300); // Espera 300ms a que todo el DOM esté bien montado
 });
+
 
 initDashboard();
