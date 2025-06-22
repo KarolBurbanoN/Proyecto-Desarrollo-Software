@@ -754,7 +754,7 @@ async function showAdminBookDetails(isbn) {
     // Mostrar detalles en el panel
     document.getElementById('detailCover').src = book.portada || 'https://via.placeholder.com/150';
     document.getElementById('detailTitle').textContent = book.titulo;
-    document.getElementById('detailAuthor').textContent = book.autores.map(a => a.nombre).join(', ');
+    document.getElementById('detailAuthor').textContent = autores;
     document.getElementById('detailStatus').textContent = 'Disponible'; // Puedes agregar este campo a tu modelo
     document.getElementById('detailRating').textContent = book.promedio_calificacion ? 
       '⭐'.repeat(Math.round(book.promedio_calificacion)) + ` (${book.promedio_calificacion.toFixed(1)})` : 'Sin calificaciones';
@@ -780,29 +780,30 @@ function closeDetailPanel() {
   document.getElementById('bookDetailPanel').classList.remove('active');
 }
 
+// Función para mostrar/ocultar secciones
 function mostrarSeccionLibros(seccion) {
-  document.querySelectorAll('#gestion-libros .user-tab').forEach(btn => btn.classList.remove('active'));
-  document.querySelectorAll('#seccion-listar-libros, #seccion-agregar-libro').forEach(div => div.classList.add('hidden-section'));
+  // Ocultar todas las secciones
+  document.querySelectorAll('#seccion-listar-libros, #seccion-agregar-libro, #seccion-editar-libro').forEach(div => {
+    div.classList.add('hidden-section');
+  });
+  
+  // Resetear todas las pestañas
+  document.querySelectorAll('#gestion-libros .user-tab').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.id === 'tabEditarLibro' && seccion !== 'editar') {
+      btn.style.display = 'none';
+    }
+  });
 
   if (seccion === 'listar') {
     document.querySelector('#gestion-libros .user-tab:nth-child(1)').classList.add('active');
     document.getElementById('seccion-listar-libros').classList.remove('hidden-section');
-    // Asegurarnos de configurar los eventos cuando se muestra la sección
-    setTimeout(setupAdminFilterEvents, 0);
-
-
-  } else {
+  } else if (seccion === 'agregar') {
     document.querySelector('#gestion-libros .user-tab:nth-child(2)').classList.add('active');
     document.getElementById('seccion-agregar-libro').classList.remove('hidden-section');
-  }
-
-  // Reinicia el formulario si es agregar
-  if (seccion === 'agregar') {
-    document.getElementById('formLibro').reset();
-    document.getElementById("previewPortada").src = "";
-    document.getElementById("previewPortada").style.display = "none";
-    document.getElementById('mensajeLibro').style.display = 'none';
-    document.getElementById('mensajeErrorLibro').style.display = 'none'
+  } else if (seccion === 'editar') {
+    document.getElementById('tabEditarLibro').classList.add('active');
+    document.getElementById('seccion-editar-libro').classList.remove('hidden-section');
   }
 }
 
@@ -871,52 +872,99 @@ async function registrarLibro(event) {
   }
 }
 
-async function editarLibro(isbn) {
-  try {
-    // Obtener datos actuales del libro
-    const response = await fetch(`/api/libros/${isbn}`);
-    const book = await response.json();
-    
-    // Mostrar formulario de edición con los datos
-    mostrarFormularioLibro();
-    
-    // Rellenar formulario con datos existentes
-    document.getElementById('tituloLibro').value = book.titulo;
-    document.getElementById('autorLibro').value = book.autores.map(a => a.nombre).join(', ');
-    document.getElementById('editorialLibro').value = book.editorial;
-    document.getElementById('anioLibro').value = book.año_publicacion || '';
-    document.getElementById('isbnLibro').value = book.ISBN;
-    document.getElementById('generoLibro').value = book.genero;
-    document.getElementById('urlPortadaLibro').value = book.portada || '';
-    
-    // Actualizar vista previa de portada
-    const preview = document.getElementById("previewPortada");
-    if (book.portada) {
-      preview.src = book.portada;
-      preview.style.display = "block";
-    }
-    
-    // Cambiar el comportamiento del formulario para edición
-    const form = document.getElementById('formLibro');
-    form.onsubmit = async function(e) {
-      e.preventDefault();
-      await actualizarLibro(isbn);
-    };
-    
-  } catch (error) {
-    console.error('Error al editar libro:', error);
-    alert('No se pudo cargar el libro para edición');
+function closeDetailPanel() {
+  const panel = document.getElementById('bookDetailPanel');
+  if (panel.classList.contains('active')) {
+    panel.classList.remove('active');
+    // Limpiar el contenido para que no quede visible al volver
+    document.getElementById('detailCover').src = '';
+    document.getElementById('detailTitle').textContent = '';
+    document.getElementById('detailAuthor').textContent = '';
+    document.getElementById('detailDescription').textContent = '';
   }
 }
 
-async function actualizarLibro(isbn) {
+async function editarLibro(isbn) {
+  try {
+    // 1. Cerrar el panel de detalles si está abierto
+    closeDetailPanel();
+    
+    // 2. Mostrar la pestaña de edición
+    document.getElementById('tabEditarLibro').style.display = 'block';
+    
+    // 3. Obtener datos del libro
+    const response = await fetch(`/api/libros/${isbn}`);
+    if (!response.ok) throw new Error('Libro no encontrado');
+    const book = await response.json();
+    
+    // 4. Mostrar la sección de edición
+    mostrarSeccionLibros('editar');
+    
+    // 5. Rellenar el formulario con los datos del libro
+    document.getElementById('edit-tituloLibro').value = book.titulo;
+    document.getElementById('edit-autorLibro').value = book.autores.map(a => a.nombre).join(', ');
+    document.getElementById('edit-editorialLibro').value = book.editorial;
+    document.getElementById('edit-anioLibro').value = book.año_publicacion || '';
+    document.getElementById('edit-isbnLibro').value = book.ISBN;
+    document.getElementById('edit-isbnLibroVisible').value = book.ISBN;
+    document.getElementById('edit-generoLibro').value = book.genero;
+    document.getElementById('edit-urlPortadaLibro').value = book.portada || '';
+    document.getElementById('edit-descripcionLibro').value = book.descripcion_libro || '';
+    document.getElementById('edit-estadoLibro').value = 'disponible'; // Ajustar según necesidad
+    
+    // 6. Actualizar vista previa de la portada
+    const preview = document.getElementById("edit-previewPortada");
+    if (book.portada) {
+      preview.src = book.portada;
+      preview.style.display = "block";
+    } else {
+      preview.style.display = "none";
+    }
+    
+    // 7. Configurar evento para vista previa en tiempo real
+    document.getElementById("edit-urlPortadaLibro").addEventListener("input", function() {
+      const url = this.value;
+      if (url && (url.startsWith("http://") || url.startsWith("https://"))) {
+        preview.src = url;
+        preview.style.display = "block";
+      } else {
+        preview.src = "";
+        preview.style.display = "none";
+      }
+    });
+    
+    // 8. Hacer scroll suave al formulario
+    document.getElementById('formularioEditarLibro').scrollIntoView({
+      behavior: 'smooth'
+    });
+    
+  } catch (error) {
+    console.error('Error al editar libro:', error);
+    document.getElementById('mensajeErrorEdicionLibro').textContent = `❌ ${error.message}`;
+    document.getElementById('mensajeErrorEdicionLibro').style.display = 'block';
+    setTimeout(() => {
+      document.getElementById('mensajeErrorEdicionLibro').style.display = 'none';
+    }, 3000);
+  }
+}
+
+async function actualizarLibro(event) {
+  event.preventDefault();
+  
+  // Ocultar mensajes anteriores
+  document.getElementById('mensajeEdicionLibro').style.display = 'none';
+  document.getElementById('mensajeErrorEdicionLibro').style.display = 'none';
+  
+  const isbn = document.getElementById('edit-isbnLibro').value;
+  
   const libroActualizado = {
-    titulo: document.getElementById('tituloLibro').value.trim(),
-    autores: [document.getElementById('autorLibro').value.trim()],
-    editorial: document.getElementById('editorialLibro').value.trim(),
-    year: parseInt(document.getElementById('anioLibro').value) || null,
-    genero: document.getElementById('generoLibro').value.trim(),
-    portada: document.getElementById('urlPortadaLibro').value.trim()
+    titulo: document.getElementById('edit-tituloLibro').value.trim(),
+    autores: [document.getElementById('edit-autorLibro').value.trim()],
+    editorial: document.getElementById('edit-editorialLibro').value.trim(),
+    year: parseInt(document.getElementById('edit-anioLibro').value) || null,
+    genero: document.getElementById('edit-generoLibro').value.trim(),
+    portada: document.getElementById('edit-urlPortadaLibro').value.trim(),
+    descripcion_libro: document.getElementById('edit-descripcionLibro').value.trim()
   };
 
   try {
@@ -927,16 +975,30 @@ async function actualizarLibro(isbn) {
     });
 
     if (!response.ok) {
-      throw new Error('Error al actualizar el libro');
+      const error = await response.json();
+      throw new Error(error.error || "Error al actualizar el libro");
     }
 
-    alert('Libro actualizado correctamente');
-    renderBooksAdmin();
-    document.getElementById('formularioLibro').classList.add('hidden-section');
+    // Mostrar mensaje de éxito
+    document.getElementById('mensajeEdicionLibro').textContent = "✅ Libro actualizado correctamente";
+    document.getElementById('mensajeEdicionLibro').style.display = 'block';
+    
+    // Actualizar la lista de libros
+    await renderBooksAdmin();
+    
+    // Ocultar pestaña de edición
+    document.getElementById('tabEditarLibro').style.display = 'none';
+    
+    // Volver a la lista después de 2 segundos
+    setTimeout(() => {
+      document.getElementById('mensajeEdicionLibro').style.display = 'none';
+      mostrarSeccionLibros('listar');
+    }, 2000);
     
   } catch (error) {
     console.error('Error:', error);
-    alert('Error al actualizar el libro: ' + error.message);
+    document.getElementById('mensajeErrorEdicionLibro').textContent = `❌ ${error.message}`;
+    document.getElementById('mensajeErrorEdicionLibro').style.display = 'block';
   }
 }
 
@@ -1197,14 +1259,15 @@ function setupPasswordStrengthChecker() {
   });
 }
 
-// Al final del archivo, modificar el DOMContentLoaded para incluir el setup
 window.addEventListener('DOMContentLoaded', () => {
   renderUsuarios();
   setupAdminFilterEvents();
   setupUserFilterEvents(); 
   renderBooksAdmin();
   renderUsuariosDesdeBackend();
-  setupPasswordStrengthChecker(); // Añadir esta línea
+  
+  // Mostrar la pestaña de edición solo cuando sea necesario
+  document.getElementById('tabEditarLibro').classList.add('hidden');
 });
 
 window.addEventListener('DOMContentLoaded', () => {

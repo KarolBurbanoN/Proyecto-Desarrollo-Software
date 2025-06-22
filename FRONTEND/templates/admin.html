@@ -225,6 +225,7 @@
               onclick="mostrarSeccionLibros('listar')">Listar libros</button>
             <button class="user-tab"
               onclick="mostrarSeccionLibros('agregar')">Agregar libro</button>
+            <button class="user-tab" id="tabEditarLibro" style="display: none;" onclick="mostrarSeccionLibros('editar')">Editar libro</button>
           </div>
 
           <!-- Contenedor de contenido para listar libros -->
@@ -365,6 +366,75 @@
           <div id="mensajeErrorLibro" class="mensaje-error"
             style="display: none;">
             ❌ Error al registrar el libro. Por favor, verifica los datos.
+          </div>
+
+          <!-- EDITAR LIBRO -->
+       <!-- Contenedor de contenido para editar libros -->
+          <div id="seccion-editar-libro" class="hidden-section">
+            <div id="formularioEditarLibro" class="card">
+              <h3>Editar libro</h3>
+              <form id="formEditarLibro" class="form" onsubmit="actualizarLibro(event)">
+                <input type="hidden" id="edit-isbnLibro">
+                
+                <div class="form-grid">
+                  <label>
+                    <i class='bx bx-image'></i>
+                    <input type="url" id="edit-urlPortadaLibro" name="Portada" placeholder="Url Portada" required>
+                  </label>
+                  <!-- Vista previa -->
+                  <div style="margin-top: 10px;">
+                    <img id="edit-previewPortada" src alt="Vista previa" style="max-width: 200px; display: none; border: 1px solid #ccc; padding: 4px;">
+                  </div>
+                  <label>
+                    <i class='bx bx-pencil'></i>
+                    <input type="text" id="edit-tituloLibro" placeholder="Título" required />
+                  </label>
+                  <label>
+                    <i class="bx bx-user"></i>
+                    <input type="text" id="edit-autorLibro" placeholder="Autor" required />
+                  </label>
+                  <label>
+                    <i class='bx bx-home-alt-2'></i>
+                    <input type="text" id="edit-editorialLibro" placeholder="Editorial" required />
+                  </label>
+                  <label>
+                    <i class="bx bx-calendar"></i>
+                    <input type="number" id="edit-anioLibro" placeholder="Año de publicación" min="1000" max="2100" required />
+                  </label>
+                  <label>
+                    <i class="bx bx-hash"></i>
+                    <input type="text" id="edit-isbnLibroVisible" placeholder="ISBN" readonly />
+                  </label>
+                  <label>
+                    <i class="bx bx-book-bookmark"></i>
+                    <input type="text" id="edit-generoLibro" placeholder="Género" required />
+                  </label>
+                  <label>
+                    <i class="bx bx-checkbox-checked"></i>
+                    <select id="edit-estadoLibro" required>
+                      <option value>Estado</option>
+                      <option value="disponible">Disponible</option>
+                      <option value="no disponible">No disponible</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="form-field descripcion-field">
+                  <span>Descripción del libro:</span>
+                  <textarea id="edit-descripcionLibro" placeholder="Escribe una descripción (máx. 200 caracteres)" maxlength="200" rows="5"></textarea>
+                </div>
+                <div style="text-align: center; margin-top: 1rem;">
+                  <button type="submit">Guardar cambios</button>
+                  <button type="button" onclick="mostrarSeccionLibros('listar')" class="cancel-btn">Cancelar</button>
+                </div>
+              </form>
+            </div>
+
+            <div id="mensajeEdicionLibro" class="mensaje-exito" style="display: none;">
+              ✅ Libro actualizado correctamente
+            </div>
+            <div id="mensajeErrorEdicionLibro" class="mensaje-error" style="display: none;">
+              ❌ Error al actualizar el libro. Por favor, verifica los datos.
+            </div>
           </div>
         </section>
 
