@@ -1,5 +1,11 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from datetime import datetime, timedelta
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+#--->Se agrego
+import threading 
+import time
+
 from BASE_DE_DATOS.db import get_db
 from BASE_DE_DATOS import models
 from sqlalchemy.orm import Session
@@ -290,3 +296,43 @@ def enviar_correo(destinatario, asunto, mensaje):
         print("Correo enviado a:", destinatario)
     except Exception as e:
         print("Error al enviar correo:", e)
+
+    
+#---> se agrego
+@prestamos_bp.route("/alertas", methods=["GET"])
+@requiere_autenticacion
+def obtener_alertas_usuario(usuario_id):
+    db: Session = next(get_db())
+    hoy = datetime.now().date()
+    tres_dias = hoy + timedelta(days=3)
+    siete_dias = hoy + timedelta(days=7)
+    
+    try:
+        prestamos = db.query(models.Prestamo).join(models.Ejemplar).join(models.Libro).filter(
+            models.Prestamo.id_usuario == usuario_id,
+            models.Prestamo.estado == 'activo',
+            models.Prestamo.fecha_vencimiento <= siete_dias
+        ).all()
+        
+        alertas = []
+        for p in prestamos:
+            dias_restantes = (p.fecha_vencimiento - hoy).days
+            
+            alerta = {
+                "id_prestamo": p.id_prestamo,
+                "titulo": p.ejemplar.libro.titulo,
+                "fecha_vencimiento": p.fecha_vencimiento.strftime("%d/%m/%Y")
+            }
+            
+            if dias_restantes <= 3:
+                alerta["mensaje"] = f"Préstamo vence en {dias_restantes} días"
+                alerta["prioridad"] = "alta"
+            else:
+                alerta["mensaje"] = f"Préstamo vence en {dias_restantes} días"
+                alerta["prioridad"] = "media"
+            
+            alertas.append(alerta)
+        
+        return jsonify(alertas)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

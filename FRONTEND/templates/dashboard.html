@@ -38,6 +38,17 @@
       </aside>
 
       <main class="main-content">
+        <!-- Panel de Alertas se agrego-->
+        <div id="alertasPanel" class="hidden">
+          <div class="panel-header">
+            <h3>📢 Alertas de Préstamos</h3>
+            <button onclick="cerrarAlertas()">✕</button>
+          </div>
+          <div id="alertasContainer" class="alertas-container">
+            <!-- Las alertas se cargarán aquí -->
+          </div>
+        </div>
+        
         <section id="catalogo" class="active-section">
           <h2>Explora nuestras opciones</h2>
           <div class="search-filter-row">
