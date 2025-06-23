@@ -159,6 +159,14 @@
                   <input type="tel" placeholder="Teléfono" id="telefono" />
                 </label>
                 <label>
+                  <select id="rol" required>
+                    <option value>Seleccionar rol</option>
+                    <option value="lector">Lector</option>
+                    <option value="bibliotecario">Bibliotecario</option>
+                    <option value="administrador">Administrador</option>
+                  </select>
+                </label>
+                <label>
                   <i class="bx bx-envelope"></i>
                   <input type="email" placeholder="Correo electrónico" id="correo" required />
                 </label>
@@ -174,14 +182,6 @@
                     <h6 class="indicator-text"></h6>
                   </div>
                 </div>
-                <label>
-                  <select id="rol" required>
-                    <option value>Seleccionar rol</option>
-                    <option value="lector">Lector</option>
-                    <option value="bibliotecario">Bibliotecario</option>
-                    <option value="administrador">Administrador</option>
-                  </select>
-                </label>
               </div>
               <input type="submit" value="Registrar usuario" />
             </form>

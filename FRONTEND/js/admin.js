@@ -78,12 +78,16 @@ function renderUsuarios() {
   // 1. Filtro base
   usuariosFiltrados = usuarios.filter(usuario => {
     const coincideBusqueda =
-      usuario.nombres.toLowerCase().includes(busqueda) ||
-      usuario.apellidos.toLowerCase().includes(busqueda) ||
-      usuario.numero_documento.includes(busqueda);
+      (usuario.nombres?.toLowerCase().includes(busqueda) || 
+      (usuario.apellidos?.toLowerCase().includes(busqueda)) || 
+      (usuario.numero_documento?.includes(busqueda)) || 
+      (usuario.correo?.toLowerCase().includes(busqueda)) )|| 
+      busqueda === '';
 
     const coincideRol = filtroRol === 'todos' || usuario.rol === filtroRol;
-    const coincideEstado = filtroEstado === 'todos' || usuario.estado === filtroEstado;
+    const coincideEstado = filtroEstado === 'todos' || 
+      (filtroEstado === 'activo' && usuario.estado?.toLowerCase() === 'activa') ||
+      (filtroEstado === 'bloqueado' && usuario.estado?.toLowerCase() === 'bloqueada');
 
     return coincideBusqueda && coincideRol && coincideEstado;
   });
@@ -100,77 +104,62 @@ function renderUsuarios() {
   const inicio = (paginaActualUsuarios - 1) * usuariosPorPagina;
   const pagina = usuariosFiltrados.slice(inicio, inicio + usuariosPorPagina);
 
-  // 4. Render tabla
+  // 4. Crear tabla
+  const tabla = document.createElement('div');
+  tabla.className = 'usuarios-table';
+
+  // Crear encabezado
+  const header = document.createElement('div');
+  header.className = 'row header';
+  header.innerHTML = `
+    <div>Nombre</div>
+    <div>Documento</div>
+    <div>Correo</div>
+    <div>Tipo de Usuario</div>
+    <div>Estado</div>
+    <div>Acciones</div>
+  `;
+  tabla.appendChild(header);
+
+  // 5. Render tabla
   if (pagina.length === 0) {
-    contenedor.innerHTML = '<p>No hay usuarios registrados.</p>';
-    document.getElementById('paginadorUsuarios').textContent = '';
-    return;
+    const emptyRow = document.createElement('div');
+    emptyRow.className = 'row empty';
+    emptyRow.innerHTML = '<div colspan="5">No hay usuarios registrados.</div>';
+    tabla.appendChild(emptyRow);
+  } else {
+    pagina.forEach(usuario => {
+      const row = document.createElement('div');
+      row.className = 'row';
+
+      // Formatear estado con color
+      const estadoClass = usuario.estado === 'activa' ? 'estado-activo' : 'estado-bloqueado';
+      const estadoText = usuario.estado === 'activa' ? 'Activa' : 'Bloqueada';
+
+      row.innerHTML = `
+        <div>${usuario.nombres} ${usuario.apellidos}</div>
+        <div>${usuario.numero_documento}</div>
+        <div>${usuario.correo}</div>
+        <div>${usuario.rol.charAt(0).toUpperCase() + usuario.rol.slice(1)}</div>
+        <div><span class="${estadoClass}">${estadoText}</span></div>
+        <div class="acciones">
+          <button class="edit" title="Editar" onclick="editarUsuario('${usuario.numero_documento}')">
+            <i class='bx bx-edit'></i>
+          </button>
+          <button class="block" title="${usuario.estado === 'activa' ? 'Bloquear' : 'Desbloquear'}" onclick="toggleEstadoUsuario('${usuario.numero_documento}')">
+            <i class='bx bx-block'></i>
+          </button>
+          <button class="delete" title="Eliminar" onclick="eliminarUsuario('${usuario.numero_documento}')">
+            <i class='bx bx-trash'></i>
+          </button>
+        </div>
+      `;
+      tabla.appendChild(row);
+    });
   }
-  
-  contenedor.innerHTML = `
-    <div style="width: 100%; overflow-x: auto; margin-top: 1rem; box-sizing: border-box;">
-      <table style="
-        width: 100%;
-        min-width: 100%;
-        border-collapse: collapse;
-        font-size: 0.9rem;
-        border-radius: 12px;
-        overflow: hidden;
-        background-color: white;
-      ">
-        <thead style="background-color: #f3e8ff; color: #5e3a18;">
-          <tr>
-            <th style="padding: 12px; text-align: left;">Nombre</th>
-            <th style="padding: 12px; text-align: left;">Documento</th>
-            <th style="padding: 12px; text-align: left;">Correo</th>
-            <th style="padding: 12px; text-align: left;">Tipo de Usuario</th>
-            <th style="padding: 12px; text-align: left;">Estado</th>
-            <th style="padding: 12px; text-align: center;">Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="usuarios-table-body"></tbody>
-      </table>
-    </div>
-  `;
 
-  const tbody = document.getElementById('usuarios-table-body');
+  contenedor.appendChild(tabla);
 
-  pagina.forEach(usuario => {
-    const estadoNormalizado = (usuario.estado || '').toLowerCase();
-    const esActivo = estadoNormalizado === 'activa';
-
-    const estadoChip = esActivo
-      ? `<span style="background-color: #d1fae5; color: #047857; font-size: 0.75rem; padding: 4px 10px; border-radius: 9999px; font-weight: 600;">Activa</span>`
-      : `<span style="background-color: #fde2e2; color: #b91c1c; font-size: 0.75rem; padding: 4px 10px; border-radius: 9999px; font-weight: 600;">Bloqueada</span>`;
-
-    const btn = (icono, titulo, accion) => `
-      <button title="${titulo}" onclick="${accion}" style="
-        background-color: #915c2b;
-        border: none;
-        color: white;
-        font-size: 0.85rem;
-        padding: 6px 8px;
-        margin: 0 2px;
-        border-radius: 6px;
-        cursor: pointer;
-      ">${icono}</button>`;
-
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td style="padding: 10px; border-top: 1px solid #eee;">${usuario.nombres} ${usuario.apellidos}</td>
-    <td style="padding: 10px; border-top: 1px solid #eee;">${usuario.numero_documento}</td>
-    <td style="padding: 10px; border-top: 1px solid #eee;">${usuario.correo}</td>
-    <td style="padding: 10px; border-top: 1px solid #eee;">${usuario.rol.charAt(0).toUpperCase() + usuario.rol.slice(1)}</td>
-    <td style="padding: 10px; border-top: 1px solid #eee;">${estadoChip}</td>
-    <td style="padding: 10px; border-top: 1px solid #eee; text-align: center; white-space: nowrap;">
-      ${btn('✏️', 'Editar', `editarUsuario('${usuario.numero_documento}')`)}
-      ${btn('🚫', esActivo ? 'Bloquear' : 'Desbloquear', `toggleEstadoUsuario('${usuario.numero_documento}')`)}
-      ${btn('🗑️', 'Eliminar', `eliminarUsuario('${usuario.numero_documento}')`)}
-    </td>
-  `;
-
-    tbody.appendChild(tr);
-  });
   document.getElementById('paginadorUsuarios').textContent = `Página ${paginaActualUsuarios} de ${totalPaginas}`;
 }
 
@@ -281,45 +270,120 @@ function editarUsuario(doc) {
   // Activar pestaña de formulario
   mostrarSeccionUsuarios('agregar');
 
-  // Rellenar campos
+  // Configurar modo edición
   document.getElementById('modo-edicion').value = "true";
   document.getElementById('usuario-editando-doc').value = doc;
 
+  // Rellenar campos del formulario
   document.getElementById('numDoc').value = usuario.numero_documento;
   document.querySelector('select[name="tipo_documento"]').value = usuario.tipo_documento;
   document.getElementById('nombres').value = usuario.nombres;
   document.getElementById('apellidos').value = usuario.apellidos;
-  document.getElementById('fecha').value = usuario.fecha;
-  document.getElementById('genero').value = usuario.genero;
-  document.getElementById('direccion').value = usuario.direccion;
-  document.getElementById('ciudad').value = usuario.ciudad;
-  document.getElementById('telefono').value = usuario.telefono;
+  
+  // Formatear fecha correctamente (esto soluciona el problema principal)
+  const fechaNacimiento = new Date(usuario.fecha_nacimiento);
+  const fechaFormateada = fechaNacimiento.toISOString().split('T')[0];
+  document.getElementById('fecha').value = fechaFormateada;
+  
+  document.getElementById('genero').value = usuario.genero || '';
+  document.getElementById('direccion').value = usuario.direccion || '';
+  document.getElementById('ciudad').value = usuario.ciudad || '';
+  document.getElementById('telefono').value = usuario.telefono || '';
   document.getElementById('correo').value = usuario.correo;
   document.getElementById('rol').value = usuario.rol;
-  document.getElementById('contraseña').value = usuario.contraseña;
+  
+  // No cargar la contraseña por seguridad
+  document.getElementById('contraseña').value = '';
+  document.getElementById('confirmar_contraseña').value = '';
 
-  // Bloquear número de documento si es necesario
+  // Bloquear número de documento (no editable)
   document.getElementById('numDoc').readOnly = true;
+
+  // Cambiar texto del botón de submit
+  const submitBtn = document.querySelector('#formUsuario button[type="submit"]');
+  if (submitBtn) {
+    submitBtn.textContent = "Actualizar Usuario";
+    submitBtn.classList.add('update-btn');
+  }
+
+  // Cambiar el evento del formulario para usar actualización
+  const form = document.getElementById('formUsuario');
+  if (form) {
+    form.onsubmit = async function(e) {
+      e.preventDefault();
+      await registrarUsuario(e); // Reutilizamos la misma función pero ahora hará PUT
+    };
+  }
+
 }
 
-function eliminarUsuario(doc) {
-  if (confirm("¿Seguro que deseas eliminar este usuario?")) {
-    usuarios = usuarios.filter(u => u.numero_documento !== doc);
-    renderUsuarios();
+
+async function eliminarUsuario(doc) {
+  if (!confirm("¿Seguro que deseas eliminar este usuario?")) return;
+
+  try {
+    const response = await fetch(`/api/usuarios/${doc}`, {
+      method: 'DELETE'
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Error al eliminar usuario");
+    }
+
+    // Mostrar mensaje de éxito
+    const mensaje = document.getElementById("mensajeRegistro");
+    mensaje.textContent = "✅ Usuario eliminado correctamente";
+    mensaje.style.display = "block";
+
+    // Actualizar lista de usuarios
+    await renderUsuariosDesdeBackend();
+
+    // Ocultar mensaje después de 2 segundos
+    setTimeout(() => {
+      mensaje.style.display = "none";
+    }, 2000);
+
+  } catch (error) {
+    console.error("Error al eliminar usuario:", error);
+    showErrorNotification('Error', 'Ocurrió un error al eliminar el usuario: ' + error.message);
   }
 }
 
-function toggleEstadoUsuario(numeroDocumento) {
-  // 1. Buscar el usuario en el arreglo original
-  const usuario = usuarios.find(u => u.numero_documento === numeroDocumento);
-  if (!usuario) return;
+async function toggleEstadoUsuario(doc) {
+  try {
+    const usuario = usuarios.find(u => u.numero_documento === doc);
+    if (!usuario) {
+      throw new Error('Usuario no encontrado');
+    }
 
-  // 2. Normalizar y alternar el estado
-  const estadoActual = (usuario.estado || '').toLowerCase();
-  usuario.estado = estadoActual === 'activa' ? 'bloqueada' : 'activa';
+    const nuevoEstado = usuario.estado === 'activa' ? 'bloqueada' : 'activa';
+    const confirmacion = confirm(`¿${nuevoEstado === 'bloqueada' ? 'Bloquear' : 'Desbloquear'} a ${usuario.nombres}?`);
+    if (!confirmacion) return;
 
-  // 3. Volver a renderizar la tabla actualizada
-  renderUsuarios();
+    const response = await fetch(`/api/usuarios/${doc}/estado`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({ estado: nuevoEstado })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Error al cambiar estado");
+    }
+
+    // Actualizar el estado localmente
+    usuario.estado = nuevoEstado;
+    renderUsuarios();
+    showSuccessNotification('Éxito', `Usuario ${nuevoEstado === 'bloqueada' ? 'bloqueado' : 'activado'}`);
+
+  } catch (error) {
+    console.error('Error:', error);
+    showErrorNotification('Error', error.message);
+  }
 }
 
 //* Funciones de paginación para usuarios

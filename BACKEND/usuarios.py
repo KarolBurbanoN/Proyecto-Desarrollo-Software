@@ -91,7 +91,16 @@ def registrar_usuario():
 @usuarios_bp.route("/", methods=["GET"])
 def listar_usuarios():
     db: Session = next(get_db())
-    usuarios = db.query(Usuario).all()
+    
+    # Verificar si el usuario actual es bibliotecario
+    if 'usuario' in session:
+        usuario_actual = db.query(Usuario).filter_by(numero_documento=session["usuario"]).first()
+        if usuario_actual and usuario_actual.rol == 'bibliotecario':
+            usuarios = db.query(Usuario).filter_by(rol='lector').all()
+        else:
+            usuarios = db.query(Usuario).all()
+    else:
+        usuarios = db.query(Usuario).filter_by(rol='lector').all()
 
     resultado = []
     for u in usuarios:
@@ -191,6 +200,35 @@ def actualizar_perfil_usuario():
 
     db.commit()
     return jsonify({"mensaje": "Perfil actualizado correctamente"})
+
+@usuarios_bp.route("/<string:numero_documento>/estado", methods=["PUT"])
+def cambiar_estado_usuario(numero_documento):
+    db: Session = next(get_db())
+    data = request.json
+
+    # Validar que se envió el estado
+    if 'estado' not in data:
+        return jsonify({"error": "Campo 'estado' es requerido"}), 400
+
+    # Validar el valor del estado
+    estado = data['estado'].lower()
+    if estado not in ['activa', 'bloqueada']:
+        return jsonify({"error": "Estado debe ser 'activa' o 'bloqueada'"}), 400
+
+    # Buscar el usuario
+    usuario = db.query(Usuario).filter_by(numero_documento=numero_documento).first()
+    if not usuario:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    # Actualizar el estado_cuenta (manteniendo el nombre original)
+    usuario.estado_cuenta = estado
+    db.commit()
+
+    return jsonify({
+        "mensaje": f"Estado actualizado a {estado}",
+        "numero_documento": usuario.numero_documento,
+        "estado": usuario.estado_cuenta  # Respuesta con el nombre del campo
+    })
 
 # --- Rutas de recuperación de contraseña ---
 @usuarios_bp.route("/send-recovery-code", methods=["POST"])

@@ -130,6 +130,9 @@ def obtener_libro(isbn):
     if not libro:
         return jsonify({"error": "Libro no encontrado"}), 404
     
+    # Obtener ejemplares del libro
+    ejemplares = db.query(models.Ejemplar).filter_by(ISBN=isbn).all()
+    
     return jsonify({
         'ISBN': libro.ISBN,
         'titulo': libro.titulo,
@@ -138,6 +141,7 @@ def obtener_libro(isbn):
         'promedio_calificacion': float(libro.promedio_calificacion) if libro.promedio_calificacion else 0.0,
         'editorial': libro.editorial,
         'genero': libro.genero,
+        'año_publicacion': libro.año_publicacion,
         'descripcion_libro': libro.descripcion_libro
     })
 

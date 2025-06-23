@@ -27,28 +27,11 @@ function mostrarSeccionUsuarios(seccion) {
   }
 
   if (seccion === 'agregar') {
-    // Reset formulario si no estamos en modo edición
-    const modoEdicion = document.getElementById('modo-edicion');
-    const submitBtn = document.querySelector('#formUsuario button[type="submit"]');
     
-    if (modoEdicion.value !== "true") {
-      document.getElementById('modo-edicion').value = "false";
-      document.getElementById('usuario-editando-doc').value = "";
-      document.getElementById('numDoc').readOnly = false;
-      document.querySelector('.form').reset();
-      
-      // Cambiar texto del botón a "Registrar"
-      if (submitBtn) {
-        submitBtn.textContent = "Registrar Usuario";
-        submitBtn.classList.remove('update-btn');
-      }
-    } else {
-      // Cambiar texto del botón a "Actualizar"
-      if (submitBtn) {
-        submitBtn.textContent = "Actualizar Usuario";
-        submitBtn.classList.add('update-btn');
-      }
-    }
+    document.getElementById('modo-edicion').value = "false";
+    document.getElementById('usuario-editando-doc').value = "";
+    document.getElementById('numDoc').readOnly = false;
+    document.querySelector('.form').reset();
   }
 }
 
@@ -58,7 +41,7 @@ function renderUsuarios() {
 
   const searchInput = document.getElementById('search-usuarios');
   const busqueda = searchInput ? searchInput.value.toLowerCase() : '';
-  const filtroRol = document.getElementById('filter-rol-usuario').value;
+  // Eliminamos el filtro por rol
   const filtroEstado = document.getElementById('filter-estado-usuario').value;
   const ordenFecha = document.getElementById('filter-fecha-usuario').value;
 
@@ -66,23 +49,18 @@ function renderUsuarios() {
   usuariosFiltrados = usuarios.filter(usuario => {
     const coincideBusqueda =
       (usuario.nombres?.toLowerCase().includes(busqueda) || 
-       usuario.apellidos?.toLowerCase().includes(busqueda) || 
-       usuario.numero_documento?.includes(busqueda) || 
-       usuario.correo?.toLowerCase().includes(busqueda)) || 
+      usuario.apellidos?.toLowerCase().includes(busqueda) || 
+      usuario.numero_documento?.includes(busqueda) || 
+      usuario.correo?.toLowerCase().includes(busqueda) )|| 
       busqueda === '';
 
-    // Verificar filtro por rol
-    const coincideRol = 
-      filtroRol === 'todos' || 
-      usuario.rol?.toLowerCase() === filtroRol.toLowerCase();
-
-    // Verificar filtro por estado (corregido)
+    // Verificar filtro por estado
     const coincideEstado = 
       filtroEstado === 'todos' || 
       (filtroEstado === 'activo' && usuario.estado?.toLowerCase() === 'activa') ||
       (filtroEstado === 'bloqueado' && usuario.estado?.toLowerCase() === 'bloqueada');
 
-    return coincideBusqueda && coincideRol && coincideEstado;
+    return coincideBusqueda && coincideEstado;
   });
 
   // 2. Orden por fecha
@@ -162,8 +140,9 @@ async function renderUsuariosDesdeBackend() {
   try {
     const response = await fetch("/api/usuarios/");
     const data = await response.json();
-    usuarios = data;
-    renderUsuarios(); // ya tienes esta función implementada
+    // Filtrar para mostrar solo lectores
+    usuarios = data.filter(u => u.rol === 'lector');
+    renderUsuarios();
   } catch (error) {
     console.error("Error al cargar usuarios:", error);
   }
@@ -262,7 +241,7 @@ async function registrarUsuario(event) {
     telefono: document.getElementById("telefono").value,
     correo: document.getElementById("correo").value,
     contraseña: document.querySelector('input[name="contraseña"]').value,
-    rol: document.getElementById("rol").value,
+    rol: "lector", // Forzar el rol lector
     estado: "activa"
   };
 
@@ -332,19 +311,22 @@ function paginaAnteriorUsuarios() {
 async function toggleEstadoUsuario(doc) {
   try {
     const usuario = usuarios.find(u => u.numero_documento === doc);
-    if (!usuario) return;
+    if (!usuario) {
+      throw new Error('Usuario no encontrado');
+    }
 
-    // Determinar el nuevo estado (alternar entre 'activa' y 'bloqueada')
     const nuevoEstado = usuario.estado === 'activa' ? 'bloqueada' : 'activa';
+    const accion = nuevoEstado === 'bloqueada' ? 'bloquear' : 'desbloquear';
     
-    // Mostrar confirmación al usuario
-    const confirmacion = confirm(`¿Estás seguro de querer ${nuevoEstado === 'bloqueada' ? 'bloquear' : 'desbloquear'} a ${usuario.nombres} ${usuario.apellidos}?`);
+    const confirmacion = confirm(`¿${nuevoEstado === 'bloqueada' ? 'Bloquear' : 'Desbloquear'} a ${usuario.nombres}?`);
     if (!confirmacion) return;
 
-    // Enviar la solicitud al servidor
-    const response = await fetch(`/api/usuarios/${doc}`, {
+    const response = await fetch(`/api/usuarios/${doc}/estado`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
       body: JSON.stringify({ estado: nuevoEstado })
     });
 
@@ -352,26 +334,20 @@ async function toggleEstadoUsuario(doc) {
       const errorData = await response.json();
       throw new Error(errorData.error || "Error al cambiar estado");
     }
-
-    // Actualizar el estado localmente
-    usuario.estado = nuevoEstado;
     
-    // Volver a renderizar la lista de usuarios
+    usuario.estado = nuevoEstado;
     renderUsuarios();
-
-    // Mostrar mensaje de éxito
-    const mensaje = document.getElementById("mensajeRegistro");
-    mensaje.textContent = `✅ Usuario ${nuevoEstado === 'bloqueada' ? 'bloqueado' : 'desbloqueado'} correctamente`;
-    mensaje.style.display = "block";
-
-    // Ocultar el mensaje después de 2 segundos
-    setTimeout(() => {
-      mensaje.style.display = "none";
-    }, 2000);
+    showSuccessNotification('Éxito', `Usuario ${nuevoEstado === 'bloqueada' ? 'bloqueado' : 'activado'}`);
 
   } catch (error) {
     console.error("Error al cambiar estado:", error);
-    showErrorNotification('Error', 'Ocurrió un error al cambiar el estado del usuario: ' + error.message);
+    showErrorNotification('Error', error.message);
+  } finally {
+    // Restaurar botón
+    if (boton) {
+      boton.innerHTML = iconoOriginal;
+      boton.disabled = false;
+    }
   }
 }
 
@@ -516,23 +492,24 @@ async function renderBooksBibliotecario() {
 async function showBibliotecarioBookDetails(isbn) {
   try {
     const response = await fetch(`/api/libros/${isbn}`);
-    if (!response.ok) {
-      throw new Error('Libro no encontrado');
-    }
+    if (!response.ok) throw new Error('Libro no encontrado');
     const book = await response.json();
 
-    const autores = Array.isArray(book.autores) ?
-      book.autores.map(a => a.nombre).join(', ') : 'Autor desconocido';
-
-    // Mostrar detalles en el panel
+    // Actualizar todos los campos del panel de detalles
     document.getElementById('detailCover').src = book.portada || 'https://via.placeholder.com/150';
     document.getElementById('detailTitle').textContent = book.titulo;
-    document.getElementById('detailAuthor').textContent = book.autores.map(a => a.nombre).join(', ');
-    document.getElementById('detailStatus').textContent = 'Disponible'; // Puedes agregar este campo a tu modelo
-    document.getElementById('detailRating').textContent = book.promedio_calificacion ?
+    document.getElementById('detailISBN').textContent = book.ISBN;
+    document.getElementById('detailAuthor').textContent = 
+      Array.isArray(book.autores) ? book.autores.map(a => a.nombre).join(', ') : 'Autor desconocido';
+    document.getElementById('detailGenero').textContent = book.genero || 'No especificado';
+    document.getElementById('detailEditorial').textContent = book.editorial || 'No especificada';
+    document.getElementById('detailAnio').textContent = book.año_publicacion || 'No especificado';
+    document.getElementById('detailStatus').textContent = book.estado || 'Disponible';
+    document.getElementById('detailLocation').textContent = book.ubicacion || 'No especificada';
+    document.getElementById('detailRating').textContent = book.promedio_calificacion ? 
       '⭐'.repeat(Math.round(book.promedio_calificacion)) + ` (${book.promedio_calificacion.toFixed(1)})` : 'Sin calificaciones';
     document.getElementById('detailDescription').textContent = book.descripcion_libro || 'No hay descripción disponible.';
-
+    
     // Botones de administración
     document.getElementById('detailButton').innerHTML = `
       <div class="bibliotecario-buttons">
@@ -540,9 +517,12 @@ async function showBibliotecarioBookDetails(isbn) {
         <button onclick="eliminarLibro('${book.ISBN}')" class="delete-btn">Eliminar</button>
       </div>
     `;
-
-    document.getElementById('bookDetailPanel').classList.add('active');
-
+    
+    // Mostrar el panel
+    const panel = document.getElementById('bookDetailPanel');
+    panel.classList.add('active');
+    panel.classList.remove('hidden-section');
+    
   } catch (error) {
     console.error('Error al cargar detalles:', error);
     showErrorNotification('Error', 'No se pudieron cargar los detalles del libro: ' + error.message);
@@ -608,51 +588,38 @@ function setupUserFilterEvents() {
   const filterToggle = document.getElementById('filterToggleBtn-usuarios');
   const filtersMenu = document.getElementById('filtersMenu-usuarios');
 
-  // 1. Verificar que los elementos existen
   if (!filterToggle || !filtersMenu) {
     console.error('Elementos de filtro de usuarios no encontrados');
     return;
   }
 
-  // 2. Evento para mostrar/ocultar menú de filtros
   filterToggle.addEventListener('click', (e) => {
     e.stopPropagation();
     filtersMenu.classList.toggle('hidden');
   });
 
-  // 3. Cerrar menú al hacer clic fuera
   document.addEventListener('click', (e) => {
     if (!filtersMenu.contains(e.target) && e.target !== filterToggle) {
       filtersMenu.classList.add('hidden');
     }
   });
 
-  // 4. Evento para aplicar filtros
   const aplicarFiltrosBtn = document.getElementById('aplicarFiltrosUsuarios');
   if (aplicarFiltrosBtn) {
     aplicarFiltrosBtn.addEventListener('click', (e) => {
       e.preventDefault();
       paginaActualUsuarios = 1;
-      renderUsuarios(); // Usamos la función principal de renderizado
+      renderUsuarios();
       filtersMenu.classList.add('hidden');
     });
   }
 
-  // 5. Eventos para cambios en tiempo real (opcional)
   const searchInput = document.getElementById('search-usuarios');
-  const rolFilter = document.getElementById('filter-rol-usuario');
   const estadoFilter = document.getElementById('filter-estado-usuario');
   const fechaFilter = document.getElementById('filter-fecha-usuario');
 
   if (searchInput) {
     searchInput.addEventListener('input', () => {
-      paginaActualUsuarios = 1;
-      renderUsuarios();
-    });
-  }
-
-  if (rolFilter) {
-    rolFilter.addEventListener('change', () => {
       paginaActualUsuarios = 1;
       renderUsuarios();
     });
@@ -678,8 +645,12 @@ function closeDetailPanel() {
 }
 
 async function registrarLibro(event) {
-  event.preventDefault();
-
+  const form = document.getElementById('formLibro');
+  if (form.dataset.modo === "edicion") {
+    await actualizarLibro(event);
+    return;
+  }
+  
   const nuevoLibro = {
     titulo: document.getElementById('tituloLibro').value.trim(),
     autores: [document.getElementById('autorLibro').value.trim()],
@@ -739,14 +710,18 @@ async function registrarLibro(event) {
 
 async function editarLibro(isbn) {
   try {
-    // Obtener datos actuales del libro
+    // 1. Cerrar el panel de detalles si está abierto
+    closeDetailPanel();
+    
+    // 2. Mostrar la pestaña de agregar libro (que usaremos para edición)
+    mostrarSeccionLibros('agregar');
+    
+    // 3. Obtener datos del libro
     const response = await fetch(`/api/libros/${isbn}`);
+    if (!response.ok) throw new Error('Libro no encontrado');
     const book = await response.json();
-
-    // Mostrar formulario de edición con los datos
-    mostrarFormularioLibro();
-
-    // Rellenar formulario con datos existentes
+    
+    // 4. Rellenar el formulario con los datos del libro
     document.getElementById('tituloLibro').value = book.titulo;
     document.getElementById('autorLibro').value = book.autores.map(a => a.nombre).join(', ');
     document.getElementById('editorialLibro').value = book.editorial;
@@ -754,35 +729,71 @@ async function editarLibro(isbn) {
     document.getElementById('isbnLibro').value = book.ISBN;
     document.getElementById('generoLibro').value = book.genero;
     document.getElementById('urlPortadaLibro').value = book.portada || '';
-
-    // Actualizar vista previa de portada
+    document.getElementById('descripcionLibro').value = book.descripcion_libro || '';
+    document.getElementById('ubicacionLibro').value = book.ubicacion || '';
+    
+    // 5. Actualizar vista previa de la portada
     const preview = document.getElementById("previewPortada");
     if (book.portada) {
       preview.src = book.portada;
       preview.style.display = "block";
+    } else {
+      preview.style.display = "none";
     }
-
-    // Cambiar el comportamiento del formulario para edición
+    
+    // 6. Configurar el formulario para modo edición
     const form = document.getElementById('formLibro');
-    form.onsubmit = async function (e) {
-      e.preventDefault();
-      await actualizarLibro(isbn);
-    };
-
+    form.dataset.modo = "edicion";
+    form.dataset.isbn = isbn;
+    
+    // 7. Cambiar texto del botón de submit
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.textContent = "Actualizar Libro";
+    }
+    
+    // 8. Hacer scroll suave al formulario
+    form.scrollIntoView({
+      behavior: 'smooth'
+    });
+    
   } catch (error) {
     console.error('Error al editar libro:', error);
-    showErrorNotification('Error', 'No se pudo cargar el libro para edición: ' + error.message);
+    document.getElementById('mensajeErrorLibro').textContent = `❌ ${error.message}`;
+    document.getElementById('mensajeErrorLibro').style.display = 'block';
+    setTimeout(() => {
+      document.getElementById('mensajeErrorLibro').style.display = 'none';
+    }, 3000);
   }
 }
 
-async function actualizarLibro(isbn) {
+async function actualizarLibro(event) {
+  event.preventDefault();
+  
+  const form = document.getElementById('formLibro');
+  const isModoEdicion = form.dataset.modo === "edicion";
+  const isbn = form.dataset.isbn;
+  
+  if (!isModoEdicion || !isbn) {
+    // Si no está en modo edición, registrar como nuevo libro
+    await registrarLibro(event);
+    return;
+  }
+  
+  // Ocultar mensajes anteriores
+  document.getElementById('mensajeLibro').style.display = 'none';
+  document.getElementById('mensajeErrorLibro').style.display = 'none';
+  
   const libroActualizado = {
     titulo: document.getElementById('tituloLibro').value.trim(),
     autores: [document.getElementById('autorLibro').value.trim()],
     editorial: document.getElementById('editorialLibro').value.trim(),
     year: parseInt(document.getElementById('anioLibro').value) || null,
     genero: document.getElementById('generoLibro').value.trim(),
-    portada: document.getElementById('urlPortadaLibro').value.trim()
+    portada: document.getElementById('urlPortadaLibro').value.trim(),
+    descripcion_libro: document.getElementById('descripcionLibro').value.trim(),
+    ubicacion: document.getElementById('ubicacionLibro').value.trim(),
+    estado: document.getElementById('estadoLibro').value
   };
 
   try {
@@ -793,16 +804,41 @@ async function actualizarLibro(isbn) {
     });
 
     if (!response.ok) {
-      throw new Error('Error al actualizar el libro');
+      const error = await response.json();
+      throw new Error(error.error || "Error al actualizar el libro");
     }
 
-    showSuccessNotification('Libro actualizado', 'Libro actualizado correctamente');
-    renderBooksBibliotecario();
-    document.getElementById('formularioLibro').classList.add('hidden-section');
-
+    // Mostrar mensaje de éxito
+    document.getElementById('mensajeLibro').textContent = "✅ Libro actualizado correctamente";
+    document.getElementById('mensajeLibro').style.display = 'block';
+    
+    // Actualizar la lista de libros
+    await renderBooksBibliotecario();
+    
+    // Resetear formulario
+    form.reset();
+    form.dataset.modo = "";
+    form.dataset.isbn = "";
+    
+    // Cambiar texto del botón de vuelta a "Registrar"
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.textContent = "Registrar Libro";
+    }
+    
+    // Ocultar vista previa de portada
+    document.getElementById("previewPortada").style.display = "none";
+    
+    // Volver a la lista después de 2 segundos
+    setTimeout(() => {
+      document.getElementById('mensajeLibro').style.display = 'none';
+      mostrarSeccionLibros('listar');
+    }, 2000);
+    
   } catch (error) {
     console.error('Error:', error);
-    showErrorNotification('Error', 'Error al actualizar el libro: ' + error.message);
+    document.getElementById('mensajeErrorLibro').textContent = `❌ ${error.message}`;
+    document.getElementById('mensajeErrorLibro').style.display = 'block';
   }
 }
 
@@ -821,7 +857,7 @@ async function eliminarLibro(isbn) {
     showSuccessNotification('Libro eliminado', 'Libro eliminado correctamente');
     renderBooksBibliotecario();
     closeDetailPanel();
-
+    
   } catch (error) {
     console.error('Error:', error);
     showErrorNotification('Error', 'Error al eliminar el libro: ' + error.message);
@@ -897,43 +933,41 @@ async function registrarAutor(event) {
 async function listarAutores() {
   try {
     const response = await fetch("/api/libros/autores");
+    if (!response.ok) throw new Error('Error al cargar autores');
+    
     const autores = await response.json();
-
     const contenedor = document.getElementById("listaAutores");
-    contenedor.innerHTML = "";
-
-    if (!autores.length) {
-      contenedor.innerHTML = "<p>No hay autores registrados.</p>";
+    
+    if (!contenedor) {
+      console.error('Elemento listaAutores no encontrado');
       return;
     }
 
-    autores.forEach(autor => {
-      const div = document.createElement("div");
-      div.className = "row";
-
-      const libros = autor.libros?.length
-        ? autor.libros.map(titulo => `<div>${titulo}</div>`).join("")
-        : "<div>N/A</div>";
-
-      div.innerHTML = `
-        <div>${autor.nombre}</div>
-        <div>${autor.nacionalidad || "No especificada"}</div>
-        <div>${autor.biografia || "Sin biografía"}</div>
-        <div>${libros}</div>
-        <div class="acciones">
-          <button class="edit" title="Editar" onclick="editarAutor('${autor.id_autor}')">
-            <i class='bx bx-edit'></i>
-          </button>
-          <button class="delete" title="Eliminar" onclick="eliminarAutor('${autor.id_autor}')">
-            <i class='bx bx-trash'></i>
-          </button>
-        </div>
-      `;
-
-      contenedor.appendChild(div);
-    });
-  } catch (err) {
-    document.getElementById("listaAutores").innerHTML = "<p>Error al cargar autores.</p>";
+    contenedor.innerHTML = autores.length === 0 
+      ? "<p>No hay autores registrados.</p>"
+      : autores.map(autor => `
+          <div class="row">
+            <div>${autor.nombre}</div>
+            <div>${autor.nacionalidad || "No especificada"}</div>
+            <div>${autor.biografia || "Sin biografía"}</div>
+            <div>${autor.libros?.join(', ') || 'N/A'}</div>
+            <div class="acciones">
+              <button class="edit" onclick="editarAutor('${autor.id_autor}')">
+                <i class='bx bx-edit'></i>
+              </button>
+              <button class="delete" onclick="eliminarAutor('${autor.id_autor}')">
+                <i class='bx bx-trash'></i>
+              </button>
+            </div>
+          </div>
+        `).join('');
+        
+  } catch (error) {
+    console.error('Error:', error);
+    const contenedor = document.getElementById("listaAutores");
+    if (contenedor) {
+      contenedor.innerHTML = `<p class="error">Error al cargar autores: ${error.message}</p>`;
+    }
   }
 }
 
@@ -965,21 +999,35 @@ async function editarAutor(id) {
   }
 }
 
-function eliminarAutor(id) {
-  if (confirm("¿Estás seguro de eliminar este autor?")) {
-    fetch(`/api/libros/autores/${id}`, {
-      method: "DELETE"
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log("Respuesta:", data);
-      showErrorNotification(data.error , data.mensaje);
-      listarAutores(); // refrescar autores
-    })
-    .catch(err => {
-      console.error("Error al eliminar autor:", err);
-      showErrorNotification('Error', 'Error al eliminar autor: ' + error.message);
+async function eliminarAutor(id) {
+  if (!confirm("¿Estás seguro de eliminar este autor?")) return;
+
+  try {
+    const response = await fetch(`/api/libros/autores/${id}`, {
+      method: "DELETE",
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || "Error al eliminar autor");
+    }
+
+    // Mostrar notificación de éxito
+    showSuccessNotification('Éxito', 'Autor eliminado correctamente');
+    
+    // Actualizar la lista de autores
+    await listarAutores();
+    
+    // Opcional: Volver a la pestaña de listar autores
+    mostrarSeccionLibros('listar_autores');
+    
+  } catch (error) {
+    console.error("Error al eliminar autor:", error);
+    showErrorNotification('Error', error.message);
   }
 }
 
@@ -1112,4 +1160,13 @@ window.addEventListener('DOMContentLoaded', () => {
   setupBibliotecarioFilterEvents(); // <-- No olvides esta
   renderBooksBibliotecario();
   listarAutores();
+
+  const formLibro = document.getElementById('formLibro');
+  if (formLibro) {
+    formLibro.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      await actualizarLibro(e);
+    });
+  }
+
 });
