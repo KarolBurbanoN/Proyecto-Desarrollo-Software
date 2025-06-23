@@ -618,22 +618,34 @@
       </section>
     </main>
 
-    <!-- Panel emergente de detalles -->
-    <div id="bookDetailPanel" class="book-detail-panel hidden-section">
-      <div class="book-detail-content">
-        <img id="detailCover" src alt="Portada del libro" />
-        <div class="detail-info">
-          <h3 id="detailTitle"></h3>
-          <p><strong>Autor:</strong> <span id="detailAuthor"></span></p>
-          <p><strong>Estado:</strong> <span id="detailStatus"></span></p>
-          <p><strong>Calificación:</strong> <span id="detailRating"></span></p>
-          <p><strong>Descripción:</strong> <span id="detailDescription"></span></p>
-          <ul id="detailReviews"></ul>
-          <div id="detailButton"></div>
+      <!-- Panel emergente de detalles -->
+      <div id="bookDetailPanel" class="book-detail-panel hidden-section">
+        <div class="book-detail-content">
+          <img id="detailCover" src alt="Portada del libro" />
+          <div class="detail-info">
+            <h3 id="detailTitle"></h3>
+            <p><strong>ISBN:</strong> <span id="detailISBN"></span></p>
+            <p><strong>Autor:</strong> <span id="detailAuthor"></span></p>
+            <p><strong>Genero:</strong> <span id="detailGenero"></span></p>
+            <p><strong>Editorial:</strong> <span
+                id="detailEditorial"></span></p>
+            <p><strong>Año:</strong> <span id="detailAnio"></span></p>
+            <p><strong>Estado:</strong> <span id="detailStatus"></span></p>
+            <p><strong>Ubicación:</strong> <span id="detailLocation"></span></p>
+            <p><strong>Calificación:</strong> <span
+                id="detailRating"></span></p>
+            <p><strong>Descripción:</strong> <span
+                id="detailDescription"></span></p>
+            <!-- En el panel de detalles del libro, modifica la sección de botones -->
+            <div id="detailButton" class="bibliotecario-buttons">
+              <button onclick="editarLibro('${book.ISBN}')">Editar</button>
+              <button onclick="eliminarLibro('${book.ISBN}')"
+                class="delete-btn">Eliminar</button>
+            </div>
+          </div>
         </div>
+        <button onclick="closeDetailPanel()">Cerrar</button>
       </div>
-      <button onclick="closeDetailPanel()">Cerrar</button>
-    </div>
 
     <!-- Panel lateral para editar autor -->
     <div id="authorEditPanel" class="hidden-section">

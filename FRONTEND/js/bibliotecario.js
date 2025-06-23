@@ -41,41 +41,33 @@ function renderUsuarios() {
 
   const searchInput = document.getElementById('search-usuarios');
   const busqueda = searchInput ? searchInput.value.toLowerCase() : '';
-  // Eliminamos el filtro por rol
   const filtroEstado = document.getElementById('filter-estado-usuario').value;
-  const ordenFecha = document.getElementById('filter-fecha-usuario').value;
 
-  // 1. Filtro base
+  // 1. Filtro base (simplificado)
   usuariosFiltrados = usuarios.filter(usuario => {
-    const coincideBusqueda =
+    // Verificar coincidencia con búsqueda
+    const coincideBusqueda = 
       (usuario.nombres?.toLowerCase().includes(busqueda) || 
-      usuario.apellidos?.toLowerCase().includes(busqueda) || 
-      usuario.numero_documento?.includes(busqueda) || 
-      usuario.correo?.toLowerCase().includes(busqueda) )|| 
-      busqueda === '';
+      (usuario.apellidos?.toLowerCase().includes(busqueda)) || 
+      (usuario.numero_documento?.includes(busqueda)) || 
+      (usuario.correo?.toLowerCase().includes(busqueda)) )|| 
+      (busqueda === '');
 
     // Verificar filtro por estado
     const coincideEstado = 
-      filtroEstado === 'todos' || 
+      (filtroEstado === 'todos') || 
       (filtroEstado === 'activo' && usuario.estado?.toLowerCase() === 'activa') ||
       (filtroEstado === 'bloqueado' && usuario.estado?.toLowerCase() === 'bloqueada');
 
     return coincideBusqueda && coincideEstado;
   });
 
-  // 2. Orden por fecha
-  usuariosFiltrados.sort((a, b) => {
-    const fechaA = new Date(a.fecha_registro || '2000-01-01');
-    const fechaB = new Date(b.fecha_registro || '2000-01-01');
-    return ordenFecha === 'reciente' ? fechaB - fechaA : fechaA - fechaB;
-  });
-
-  // 3. Paginación
+  // 2. Paginación
   const totalPaginas = Math.ceil(usuariosFiltrados.length / usuariosPorPagina);
   const inicio = (paginaActualUsuarios - 1) * usuariosPorPagina;
   const pagina = usuariosFiltrados.slice(inicio, inicio + usuariosPorPagina);
 
-  // 4. Crear tabla
+  // 3. Crear tabla
   const tabla = document.createElement('div');
   tabla.className = 'usuarios-table';
 
@@ -92,7 +84,7 @@ function renderUsuarios() {
   `;
   tabla.appendChild(header);
 
-  // 5. Render tabla
+  // 4. Render tabla
   if (pagina.length === 0) {
     const emptyRow = document.createElement('div');
     emptyRow.className = 'row empty';
@@ -130,7 +122,6 @@ function renderUsuarios() {
   }
 
   contenedor.appendChild(tabla);
-
   document.getElementById('paginadorUsuarios').textContent = `Página ${paginaActualUsuarios} de ${totalPaginas}`;
 }
 
@@ -616,7 +607,6 @@ function setupUserFilterEvents() {
 
   const searchInput = document.getElementById('search-usuarios');
   const estadoFilter = document.getElementById('filter-estado-usuario');
-  const fechaFilter = document.getElementById('filter-fecha-usuario');
 
   if (searchInput) {
     searchInput.addEventListener('input', () => {
@@ -627,13 +617,6 @@ function setupUserFilterEvents() {
 
   if (estadoFilter) {
     estadoFilter.addEventListener('change', () => {
-      paginaActualUsuarios = 1;
-      renderUsuarios();
-    });
-  }
-
-  if (fechaFilter) {
-    fechaFilter.addEventListener('change', () => {
       paginaActualUsuarios = 1;
       renderUsuarios();
     });

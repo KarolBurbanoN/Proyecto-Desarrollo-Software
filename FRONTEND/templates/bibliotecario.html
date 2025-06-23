@@ -35,7 +35,6 @@
           <ul>
             <li><button class="menu-btn active" data-target="gestion-usuarios">Usuarios</button></li>
             <li><button class="menu-btn" data-target="gestion-libros">Libros</button></li>
-            <li><button class="menu-btn" data-target="historial">Historial</button></li>
             <li><button class="menu-btn" data-target="perfil">Perfil</button></li>
             <li><button onclick="logout()" class="menu-btn">Cerrar sesión</button></li>
           </ul>
@@ -74,14 +73,6 @@
                         <option value="todos">Todos</option>
                         <option value="activo">Activa</option>
                         <option value="bloqueado">Bloqueada</option>
-                      </select>
-                    </div>
-
-                    <div class="filter-group">
-                      <h4>Ordenar por</h4>
-                      <select id="filter-fecha-usuario">
-                        <option value="reciente">Más reciente</option>
-                        <option value="antiguo">Más antiguo</option>
                       </select>
                     </div>
 
@@ -384,12 +375,6 @@
           </div>
         </section>
 
-        <!-- Historial -->
-        <section id="historial" class="hidden-section">
-          <h2>Historial de préstamos y devoluciones</h2>
-          <p>[Aquí se listará el historial de movimientos de libros]</p>
-        </section>
-
         <section id="perfil" class="hidden-section">
           <div class="perfil-container">
             <!-- Bloque izquierdo -->
@@ -419,9 +404,9 @@
               <form id="edit-profile-form" onsubmit="editProfile(event)" class="hidden-section">
                 <div class="gender-selector">
                   <span>Género:</span>
-                  <label><input type="radio" name="genero" value="M" /> Masculino</label>
-                  <label><input type="radio" name="genero" value="F" /> Femenino</label>
-                  <label><input type="radio" name="genero" value="O" /> Otro</label>
+                  <label><input type="radio" name="genero" value="Masculino" /> Masculino</label>
+                  <label><input type="radio" name="genero" value="Femenino" /> Femenino</label>
+                  <label><input type="radio" name="genero" value="Otro" /> Otro</label>
                 </div>
                 <div class="form-grid">
                   <div class="form-field">

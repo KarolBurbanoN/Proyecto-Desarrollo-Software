@@ -639,8 +639,14 @@ async function showAdminBookDetails(isbn) {
     // Mostrar detalles en el panel
     document.getElementById('detailCover').src = book.portada || 'https://via.placeholder.com/150';
     document.getElementById('detailTitle').textContent = book.titulo;
-    document.getElementById('detailAuthor').textContent = autores;
-    document.getElementById('detailStatus').textContent = 'Disponible'; // Puedes agregar este campo a tu modelo
+    document.getElementById('detailISBN').textContent = book.ISBN;
+    document.getElementById('detailAuthor').textContent = 
+      Array.isArray(book.autores) ? book.autores.map(a => a.nombre).join(', ') : 'Autor desconocido';
+    document.getElementById('detailGenero').textContent = book.genero || 'No especificado';
+    document.getElementById('detailEditorial').textContent = book.editorial || 'No especificada';
+    document.getElementById('detailAnio').textContent = book.año_publicacion || 'No especificado';
+    document.getElementById('detailStatus').textContent = book.estado || 'Disponible';
+    document.getElementById('detailLocation').textContent = book.ubicacion || 'No especificada';
     document.getElementById('detailRating').textContent = book.promedio_calificacion ? 
       '⭐'.repeat(Math.round(book.promedio_calificacion)) + ` (${book.promedio_calificacion.toFixed(1)})` : 'Sin calificaciones';
     document.getElementById('detailDescription').textContent = book.descripcion_libro || 'No hay descripción disponible.';
