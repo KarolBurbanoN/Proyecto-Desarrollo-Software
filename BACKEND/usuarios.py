@@ -199,7 +199,19 @@ def actualizar_perfil_usuario():
         usuario.contraseña = bcrypt.hashpw(data["contraseña"].encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
     db.commit()
-    return jsonify({"mensaje": "Perfil actualizado correctamente"})
+    return jsonify({
+    "mensaje": "Perfil actualizado correctamente",
+    "usuario": {
+        "nombres": usuario.nombres,
+        "apellidos": usuario.apellidos,
+        "correo": usuario.correo,
+        "genero": usuario.genero,
+        "direccion": usuario.direccion,
+        "telefono": usuario.telefono,
+        "ciudad": usuario.ciudad
+    }
+})
+
 
 @usuarios_bp.route("/<string:numero_documento>/estado", methods=["PUT"])
 def cambiar_estado_usuario(numero_documento):

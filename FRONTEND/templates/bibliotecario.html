@@ -35,7 +35,7 @@
           <ul>
             <li><button class="menu-btn active" data-target="gestion-usuarios">Usuarios</button></li>
             <li><button class="menu-btn" data-target="gestion-libros">Libros</button></li>
-            <li><button class="menu-btn" data-target="perfil">Perfil</button></li>
+            <li><button class="menu-btn" data-target="perfil-bibliotecario">Perfil</button></li>
             <li><button onclick="logout()" class="menu-btn">Cerrar sesión</button></li>
           </ul>
         </nav>
@@ -375,7 +375,7 @@
           </div>
         </section>
 
-        <section id="perfil" class="hidden-section">
+        <section id="perfil-bibliotecario" class="hidden-section">
           <div class="perfil-container">
             <!-- Bloque izquierdo -->
             <div class="perfil-sidebar">
@@ -390,57 +390,87 @@
             <!-- Bloque derecho -->
             <div class="perfil-info">
               <h2>Información Personal</h2>
-              <div id="perfilResumen">
-                <p><strong>Nombre:</strong> <span id="resumen-nombre">{{ usuario.nombres }}</span></p>
-                <p><strong>Apellidos:</strong> <span id="resumen-apellidos">{{ usuario.apellidos }}</span></p>
-                <p><strong>Email:</strong> <span id="resumen-email">{{ usuario.correo }}</span></p>
-                <p><strong>Dirección:</strong> <span id="resumen-direccion">{{ usuario.direccion }}</span></p>
-                <p><strong>Teléfono:</strong> <span id="resumen-telefono">{{ usuario.telefono }}</span></p>
-                <p><strong>Ciudad:</strong> <span id="resumen-ciudad">{{ usuario.ciudad }}</span></p>
-                <p><strong>Género:</strong> <span id="resumen-genero">{{ usuario.genero }}</span></p>
+              <div id="perfilResumenBibliotecario">
+                <p><strong>Nombre:</strong> <span
+                    id="resumen-nombre-bibliotecario">{{ usuario.nombres
+                    }}</span></p>
+                <p><strong>Apellidos:</strong> <span
+                    id="resumen-apellidos-bibliotecario">{{ usuario.apellidos
+                    }}</span></p>
+                <p><strong>Email:</strong> <span
+                    id="resumen-email-bibliotecario">{{ usuario.correo
+                    }}</span></p>
+                <p><strong>Dirección:</strong> <span
+                    id="resumen-direccion-bibliotecario">{{ usuario.direccion
+                    }}</span></p>
+                <p><strong>Teléfono:</strong> <span
+                    id="resumen-telefono-bibliotecario">{{ usuario.telefono
+                    }}</span></p>
+                <p><strong>Ciudad:</strong> <span
+                    id="resumen-ciudad-bibliotecario">{{ usuario.ciudad
+                    }}</span></p>
+                <p><strong>Género:</strong> <span
+                    id="resumen-genero-bibliotecario">{{ usuario.genero
+                    }}</span></p>
 
-                <button onclick="mostrarFormularioPerfil()">Editar perfil</button>
+                <button onclick="mostrarFormularioPerfilBibliotecario()">Editar
+                  perfil</button>
               </div>
-              <form id="edit-profile-form" onsubmit="editProfile(event)" class="hidden-section">
+
+              <form id="edit-profile-form-bibliotecario"
+                onsubmit="editProfileBibliotecario(event)"
+                class="hidden-section">
                 <div class="gender-selector">
                   <span>Género:</span>
-                  <label><input type="radio" name="genero" value="Masculino" /> Masculino</label>
-                  <label><input type="radio" name="genero" value="Femenino" /> Femenino</label>
-                  <label><input type="radio" name="genero" value="Otro" /> Otro</label>
+                  <label><input type="radio" name="generoBibliotecario"
+                      value="M" /> Masculino</label>
+                  <label><input type="radio" name="generoBibliotecario"
+                      value="F" /> Femenino</label>
+                  <label><input type="radio" name="generoBibliotecario"
+                      value="O" /> Otro</label>
                 </div>
                 <div class="form-grid">
                   <div class="form-field">
                     <span>Nombre</span>
-                    <input type="text" id="edit-nombre" value="{{ usuario.nombres }}" />
+                    <input type="text" id="edit-nombre-bibliotecario"
+                      value="{{ usuario.nombres }}" />
                   </div>
                   <div class="form-field">
                     <span>Apellidos</span>
-                    <input type="text" id="edit-apellidos" value="{{ usuario.apellidos }}" />
+                    <input type="text" id="edit-apellidos-bibliotecario"
+                      value="{{ usuario.apellidos }}" />
                   </div>
                   <div class="form-field">
                     <span>Email</span>
-                    <input type="email" id="edit-email" value="{{ usuario.correo }}" />
+                    <input type="email" id="edit-email-bibliotecario"
+                      value="{{ usuario.correo }}" />
                   </div>
                   <div class="form-field">
                     <span>Contraseña</span>
-                    <input type="password" id="edit-pass" placeholder="Nueva contraseña" />
+                    <input type="password" id="edit-pass-bibliotecario"
+                      placeholder="Nueva contraseña" />
                   </div>
                   <div class="form-field">
                     <span>Dirección</span>
-                    <input type="text" id="edit-address" placeholder="{{ usuario.direccion }}" />
+                    <input type="text" id="edit-address-bibliotecario"
+                      placeholder="{{ usuario.direccion }}" />
                   </div>
                   <div class="form-field">
                     <span>Teléfono</span>
-                    <input type="tel" id="edit-phone" placeholder="{{ usuario.telefono }}" />
+                    <input type="tel" id="edit-phone-bibliotecario"
+                      placeholder="{{ usuario.telefono }}" />
                   </div>
                   <div class="form-field">
                     <span>Ciudad</span>
-                    <input type="text" id="edit-city" placeholder="{{ usuario.ciudad }}" />
+                    <input type="text" id="edit-city-bibliotecario"
+                      placeholder="{{ usuario.ciudad }}" />
                   </div>
                 </div>
 
                 <div class="botones-perfil">
-                  <button type="button" onclick="cancelarEdicionPerfil()" class="cancelar-btn">Cancelar</button>
+                  <button type="button"
+                    onclick="cancelarEdicionPerfilBibliotecario()"
+                    class="cancelar-btn">Cancelar</button>
                   <button type="submit">Guardar Cambios</button>
                 </div>
               </form>

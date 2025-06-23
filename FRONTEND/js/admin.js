@@ -1123,90 +1123,103 @@ function prevPageAdmin() {
 
 //* Funciones Inicializadoras
 
-function mostrarFormularioPerfil() {
-  document.getElementById('perfilResumen').classList.add('hidden-section');
-  document.getElementById('edit-profile-form').classList.remove('hidden-section');
+function mostrarFormularioPerfilAdmin() {
+  document.getElementById('perfilResumenAdmin').classList.add('hidden-section');
+  document.getElementById('edit-profile-form-admin').classList.remove('hidden-section');
 
-  // Llenar formulario con los datos actuales del resumen
-  document.getElementById('edit-nombre').value = document.getElementById('resumen-nombre').textContent;
-  document.getElementById('edit-apellidos').value = document.getElementById('resumen-apellidos').textContent;
-  document.getElementById('edit-email').value = document.getElementById('resumen-email').textContent;
-  document.getElementById('edit-address').value = document.getElementById('resumen-direccion').textContent;
-  document.getElementById('edit-phone').value = document.getElementById('resumen-telefono').textContent;
-  document.getElementById('edit-city').value = document.getElementById('resumen-ciudad').textContent;
+  // Rellenar campos de texto
+  document.getElementById('edit-nombre-admin').value = document.getElementById('resumen-nombre-admin').textContent;
+  document.getElementById('edit-apellidos-admin').value = document.getElementById('resumen-apellidos-admin').textContent;
+  document.getElementById('edit-email-admin').value = document.getElementById('resumen-email-admin').textContent;
+  document.getElementById('edit-address-admin').value = document.getElementById('resumen-direccion-admin').textContent;
+  document.getElementById('edit-phone-admin').value = document.getElementById('resumen-telefono-admin').textContent;
+  document.getElementById('edit-city-admin').value = document.getElementById('resumen-ciudad-admin').textContent;
 
-  const genero = document.getElementById('resumen-genero').textContent.toLowerCase();
-  document.querySelectorAll('input[name="genero"]').forEach(radio => {
-    radio.checked = radio.value === genero.charAt(0);
+  // Detectar y marcar el género
+  const generoTexto = document.getElementById('resumen-genero-admin').textContent.trim().toLowerCase();
+  let inicialGenero = null;
+
+  if (generoTexto.startsWith('m')) {
+    inicialGenero = 'M';
+  } else if (generoTexto.startsWith('f')) {
+    inicialGenero = 'F';
+  } else if (generoTexto.startsWith('o')) {
+    inicialGenero = 'O';
+  }
+
+  document.querySelectorAll('input[name="generoAdmin"]').forEach(radio => {
+    radio.checked = radio.value === inicialGenero;
   });
 }
 
-//* Funciones de Interacción
 
-function cancelarEdicionPerfil() {
-  document.getElementById('edit-profile-form').classList.add('hidden-section');
-  document.getElementById('perfilResumen').classList.remove('hidden-section');
+function cancelarEdicionPerfilAdmin() {
+  document.getElementById('edit-profile-form-admin').classList.add('hidden-section');
+  document.getElementById('perfilResumenAdmin').classList.remove('hidden-section');
 }
 
-async function editProfile(event) {
+async function editProfileAdmin(event) {
   event.preventDefault();
-  
+  console.log("enviando perfil admin...");
+
+  // Verificar selección de género
+  const generoRadio = document.querySelector('input[name="generoAdmin"]:checked');
+  if (!generoRadio) {
+    showErrorNotification("Error", "Selecciona un género antes de guardar.");
+    return;
+  }
+
   // Obtener los datos del formulario
   const formData = {
-    nombres: document.getElementById('edit-nombre').value,
-    apellidos: document.getElementById('edit-apellidos').value,
-    correo: document.getElementById('edit-email').value,
-    genero: document.querySelector('input[name="genero"]:checked').value,
-    direccion: document.getElementById('edit-address').value,
-    telefono: document.getElementById('edit-phone').value,
-    ciudad: document.getElementById('edit-city').value
+    nombres: document.getElementById('edit-nombre-admin').value,
+    apellidos: document.getElementById('edit-apellidos-admin').value,
+    correo: document.getElementById('edit-email-admin').value,
+    genero: generoRadio.value,
+    direccion: document.getElementById('edit-address-admin').value,
+    telefono: document.getElementById('edit-phone-admin').value,
+    ciudad: document.getElementById('edit-city-admin').value
   };
-  
-  // Agregar contraseña solo si se proporcionó
-  const nuevaContraseña = document.getElementById('edit-pass').value;
+
+  // Agregar contraseña si se proporcionó
+  const nuevaContraseña = document.getElementById('edit-pass-admin').value;
   if (nuevaContraseña) {
     formData.contraseña = nuevaContraseña;
   }
-  
+
   try {
-    // Enviar los datos al servidor
     const response = await fetch('/api/usuarios/perfil', {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
-      credentials: 'include' // Para incluir las cookies de sesión
+      credentials: 'include'
     });
-    
+
     if (!response.ok) {
       throw new Error('Error al actualizar el perfil');
     }
-    
+
     const data = await response.json();
-    
-    // Actualizar la vista con los nuevos datos
-    document.getElementById('resumen-nombre').textContent = data.usuario.nombres;
-    document.getElementById('resumen-apellidos').textContent = data.usuario.apellidos;
-    document.getElementById('resumen-email').textContent = data.usuario.correo;
-    document.getElementById('resumen-direccion').textContent = data.usuario.direccion;
-    document.getElementById('resumen-telefono').textContent = data.usuario.telefono;
-    document.getElementById('resumen-ciudad').textContent = data.usuario.ciudad;
-    document.getElementById('resumen-genero').textContent = 
-      data.usuario.genero === 'M' ? 'Masculino' : 
+
+    // Actualizar resumen del perfil
+    document.getElementById('resumen-nombre-admin').textContent = data.usuario.nombres;
+    document.getElementById('resumen-apellidos-admin').textContent = data.usuario.apellidos;
+    document.getElementById('resumen-email-admin').textContent = data.usuario.correo;
+    document.getElementById('resumen-direccion-admin').textContent = data.usuario.direccion;
+    document.getElementById('resumen-telefono-admin').textContent = data.usuario.telefono;
+    document.getElementById('resumen-ciudad-admin').textContent = data.usuario.ciudad;
+    document.getElementById('resumen-genero-admin').textContent =
+      data.usuario.genero === 'M' ? 'Masculino' :
       data.usuario.genero === 'F' ? 'Femenino' : 'Otro';
-    
-    // Mostrar mensaje de éxito
-    showSuccessNotification('Perfil actualizado', 'Perfil actualizado correctamente');
-    
-    // Volver a la vista de resumen
-    cancelarEdicionPerfil();
-    
+
+    showSuccessNotification('Perfil Actualizado', 'Perfil actualizado correctamente');
+    cancelarEdicionPerfilAdmin();
+
   } catch (error) {
     console.error('Error:', error);
     showErrorNotification('Error', 'Error al actualizar el perfil: ' + error.message);
   }
 }
+
 
 //?----------------------------/
 //?---------- LOGOUT ----------/

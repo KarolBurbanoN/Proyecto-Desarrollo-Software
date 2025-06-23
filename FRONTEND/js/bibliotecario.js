@@ -8,6 +8,34 @@ let books = [];
 
 let filteredBooks = null;
 
+// ==================== FUNCIONES DE NOTIFICACIÓN ====================
+// Función para mostrar notificaciones de éxito
+function showSuccessNotification(title, message) {
+  Swal.fire({
+    icon: 'success',
+    title: title,
+    text: message,
+    showConfirmButton: false,
+    timer: 2000,
+    toast: true,
+    position: 'top-end',
+    background: '#f8f9fa',
+    backdrop: false
+  });
+}
+
+// Función para mostrar notificaciones de error
+function showErrorNotification(title, message) {
+  Swal.fire({
+    icon: 'error',
+    title: title,
+    text: message,
+    confirmButtonText: 'Entendido',
+    position: 'center',
+    backdrop: true
+  });
+}
+
 //?-----------------------------/
 //?---- GESTIONAR USUARIOS ----/
 //?----------------------------/
@@ -1018,58 +1046,75 @@ async function eliminarAutor(id) {
 //?----- GESTIONAR PERFIL -----/
 //?----------------------------/
 
-function mostrarFormularioPerfil() {
-  document.getElementById('perfilResumen').classList.add('hidden-section');
-  document.getElementById('edit-profile-form').classList.remove('hidden-section');
+function mostrarFormularioPerfilBibliotecario() {
+  document.getElementById('perfilResumenBibliotecario').classList.add('hidden-section');
+  document.getElementById('edit-profile-form-bibliotecario').classList.remove('hidden-section');
 
-  // Llenar formulario con los datos actuales del resumen
-  document.getElementById('edit-nombre').value = document.getElementById('resumen-nombre').textContent;
-  document.getElementById('edit-apellidos').value = document.getElementById('resumen-apellidos').textContent;
-  document.getElementById('edit-email').value = document.getElementById('resumen-email').textContent;
-  document.getElementById('edit-address').value = document.getElementById('resumen-direccion').textContent;
-  document.getElementById('edit-phone').value = document.getElementById('resumen-telefono').textContent;
-  document.getElementById('edit-city').value = document.getElementById('resumen-ciudad').textContent;
+  // Rellenar campos de texto
+  document.getElementById('edit-nombre-bibliotecario').value = document.getElementById('resumen-nombre-bibliotecario').textContent;
+  document.getElementById('edit-apellidos-bibliotecario').value = document.getElementById('resumen-apellidos-bibliotecario').textContent;
+  document.getElementById('edit-email-bibliotecario').value = document.getElementById('resumen-email-bibliotecario').textContent;
+  document.getElementById('edit-address-bibliotecario').value = document.getElementById('resumen-direccion-bibliotecario').textContent;
+  document.getElementById('edit-phone-bibliotecario').value = document.getElementById('resumen-telefono-bibliotecario').textContent;
+  document.getElementById('edit-city-bibliotecario').value = document.getElementById('resumen-ciudad-bibliotecario').textContent;
 
-  const genero = document.getElementById('resumen-genero').textContent.toLowerCase();
-  document.querySelectorAll('input[name="genero"]').forEach(radio => {
-    radio.checked = radio.value === genero.charAt(0);
+  // Detectar y marcar el género
+  const generoTexto = document.getElementById('resumen-genero-bibliotecario').textContent.trim().toLowerCase();
+  let inicialGenero = null;
+
+  if (generoTexto.startsWith('m')) {
+    inicialGenero = 'M';
+  } else if (generoTexto.startsWith('f')) {
+    inicialGenero = 'F';
+  } else if (generoTexto.startsWith('o')) {
+    inicialGenero = 'O';
+  }
+
+  document.querySelectorAll('input[name="generoBibliotecario"]').forEach(radio => {
+    radio.checked = radio.value === inicialGenero;
   });
 }
 
-function cancelarEdicionPerfil() {
-  document.getElementById('edit-profile-form').classList.add('hidden-section');
-  document.getElementById('perfilResumen').classList.remove('hidden-section');
+
+function cancelarEdicionPerfilBibliotecario() {
+  document.getElementById('edit-profile-form-bibliotecario').classList.add('hidden-section');
+  document.getElementById('perfilResumenBibliotecario').classList.remove('hidden-section');
 }
 
-async function editProfile(event) {
+async function editProfileBibliotecario(event) {
   event.preventDefault();
+  console.log("Enviando perfil bibliotecario...");
+
+  // Verificar selección de género
+  const generoRadio = document.querySelector('input[name="generoBibliotecario"]:checked');
+  if (!generoRadio) {
+    showErrorNotification("Error", "Selecciona un género antes de guardar.");
+    return;
+  }
 
   // Obtener los datos del formulario
   const formData = {
-    nombres: document.getElementById('edit-nombre').value,
-    apellidos: document.getElementById('edit-apellidos').value,
-    correo: document.getElementById('edit-email').value,
-    genero: document.querySelector('input[name="genero"]:checked').value,
-    direccion: document.getElementById('edit-address').value,
-    telefono: document.getElementById('edit-phone').value,
-    ciudad: document.getElementById('edit-city').value
+    nombres: document.getElementById('edit-nombre-bibliotecario').value,
+    apellidos: document.getElementById('edit-apellidos-bibliotecario').value,
+    correo: document.getElementById('edit-email-bibliotecario').value,
+    genero: generoRadio.value,
+    direccion: document.getElementById('edit-address-bibliotecario').value,
+    telefono: document.getElementById('edit-phone-bibliotecario').value,
+    ciudad: document.getElementById('edit-city-bibliotecario').value
   };
 
-  // Agregar contraseña solo si se proporcionó
-  const nuevaContraseña = document.getElementById('edit-pass').value;
+  // Agregar contraseña si se proporcionó
+  const nuevaContraseña = document.getElementById('edit-pass-bibliotecario').value;
   if (nuevaContraseña) {
     formData.contraseña = nuevaContraseña;
   }
 
   try {
-    // Enviar los datos al servidor
     const response = await fetch('/api/usuarios/perfil', {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
-      credentials: 'include' // Para incluir las cookies de sesión
+      credentials: 'include'
     });
 
     if (!response.ok) {
@@ -1078,28 +1123,26 @@ async function editProfile(event) {
 
     const data = await response.json();
 
-    // Actualizar la vista con los nuevos datos
-    document.getElementById('resumen-nombre').textContent = data.usuario.nombres;
-    document.getElementById('resumen-apellidos').textContent = data.usuario.apellidos;
-    document.getElementById('resumen-email').textContent = data.usuario.correo;
-    document.getElementById('resumen-direccion').textContent = data.usuario.direccion;
-    document.getElementById('resumen-telefono').textContent = data.usuario.telefono;
-    document.getElementById('resumen-ciudad').textContent = data.usuario.ciudad;
-    document.getElementById('resumen-genero').textContent =
+    // Actualizar resumen del perfil
+    document.getElementById('resumen-nombre-bibliotecario').textContent = data.usuario.nombres;
+    document.getElementById('resumen-apellidos-bibliotecario').textContent = data.usuario.apellidos;
+    document.getElementById('resumen-email-bibliotecario').textContent = data.usuario.correo;
+    document.getElementById('resumen-direccion-bibliotecario').textContent = data.usuario.direccion;
+    document.getElementById('resumen-telefono-bibliotecario').textContent = data.usuario.telefono;
+    document.getElementById('resumen-ciudad-bibliotecario').textContent = data.usuario.ciudad;
+    document.getElementById('resumen-genero-bibliotecario').textContent =
       data.usuario.genero === 'M' ? 'Masculino' :
-        data.usuario.genero === 'F' ? 'Femenino' : 'Otro';
+      data.usuario.genero === 'F' ? 'Femenino' : 'Otro';
 
-    // Mostrar mensaje de éxito
-    showSuccessNotification('Perfil actualizado', 'Perfil actualizado correctamente');
-
-    // Volver a la vista de resumen
-    cancelarEdicionPerfil();
+    showSuccessNotification('Perfil Actualizado', 'Perfil actualizado correctamente');
+    cancelarEdicionPerfilBibliotecario();
 
   } catch (error) {
     console.error('Error:', error);
     showErrorNotification('Error', 'Error al actualizar el perfil: ' + error.message);
   }
 }
+
 
 //?----------------------------/
 //?---------- LOGOUT ----------/

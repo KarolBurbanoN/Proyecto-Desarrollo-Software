@@ -502,7 +502,6 @@ async function renderPrestamos() {
             <p><strong>Autor:</strong> ${prestamo.libro.autores.map(a => a.nombre).join(', ')}</p>
             <p><strong>Fecha préstamo:</strong> ${fechaPrestamo}</p>
             <p><strong>Devolver antes del:</strong> ${fechaVencimiento}</p>
-            <p><strong>Devolver antes del:</strong> ${fechaVencimiento}</p>
 
             ${prestamo.puede_resenar ? `
               <form onsubmit="submitReview(event, ${prestamo.id_prestamo})">
