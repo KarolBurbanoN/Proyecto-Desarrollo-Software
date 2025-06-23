@@ -652,6 +652,16 @@ document.getElementById('search').addEventListener('input', () => {
   renderBooks();
 });
 
+// Cierre automático del panel de detalles al hacer clic fuera
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('bookDetailPanel');
+  const isActive = panel.classList.contains('active');
+
+  // Si está visible y el clic fue fuera del panel, lo cerramos
+  if (isActive && !panel.contains(e.target)) {
+    panel.classList.remove('active');
+  }
+});
 
 //** Conexion Base de Datos */
 
@@ -741,6 +751,40 @@ function editProfile(event) {
     return actualizarPerfil(event);
 }
 
+// Función para cargar alertas de préstamos--->se agrego
+async function cargarAlertas() {
+    try {
+        const response = await fetch('/api/prestamos/alertas');
+        if (!response.ok) return;
+        
+        const alertas = await response.json();
+        const alertasContainer = document.getElementById('alertasContainer');
+        
+        if (alertas.length > 0) {
+            alertasContainer.innerHTML = '';
+            alertas.forEach(alerta => {
+                const alertaElement = document.createElement('div');
+                alertaElement.className = 'alerta';
+                alertaElement.innerHTML = `
+                    <span>⚠️</span>
+                    <div>
+                        <strong>${alerta.titulo}</strong>
+                        <p>${alerta.mensaje}</p>
+                        <small>Vence: ${alerta.fecha_vencimiento}</small>
+                    </div>
+                `;
+                alertasContainer.appendChild(alertaElement);
+            });
+            document.getElementById('alertasPanel').classList.remove('hidden');
+        }
+    } catch (error) {
+        console.error('Error cargando alertas:', error);
+    }
+}
+
+function cerrarAlertas() {
+  document.getElementById('alertasPanel').classList.add('hidden');
+}
 
 // Al inicializar el dashboard
 async function initDashboard() {
@@ -770,6 +814,7 @@ async function initDashboard() {
     renderPrestamos();
     renderReservas();
     cargarPerfilUsuario();
+    cargarAlertas();//---> se agrego
     
   } catch (error) {
     console.error('Error al inicializar dashboard:', error);
