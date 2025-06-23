@@ -81,6 +81,44 @@ button:hover {
   z-index: 2;
 }
 
+/* Estilos para el panel de alertas -->se agrego */
+#alertasPanel {
+  background-color: #fff9e6;
+  border-left: 4px solid #ffcc00;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+#alertasPanel.hidden {
+  display: none;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.alertas-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alerta {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.alerta span {
+  font-size: 24px;
+}
 /*?------------------------------*/
 /*?---- ESTRUCTURA PRINCIPAL ----*/
 /*?------------------------------*/
