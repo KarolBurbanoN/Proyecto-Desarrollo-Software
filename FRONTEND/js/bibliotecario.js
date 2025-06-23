@@ -8,7 +8,7 @@ let books = [];
 
 let filteredBooks = null;
 
-//?----------------------------/
+//?-----------------------------/
 //?---- GESTIONAR USUARIOS ----/
 //?----------------------------/
 
@@ -1152,6 +1152,17 @@ document.querySelectorAll('.menu-btn').forEach(btn => {
 document.getElementById('search-Bibliotecario').addEventListener('input', () => {
   currentPage = 1;
   renderBooksBibliotecario();
+});
+
+// Cierre automático del panel de detalles al hacer clic fuera
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('bookDetailPanel');
+  const isActive = panel.classList.contains('active');
+
+  // Si está visible y el clic fue fuera del panel, lo cerramos
+  if (isActive && !panel.contains(e.target)) {
+    panel.classList.remove('active');
+  }
 });
 
 window.addEventListener('DOMContentLoaded', () => {

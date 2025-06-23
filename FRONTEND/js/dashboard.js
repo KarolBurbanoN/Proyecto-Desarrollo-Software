@@ -652,6 +652,16 @@ document.getElementById('search').addEventListener('input', () => {
   renderBooks();
 });
 
+// Cierre automático del panel de detalles al hacer clic fuera
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('bookDetailPanel');
+  const isActive = panel.classList.contains('active');
+
+  // Si está visible y el clic fue fuera del panel, lo cerramos
+  if (isActive && !panel.contains(e.target)) {
+    panel.classList.remove('active');
+  }
+});
 
 //** Conexion Base de Datos */
 
