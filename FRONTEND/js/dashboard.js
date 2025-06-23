@@ -359,7 +359,21 @@ async function renderReservas() {
 
 async function convertirReservaEnPrestamo(idReserva, isbn) {
   try {
-    // Primero crear el préstamo
+    // Primero marcar la reserva como completada
+    const reservaResponse = await fetch(`/api/reservas/${idReserva}/completar`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    if (!reservaResponse.ok) {
+      const errorData = await reservaResponse.json();
+      throw new Error(errorData.error || 'No se pudo marcar la reserva como completada');
+    }
+
+    // Luego crear el préstamo
     const prestamoResponse = await fetch('/api/prestamos', {
       method: 'POST',
       headers: {
@@ -374,23 +388,10 @@ async function convertirReservaEnPrestamo(idReserva, isbn) {
       throw new Error(errorData.error || 'No se pudo prestar el libro');
     }
 
-    // Luego marcar la reserva como completada
-    const reservaResponse = await fetch(`/api/reservas/${idReserva}/completar`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-
-    if (!reservaResponse.ok) {
-      throw new Error('No se pudo marcar la reserva como completada');
-    }
-
     showSuccessNotification('Libro Prestado', 'Libro prestado correctamente');
     renderBooks();
-    renderReservas(); // Actualizar lista de reservas
-    renderPrestamos(); // Actualizar lista de préstamos
+    renderReservas();
+    renderPrestamos();
   } catch (error) {
     console.error('Error:', error);
     showErrorNotification('Error', 'Error al prestar libro: ' + error.message);

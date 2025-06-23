@@ -151,7 +151,7 @@ class Reserva(Base):
     libro = relationship("Libro")
 
     __table_args__ = (
-        CheckConstraint(estado.in_(['pendiente', 'cancelada', 'completada'])),
+        CheckConstraint(estado.in_(['pendiente', 'cancelada', 'completada', 'notificado'])),
     )
 
 # 13. Calificación

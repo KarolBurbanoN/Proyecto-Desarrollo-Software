@@ -182,9 +182,9 @@ def devolver_prestamo(usuario_id, id_prestamo):
 
         El libro que reservaste: {reserva.libro.titulo} ya está disponible.
 
-        Tienes 24 horas para reclamarlo.
+        Ya puedes prestarlo.
 
-        Biblioteca Universidad del Valle
+        Biblioteca Alexandria
         """
             enviar_correo(reserva.usuario.correo, asunto, mensaje)
 
@@ -277,8 +277,8 @@ def agregar_resena(usuario_id, id_prestamo):
         return jsonify({"error": str(e)}), 500
 
 def enviar_correo(destinatario, asunto, mensaje):
-    remitente = "karoltatianaburbanonasner@gmail.com"  # Cambia por tu correo
-    contraseña = "dsby egox ledp imjf"  # Usa contraseña de aplicación si es Gmail
+    remitente = "alexandriabiblioteca611@gmail.com"  # Cambia por tu correo
+    contraseña = "dvvj ijxx rpys reoz"  # Usa contraseña de aplicación si es Gmail
 
     msg = MIMEMultipart()
     msg['From'] = remitente
